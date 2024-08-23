@@ -1,0 +1,584 @@
+//parent component html--------------------------------------------------------------------
+<div *ngIf="showPopup" class="popup2"  >
+  <app-rightclcik // this is a angular component
+  [contextMenuItems]="rightClickMenuItems" [contextMenuItems2]="rightClickMenuItems2"
+  (onContextMenuItemClick)="handleMenuItemClick($event)"
+  (onContextMenuItemClick2)="handleMenuItemClick2($event)"
+  (onContextMenuItemClick3)="handleMenuItemClick3()"
+  (onContextMenuItemClick4)="handleMenuItemClick4()"></app-rightclcik>
+
+</div>
+
+//parent component ts------------------------------------------------------------------------
+private longPressTimer: any;
+public showPopup = false;
+
+startLongPress(event: MouseEvent) {
+  // Clear any existing timer
+  this.clearLongPressTimer();
+  // Set a timer for long-press
+  this.longPressTimer = setTimeout(() => {
+    this.showPopup = true;
+    
+  },500); // Adjust time (in ms) for long press duration
+}
+
+endLongPress(event: MouseEvent) {
+  this.clearLongPressTimer();
+}
+
+clearLongPressTimer() {
+  if (this.longPressTimer) {
+    clearTimeout(this.longPressTimer);
+    this.longPressTimer = null;
+    
+  }
+}
+
+closePopup() {
+  this.longPressTimer = setTimeout(()=>{
+    this.showPopup = false
+  },500);
+}
+
+
+
+// rightclick html----------------------------------------------------------------------------
+
+<ng-container >
+    <div>
+      <button class="rightclick1" (click)="onContextMenuClick3()" (mouseover)="ttp3($event)" >Group</button>
+      <button class="rightclick1"(click)="onContextMenuClick4()" (mouseover)="ttp3($event)" >UnGroup</button>
+      <button class="rightclick1" (click)="ttp1($event)"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+     <style type="text/css">
+       .st0{stroke:#000000;stroke-miterlimit:10;}
+       .stt{stroke:#FFFFFF;stroke-miterlimit:10;}
+     </style>
+     <path class="st0" d="M11.85,21.74L6.64,16.9c-0.79-0.73-0.83-1.96-0.1-2.75l5.01-5.39c0.73-0.79,1.96-0.83,2.75-0.1l5.21,4.84
+       c0.79,0.73,0.83,1.96,0.1,2.75l-5.01,5.39C13.87,22.42,12.64,22.47,11.85,21.74z"/>
+     <path class="stt" d="M11.09,15.62l-5.14-5.14c-0.97-0.97-0.97-2.55,0-3.52l5.5-5.5c0.97-0.97,2.55-0.97,3.52,0l5.14,5.14
+       c0.97,0.97,0.97,2.55,0,3.52l-5.5,5.5C13.64,16.59,12.06,16.59,11.09,15.62z"/>
+     </svg> &nbsp;&nbsp; Layer</button>
+      <button class="rightclick2" (click)="ttp2($event)"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+        <defs>
+          <style>
+            .cls-1 {
+              fill: none;
+            }
+          </style>
+        </defs>
+        <g id="SVGRepo_iconCarrier" data-name="SVGRepo iconCarrier">
+          <g id="Layer_2" data-name="Layer 2">
+            <g id="invisible_box" data-name="invisible box">
+              <rect class="cls-1" x="0" y="0" width="24" height="24"/>
+            </g>
+            <g id="Layer_7" data-name="Layer 7">
+              <g>
+                <path d="m5,22V2c0-.55-.45-1-1-1s-1,.45-1,1v20c0,.55.45,1,1,1s1-.45,1-1Z"/>
+                <path d="m7,14v6c0,.55.45,1,1,1h8c.55,0,1-.45,1-1v-6c0-.55-.45-1-1-1h-8c-.55,0-1,.45-1,1Zm2,1h6s0,4,0,4h-6s0-4,0-4Z"/>
+                <path d="m21,10v-6c0-.55-.45-1-1-1h-12c-.55,0-1,.45-1,1v6c0,.55.45,1,1,1h12c.55,0,1-.45,1-1Zm-2-1h-10s0-4,0-4h10s0,4,0,4Z"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg> &nbsp;&nbsp;  Align Page</button>
+    </div>
+
+    
+    <div class="main_popup" style="position: absolute;" [ngStyle]="{left: this.left, top: this.top}" *ngIf="tp1 == true"  >
+      <div *ngFor="let menuItem of contextMenuItems; index as i" class="popup" (click)="onContextMenuClick($event, menuItem.menuEvent)" >
+        <span [innerHTML]="sanit(menuItem.menuIcon)"></span> &nbsp;&nbsp;
+        <span>{{ menuItem.menuText }}</span>
+      </div>
+     </div>
+     <div  class="main_popup2" style="position: absolute;" [ngStyle]="{left: this.left, top: this.top}" *ngIf="tp2 == true"  >
+      <div *ngFor="let menuItem of contextMenuItems2; index as i" class="popup2" (click)="onContextMenuClick2($event, menuItem.menuEvent)">
+        <span [innerHTML]="sanit(menuItem.menuIcon)"></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        <span>{{ menuItem.menuText }}</span>
+      </div>
+     </div>
+  </ng-container>
+
+
+// rightclick ts---------------------------------------------------------------------------------
+
+import { Component, Input, OnInit, Output } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+
+export interface ContextMenuModel {
+  menuText: string;
+  menuEvent: string;
+  menuIcon: string;
+
+}
+
+
+@Component({
+  selector: 'app-rightclcik',
+  templateUrl: './rightclcik.component.html',
+  styleUrls: ['./rightclcik.component.scss']
+})
+export class RightclcikComponent implements OnInit {
+
+  constructor(
+    private sanitizer: DomSanitizer,
+  ) { }
+
+  tp1: any;
+  tp2: any;
+  left: any;
+  top: any;
+  ngOnInit(): void {
+  }
+  @Input()
+  contextMenuItems: Array<ContextMenuModel>;
+
+  @Output()
+  onContextMenuItemClick: EventEmitter<any> = new EventEmitter<any>();
+  
+  onContextMenuClick(event, data): any {
+    this.onContextMenuItemClick.emit({
+      event,
+      data,
+    });
+  }
+  
+  @Input()
+  contextMenuItems2: Array<ContextMenuModel>;
+  
+  @Output()
+  onContextMenuItemClick2: EventEmitter<any> = new EventEmitter<any>();
+
+  
+  onContextMenuClick2(event, data): any {
+    this.onContextMenuItemClick2.emit({
+      event,
+      data,
+    });
+  }
+  
+  @Output()
+  onContextMenuItemClick3: EventEmitter<any> = new EventEmitter<any>();
+
+  onContextMenuClick3(): any {
+    this.onContextMenuItemClick3.emit();
+  }
+
+  @Output()
+  onContextMenuItemClick4: EventEmitter<any> = new EventEmitter<any>();
+
+  onContextMenuClick4(): any {
+    this.onContextMenuItemClick4.emit();
+  }
+
+
+  sanit(val) {
+    return this.sanitizer.bypassSecurityTrustHtml(val);
+  }
+
+  ttp1(event) {
+    event.stopPropagation(); 
+    this.tp2 = false
+    this.tp1 = true; 
+    this.left = '150px'
+    this.top = '90px'
+  }
+  ttp2(event) {
+    event.stopPropagation(); 
+    this.tp1 = false;
+    this.tp2 = true; 
+    this.left = '150px'
+    this.top = '145px'
+  }
+  ttp3(event) {
+    event.stopPropagation(); 
+    this.tp1 = false;
+    this.tp2 = false; 
+    this.left = '150px'
+    this.top = '45px'
+  }
+
+  // ttp4(){
+  //   this.tp1 = false;
+  //   this.tp2= false;
+  //   this.tp3 = false;
+  // }
+
+}
+
+// rightclick css
+.menu-link {
+    background: white;
+  
+}
+
+.menu-link:hover {
+    align-items: center;
+    background: whitesmoke;
+}
+
+.rightclick1{
+    width: 150px;
+    padding: 8%;
+     background-color: white;
+     border: #f3f5f6;
+     border-bottom:2px solid #f3f5f6;
+     display: flex;
+     justify-content: left;
+    //  align-items: center;
+}
+.rightclick2{
+    width: 150px;
+    padding: 8%;
+     background-color: white;
+     border: #f3f5f6;
+     border-bottom:2px solid #f3f5f6;
+     display: flex;
+     justify-content: left;
+    //  align-items: center;
+}
+
+.main_popup{
+    border: 2px solid #f3f5f6;
+}
+.main_popup2{
+    border: 2px solid #f3f5f6;
+    
+    
+}
+
+
+.popup{
+    padding: 8%;
+    width: 150px;
+    display: flex;
+    justify-content: left;
+    // border-bottom: 1px solid #f3f5f6;
+    background-color: white;
+}
+.popup:hover{
+    background-color:#f3f5f6;
+    }
+
+.popup2{
+    padding: 8%;
+    width: 150px;
+    display: flex;
+    justify-content: left;
+    // border-bottom: 1px solid #f3f5f6;
+    background-color: white;
+}
+.popup2:hover{
+background-color:#f3f5f6;
+}
+
+
+
+
+// parentcomponent html rightclick function---------------------------------------------------------------------------
+
+<app-rightclcik style="border: 3px solid #F3F5F6; border-radius: 10px;"
+  *ngIf=" rightClickMenuItems.length > 0 && isDisplayContextMenu" [ngStyle]="getRightClickMenuStyle()"
+  [contextMenuItems]="rightClickMenuItems" [contextMenuItems2]="rightClickMenuItems2"
+  (onContextMenuItemClick)="handleMenuItemClick($event)"
+  (onContextMenuItemClick2)="handleMenuItemClick2($event)"
+  (onContextMenuItemClick3)="handleMenuItemClick3()"
+  (onContextMenuItemClick4)="handleMenuItemClick4()">
+</app-rightclcik>
+
+
+// parentcomponent ts rightclick function-----------------------------------------------------------------------------
+
+export interface ContextMenuModel {
+  menuText: string;
+  menuEvent: string;
+  menuIcon:string;
+  
+}
+
+disableRightClick(event: MouseEvent) {
+    event.preventDefault();
+  }
+
+  //  Right button add other popup--
+
+  title = 'context-menu';
+  isDisplayContextMenu: boolean;
+  rightClickMenuItems: Array<ContextMenuModel> = [];
+  rightClickMenuItems2: Array<ContextMenuModel> = [];
+  rightClickMenuPositionX: number;
+  rightClickMenuPositionY: number;
+
+  displayContextMenu(event) {
+
+    this.isDisplayContextMenu = true;
+
+    this.rightClickMenuItems = [
+      {
+        menuText: 'SendBackward',
+       menuEvent: 'SendBackward',
+       menuIcon: '<img src="../../../assets/Canva icon/backward-24.png" />',
+        
+      },
+      {
+        menuText: 'SendToBack',
+        menuEvent: 'SendToBack',
+        menuIcon:'<img src="../../../assets/Canva icon/send-to-back-24.png"/>',
+      },
+      {
+        menuText: 'SendForward',
+        menuEvent: 'SendForward',
+        menuIcon:'<img src="../../../assets/Canva icon/bring-forward-24.png"/>',
+      },
+      {
+        menuText: 'SendToFornt',
+        menuEvent: 'SendToFornt',
+        menuIcon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+     <style type="text/css">
+       .st0{opacity:0.9804;fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+       .st1{stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+       .st2{fill:#FFFFFF;}
+     </style>
+     <g>
+       <g>
+         <g>
+           <rect x="7.14" y="7.46" class="st0" width="10.25" height="10"/>
+           <rect x="3.62" y="3.36" class="st1" width="7.75" height="8.85"/>
+           <rect x="12.88" y="13.39" class="st1" width="7.5" height="7.25"/>
+           <rect x="8.12" y="8.22" class="st2" width="8.25" height="8.25"/>
+         </g>
+       </g>
+     </g>
+     </svg>`,
+     
+      },
+
+      
+    ];
+
+    this.rightClickMenuItems2 = [
+      {
+        menuText: 'Left',
+       menuEvent: 'Left',
+       menuIcon: `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+       width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+       <defs>
+         <style>
+           .cls-1 {
+             fill: none;
+           }
+         </style>
+       </defs>
+       <g id="SVGRepo_iconCarrier" data-name="SVGRepo iconCarrier">
+         <g id="Layer_2" data-name="Layer 2">
+           <g id="invisible_box" data-name="invisible box">
+             <rect class="cls-1" x="0" y="0" width="24" height="24"/>
+           </g>
+           <g id="Layer_7" data-name="Layer 7">
+             <g>
+               <path d="m5,22V2c0-.55-.45-1-1-1s-1,.45-1,1v20c0,.55.45,1,1,1s1-.45,1-1Z"/>
+               <path d="m7,14v6c0,.55.45,1,1,1h8c.55,0,1-.45,1-1v-6c0-.55-.45-1-1-1h-8c-.55,0-1,.45-1,1Zm2,1h6s0,4,0,4h-6s0-4,0-4Z"/>
+               <path d="m21,10v-6c0-.55-.45-1-1-1h-12c-.55,0-1,.45-1,1v6c0,.55.45,1,1,1h12c.55,0,1-.45,1-1Zm-2-1h-10s0-4,0-4h10s0,4,0,4Z"/>
+             </g>
+           </g>
+         </g>
+       </g>
+     </svg>`,
+        
+      },
+      {
+        menuText: 'Center',
+        menuEvent: 'Center',
+        menuIcon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+     <style type="text/css">
+       .st0{fill:#FFFFFF;stroke:#000000;stroke-miterlimit:10;}
+     </style>
+     <g>
+       <g>
+         <path class="st0" d="M20.85,11.5h-3.73V6.86c0-0.26-0.21-0.47-0.47-0.47h-4.07c-0.26,0-0.47,0.21-0.47,0.47v4.63h-1.75V4.36
+           c0-0.26-0.21-0.47-0.47-0.47H5.84c-0.26,0-0.47,0.21-0.47,0.47v7.13H3.15C3.07,11.5,3,11.57,3,11.65V12
+           c0,0.08,0.07,0.15,0.15,0.15h2.22v7.03c0,0.26,0.21,0.47,0.47,0.47h4.07c0.26,0,0.47-0.21,0.47-0.47v-7.03h1.75v4.53
+           c0,0.26,0.21,0.47,0.47,0.47h4.07c0.26,0,0.47-0.21,0.47-0.47v-4.53h3.72c0.08,0,0.15-0.07,0.15-0.15v-0.35
+           C21,11.57,20.93,11.5,20.85,11.5z"/>
+       </g>
+     </g>
+     </svg>`,
+      },
+      {
+        menuText: 'Right',
+        menuEvent: 'Right',
+        menuIcon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+        <defs>
+          <style>
+            .cls-1 {
+              fill: #FFFFFF;
+            }
+          </style>
+        </defs>
+        <g id="SVGRepo_iconCarrier" data-name="SVGRepo iconCarrier">
+          <g id="Layer_2" data-name="Layer 2">
+            <g id="invisible_box" data-name="invisible box">
+              <rect class="cls-1" x="0" y="0" width="24" height="24"/>
+            </g>
+            <g id="Layer_7" data-name="Layer 7">
+              <g>
+                <path d="m20,23c.55,0,1-.45,1-1V2c0-.55-.45-1-1-1s-1,.45-1,1v20c0,.55.45,1,1,1Z"/>
+                <path d="m16,13h-8c-.55,0-1,.45-1,1v6c0,.55.45,1,1,1h8c.55,0,1-.45,1-1v-6c0-.55-.45-1-1-1Zm-1,6h-6v-4h6v4Z"/>
+                <path d="m4,11h12c.55,0,1-.45,1-1v-6c0-.55-.45-1-1-1H4c-.55,0-1,.45-1,1v6c0,.55.45,1,1,1Zm1-6h10v4H5v-4Z"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>`,
+      },
+      {
+        menuText: 'Top',
+       menuEvent: 'Top',
+       menuIcon: `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+       width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+       <defs>
+         <style>
+           .cls-1 {
+             fill: #FFFFFF;
+           }
+         </style>
+       </defs>
+       <g id="SVGRepo_iconCarrier" data-name="SVGRepo iconCarrier">
+         <g id="Layer_2" data-name="Layer 2">
+           <g id="invisible_box" data-name="invisible box">
+             <rect class="cls-1" x="0" y="0" width="24" height="24"/>
+           </g>
+           <g id="Layer_7" data-name="Layer 7">
+             <g>
+               <path d="m23,4c0-.55-.45-1-1-1H2c-.55,0-1,.45-1,1s.45,1,1,1h20c.55,0,1-.45,1-1Z"/>
+               <path d="m13,8v8c0,.55.45,1,1,1h6c.55,0,1-.45,1-1v-8c0-.55-.45-1-1-1h-6c-.55,0-1,.45-1,1Zm6,1v6s-4,0-4,0v-6s4,0,4,0Z"/>
+               <path d="m11,20v-12c0-.55-.45-1-1-1h-6c-.55,0-1,.45-1,1v12c0,.55.45,1,1,1h6c.55,0,1-.45,1-1Zm-6-1v-10s4,0,4,0v10s-4,0-4,0Z"/>
+             </g>
+           </g>
+         </g>
+       </g>
+     </svg>`,
+        
+      },
+      {
+        menuText: 'Middle',
+        menuEvent: 'Middle',
+        menuIcon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+     <style type="text/css">
+       .st0{fill:#FFFFFF;stroke:#000000;stroke-miterlimit:10;}
+     </style>
+     <path class="st0" d="M11.62,20.62V2.92c0-0.08,0.07-0.15,0.15-0.15h0.35c0.08,0,0.15,0.07,0.15,0.15v17.7
+       c0,0.08-0.07,0.15-0.15,0.15h-0.35C11.69,20.77,11.62,20.71,11.62,20.62z"/>
+     <path class="st0" d="M16.91,11.65l-9.82,0c-0.26,0-0.47-0.21-0.47-0.47l0-4.07c0-0.26,0.21-0.47,0.47-0.47l9.82,0
+       c0.26,0,0.47,0.21,0.47,0.47v4.07C17.38,11.44,17.17,11.65,16.91,11.65z"/>
+     <path class="st0" d="M19.41,18.4l-14.82,0c-0.26,0-0.47-0.21-0.47-0.47l0-4.07c0-0.26,0.21-0.47,0.47-0.47l14.82,0
+       c0.26,0,0.47,0.21,0.47,0.47v4.07C19.87,18.19,19.67,18.4,19.41,18.4z"/>
+     </svg>`,
+      },
+      {
+        menuText: 'Bottom',
+        menuEvent: 'Bottom',
+        menuIcon:`<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+        <defs>
+          <style>
+            .cls-1 {
+              fill: #FFFFFF;
+            }
+          </style>
+        </defs>
+        <g id="SVGRepo_iconCarrier" data-name="SVGRepo iconCarrier">
+          <g id="Layer_2" data-name="Layer 2">
+            <g id="invisible_box" data-name="invisible box">
+              <rect class="cls-1" x="0" y="0" width="24" height="24"/>
+            </g>
+            <g id="Layer_7" data-name="Layer 7">
+              <g>
+                <path d="m22,19H2c-.55,0-1,.45-1,1s.45,1,1,1h20c.55,0,1-.45,1-1,0-.55-.45-1-1-1Z"/>
+                <path d="m14,17h6c.55,0,1-.45,1-1v-8c0-.55-.45-1-1-1h-6c-.55,0-1,.45-1,1v8c0,.55.45,1,1,1Zm1-2v-6h4v6h-4Z"/>
+                <path d="m10,3h-6c-.55,0-1,.45-1,1v12c0,.55.45,1,1,1h6c.55,0,1-.45,1-1V4c0-.55-.45-1-1-1Zm-1,2v10h-4V5h4Z"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>`,
+      },
+      
+    ];
+
+
+    this.rightClickMenuPositionX = event.clientX;
+    this.rightClickMenuPositionY = event.clientY;
+
+    
+
+  }
+
+  getRightClickMenuStyle() {
+    return {
+      position: 'fixed',
+      left: `${this.rightClickMenuPositionX}px`,
+      top: `${this.rightClickMenuPositionY}px`,
+    }
+  }
+
+  handleMenuItemClick(event) { 
+    switch (event.data) {
+      case this.rightClickMenuItems[0].menuEvent:
+        this.sendTobackwards();
+        break;
+      case this.rightClickMenuItems[1].menuEvent:
+        this.sendToBack();
+        break;
+      case this.rightClickMenuItems[2].menuEvent:
+        this.sendForWard();
+        break;
+      case this.rightClickMenuItems[3].menuEvent:
+        this.sendToFront();
+        break;
+    }
+  }
+  handleMenuItemClick2(event) { 
+    switch (event.data) {
+      case this.rightClickMenuItems2[0].menuEvent:
+        this.alignToLeft();
+        break;
+      case this.rightClickMenuItems2[1].menuEvent:
+        this.alignToCenter();
+        break;
+      case this.rightClickMenuItems2[2].menuEvent:
+        this.alignToRight();
+        break;
+      case this.rightClickMenuItems2[3].menuEvent:
+        this.alignToTop();
+        break;
+      case this.rightClickMenuItems2[4].menuEvent:
+        this.alignToMiddle();
+        break;
+      case this.rightClickMenuItems2[5].menuEvent:
+        this.alignToBottom();
+        break;
+    }
+  }
+
+  handleMenuItemClick3() {
+    this.groupSelectedObjects()
+  }
+
+  handleMenuItemClick4() {
+    this.ungroupSelectedObjects()
+  }
+
+
+  @HostListener('document:click')
+  documentClick(): void {
+    this.isDisplayContextMenu = false;
+  }
+  
