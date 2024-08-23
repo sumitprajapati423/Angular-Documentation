@@ -1,0 +1,124 @@
+// parentcomponent htlm-----------------------------------------------
+
+<app-popup [Switch]="Switch2" [Title]="'Share Link'" (Close)="CloseSharelinkpopup($event)" >
+
+  <div class="modal-content animate p-3">
+      <div class="position-relative">
+          <app-input [Lable]="'Link'" [Minlength]="0" [Maxlength]="0"  [Disable]="true" [Value]="Blog_link" [Placeholder]="'Blog Link'"></app-input>
+          <span (click)="Copylink()" class="position-absolute theme_shadow" style="   
+          right: 10px;
+          padding: 5px 10px;
+          background: lightslategrey;
+          border-radius: 5px;
+          bottom: 5px;
+          cursor: pointer;">Copy</span>
+      </div>
+   
+      <div class="social" style="margin-top: 20px;">
+        <a target="_blank" (click)="openlink(0)" data-action="share/whatsapp/share">
+          <img class="socialimgtag" src="assets/images/shopdetailicons/sharewhatsapp.png" alt="mail" />
+        </a>
+        <a target="_blank" (click)="openlink(1)"><img class="socialimgtag" src="assets/images/shopdetailicons/sharefb.png"
+            alt="Facebook Logo" /></a>
+  
+        <a target="_blank" (click)="openlink(2)">
+          <img class="socialimgtag" src="assets/images/shopdetailicons/sharepintrest.png" alt="Pinterest Logo" /></a>
+        <a target="_blank" href="" (click)="openlink(3)"><img class="socialimgtag"
+            src="assets/images/shopdetailicons/sharetwitter.png" alt="Twitter Logo" /></a>
+  
+        <a target="_blank" (click)="openlink(4)">
+          <img class="socialimgtag" src="assets/images/shopdetailicons/sharelinkedin.png" alt="LinkedIn Logo" />
+        </a>
+        <a target="_blank" (click)="openlink(5)">
+          <img class="socialimgtag" src="../../../assets/Telegram.svg" alt="Telegram Logo" />
+        </a>
+        <a target="_blank" (click)="openlink(6)">
+          <img class="socialimgtag" src="assets/images/shopdetailicons/sharetomail.png" alt="Email Logo" />
+        </a>
+      </div>
+    </div>
+  <!-- </div> -->
+
+</app-popup>
+
+parentcomponet ts -------------------------------------------
+
+copyMessage:any
+  permalink:any
+  platformId:any
+   encodeurl: string ='https://i.ibb.co/jR70VKs/screenshot-12.png'
+  openlink(linkno) {
+    console.log(this.current_item)
+      let linkshare;
+  
+      // let encodeurl = encodeURI(constant.Constants.IMAGE_URL+this.current_item.banner_img);
+  
+      let texttoshare = `Check out this cool new banner :) `;
+      this.Blog_link = this.encodeurl
+      if (linkno == 0) {
+      //  https://api.whatsapp.com/send?text=Hello World%0ahttps://i.ibb.co/jR70VKs/screenshot-12.png
+      //   const url = `https://api.whatsapp.com/send?&text=${this.message}%20${encodeURIComponent(this.imageUrl)}`;
+        linkshare = `https://api.whatsapp.com/send?text=Hello World%20${this.encodeurl}`;
+      } else if (linkno == 1) {
+        linkshare = `https://www.facebook.com/sharer/sharer.php?u=${this.encodeurl}&quote=${texttoshare}`;
+      } else if (linkno == 2) {
+        linkshare = `https://pinterest.com/pin/create/button/?url=${this.encodeurl}&media=&description=${texttoshare}`;
+      } else if (linkno == 3) {
+        linkshare = `https://twitter.com/intent/tweet?url=${this.encodeurl} via @Shupple_com&text=${texttoshare} via @Shupple_com`;
+      } else if (linkno == 4) {
+        linkshare = `https://www.linkedin.com/shareArticle?&url=${this.encodeurl}&title=${texttoshare}`;
+      }
+      else if (linkno == 5) {
+        linkshare = `https://t.me/share/url?url=${this.encodeurl}&title=${texttoshare}`;
+      }
+      else if (linkno == 6) {
+        linkshare = `mailto:${this.encodeurl}&title=${texttoshare}`;
+      }
+      if (isPlatformBrowser(this.platformId)) {
+        
+      }
+      console.log(linkshare)
+        window.open(linkshare, "MsgWindow", "width=500,height=600");
+    }
+
+  // extra -------
+    CloseSharelinkpopup(event:any){
+      this.SharelinkpopupSwitch = false
+      this.Switch2= false
+      console.log(event)
+  
+    }
+    ShareLink(data:any){
+      this.Blog_link = this.encodeurl
+      this.SharelinkpopupSwitch = true
+  
+    }
+    Copylink(){
+      this.clipboard.copy(this.Blog_link)
+      this.mat.open(`Link Copied`, 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
+    }
+  
+   openSharePopup(data) {
+  this.Switch2 = true;
+  this.Blog_link = this.encodeurl
+      // document.getElementById("shareiconmodal").style.display = "block";
+      this.current_item = data;
+    }
+    closepop() {
+      document.getElementById("shareiconmodal").style.display = "none";
+      this.current_item = null;
+    }
+  
+    Openpopup() {
+      this.Switch = true
+      }
+      Closepopup(event:any){
+        this.Switch = event
+      }
+      Closepopup2(event:any){
+        this.Switch2 = event
+      }
