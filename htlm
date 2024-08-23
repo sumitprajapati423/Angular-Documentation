@@ -1,0 +1,1452 @@
+<!-- <ngx-spinner bdColor="rgba(51,51,51,0.8)"
+size="medium" 
+color="#fff"
+ type="ball-scale-multiple">
+  <p style="font-size: 20px; color: white;">Loading...</p>
+</ngx-spinner> -->
+
+<div class="row header">
+  <div class="col-6 add">
+    <span (click)="Banner()" style="cursor: pointer;" matTooltip="Back"> <i class='bx bx-chevron-left'></i> </span>
+    <span id="icon1"> {{pageName}} Banner</span>
+  </div>
+  <div class="col-6" style="text-align: right;">
+    <span id="icon" (click)="openSharePopup(dataItem)" style="cursor: pointer;" matTooltip="Share"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+   <style type="text/css">
+     .st0{fill:#FFFFFF;stroke:#000000;stroke-miterlimit:10;}
+   </style>
+   <circle class="st0" cx="17.6" cy="6.3" r="2.9"/>
+   <circle class="st0" cx="18.4" cy="18.3" r="2.9"/>
+   <circle class="st0" cx="6.1" cy="12.5" r="2.9"/>
+   <line class="st0" x1="8.4" y1="13.2" x2="15.8" y2="17"/>
+   <line class="st0" x1="15.5" y1="7.3" x2="8.1" y2="11"/>
+   </svg></span>
+    <button class="btn" (click)="saveCanvas()">Save Banner</button>
+  </div>
+</div>
+
+
+
+<!-- <app-popup [Switch]="Switch2" [Title]="'Share'" (Close)="Closepopup2($event)">
+  <div class="container" style="
+    width: 90%;
+    transform: translate(0, 0);
+    margin: 7% auto;
+    text-align: center;
+  ">
+  <span  class="position-absolute theme_shadow" style="   
+  right: 10px;
+  padding: 5px 10px;
+  background: white;
+  border-radius: 5px;
+  bottom: 5px;
+  cursor: pointer;">Copy</span>
+
+    <div class="social" >
+      <a target="_blank" (click)="openlink(0)" data-action="share/whatsapp/share">
+        <img class="socialimgtag" src="assets/images/shopdetailicons/sharewhatsapp.png" alt="mail" />
+      </a>
+      <a target="_blank" (click)="openlink(1)"><img class="socialimgtag" src="assets/images/shopdetailicons/sharefb.png"
+          alt="Facebook Logo" /></a>
+
+      <a target="_blank" (click)="openlink(2)">
+        <img class="socialimgtag" src="assets/images/shopdetailicons/sharepintrest.png" alt="Pinterest Logo" /></a>
+      <a target="_blank" href="" (click)="openlink(3)"><img class="socialimgtag"
+          src="assets/images/shopdetailicons/sharetwitter.png" alt="Twitter Logo" /></a>
+
+      <a target="_blank" (click)="openlink(4)">
+        <img class="socialimgtag" src="assets/images/shopdetailicons/sharelinkedin.png" alt="LinkedIn Logo" />
+      </a>
+      <a target="_blank" (click)="openlink(5)">
+        <img class="socialimgtag" src="../../../assets/Telegram.svg" alt="Telegram Logo" />
+      </a>
+      <a target="_blank" (click)="openlink(6)">
+        <img class="socialimgtag" src="assets/images/shopdetailicons/sharetomail.png" alt="Email Logo" />
+      </a>
+    </div>
+  </div>
+</app-popup> -->
+
+<app-popup [Switch]="Switch2" [Title]="'Share Link'" (Close)="CloseSharelinkpopup($event)" >
+
+  <div class="modal-content animate p-3">
+      <div class="position-relative">
+          <app-input [Lable]="'Link'" [Minlength]="0" [Maxlength]="0"  [Disable]="true" [Value]="Blog_link" [Placeholder]="'Blog Link'"></app-input>
+          <span (click)="Copylink()" class="position-absolute theme_shadow" style="   
+          right: 10px;
+          padding: 5px 10px;
+          background: lightslategrey;
+          border-radius: 5px;
+          bottom: 5px;
+          cursor: pointer;">Copy</span>
+      </div>
+   
+      <div class="social" style="margin-top: 20px;">
+        <a target="_blank" (click)="openlink(0)" data-action="share/whatsapp/share">
+          <img class="socialimgtag" src="assets/images/shopdetailicons/sharewhatsapp.png" alt="mail" />
+        </a>
+        <a target="_blank" (click)="openlink(1)"><img class="socialimgtag" src="assets/images/shopdetailicons/sharefb.png"
+            alt="Facebook Logo" /></a>
+  
+        <a target="_blank" (click)="openlink(2)">
+          <img class="socialimgtag" src="assets/images/shopdetailicons/sharepintrest.png" alt="Pinterest Logo" /></a>
+        <a target="_blank" href="" (click)="openlink(3)"><img class="socialimgtag"
+            src="assets/images/shopdetailicons/sharetwitter.png" alt="Twitter Logo" /></a>
+  
+        <a target="_blank" (click)="openlink(4)">
+          <img class="socialimgtag" src="assets/images/shopdetailicons/sharelinkedin.png" alt="LinkedIn Logo" />
+        </a>
+        <a target="_blank" (click)="openlink(5)">
+          <img class="socialimgtag" src="../../../assets/Telegram.svg" alt="Telegram Logo" />
+        </a>
+        <a target="_blank" (click)="openlink(6)">
+          <img class="socialimgtag" src="assets/images/shopdetailicons/sharetomail.png" alt="Email Logo" />
+        </a>
+      </div>
+    </div>
+  <!-- </div> -->
+
+</app-popup>
+
+<!-- -----------choose template------------------ -->
+<div class="choose">
+  <div class="one">
+    <!-- <button type="button" class="btn btn-lg btn-primary" disabled> <img src="../../../assets/Canva icon/template-24.png" alt="" > Primary button</button> -->
+    <!-- <button (click)="choose()" data-bs-toggle="modal" data-bs-target="#exampleModal4" data-bs-whatever="@mdo" style="font-size: 20px;"> <img src="../../../assets/Canva icon/template-24.png" alt="" >&nbsp; &nbsp; Template</button> -->
+    <button mat-button (click)="choose()" data-bs-toggle="modal" data-bs-target="#exampleModal4"
+      data-bs-whatever="@mdo">
+      <mat-icon><img src="../../../assets/Canva icon/template-24.png" alt=""></mat-icon>
+      <span style="margin-top: 1.5px;">Choose Template</span>
+    </button>
+    <!-- Search  -->
+
+    <div class="modal fade" style="width: 100%;  " id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel"><b>Choose Template</b></h1>
+              <button type="button" id="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                style="width: auto; margin-right: 3%;"></button>
+            </div>
+            <div class="modal-body" style="width: 100%;">
+              <div class="px-2 BannerSearch">
+                <span class="d-flex">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" title="Search" width="16" height="16"
+                    class="sub-nav__NavbarSearchIcon-sc-1ovwz59-0 mqZEt">
+                    <path id="Path_1115" data-name="Path 1115" class="k3-search-cls-1"
+                      d="M24,21.887l-4.981-4.981a10.335,10.335,0,0,0,2.113-6.34A10.5,10.5,0,0,0,10.566,0,10.5,10.5,0,0,0,0,10.566,10.5,10.5,0,0,0,10.566,21.132a10.335,10.335,0,0,0,6.34-2.113L21.887,24ZM3.019,10.566a7.474,7.474,0,0,1,7.547-7.547,7.474,7.474,0,0,1,7.547,7.547,7.474,7.474,0,0,1-7.547,7.547A7.474,7.474,0,0,1,3.019,10.566Z">
+                    </path>
+                  </svg>
+                </span>
+                <span class="w-100 h-100">
+                  <input type="text" class="px-2 h-100 w-100" placeholder="Search Banner ..."
+                    style=" outline: unset; border: unset; width: 100%; background-color: transparent;"
+                    (input)="searchEvent($event)">
+                </span>
+              </div>
+              <!-- ---Grid Template---- -->
+              <div class="container-fluid">
+                <div class="bannertemplate">
+                  <div class="bannercard" *ngFor="let data of searchTemplate">
+                    <img [src]="image_url+data.banner_img" alt="" width="200px" height="200px"
+                      (click)="loadCanvas(data.banner_data)">
+                    <button (click)="loadCanvas(data.banner_data)">{{data.banner_name}}</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- --------------Canvas size -->
+  <div class="two">
+    <!-- <button mat-button [matMenuTriggerFor]="animals" style="width: 229px; height: 38px; border-radius: 7px; border: 1px solid black; font-size: 20px;" > <img src="../../../assets/Canva icon/resize-file-24.png" alt="">&nbsp; &nbsp;&nbsp;Canvas Size </button> -->
+    <button mat-button [matMenuTriggerFor]="animals">
+      <mat-icon><img src="../../../assets/Canva icon/resize-file-24.png" alt=""></mat-icon>
+      <span style="margin-top: 1.5px;">CANVAS SIZE</span>
+    </button>
+    <mat-menu #animals="matMenu">
+      <button mat-menu-item [matMenuTriggerFor]="whatsapp">Whatsapp</button>
+      <button mat-menu-item [matMenuTriggerFor]="Facebook">Facebook</button>
+      <button mat-menu-item [matMenuTriggerFor]="Instagram">Instagram</button>
+      <button mat-menu-item [matMenuTriggerFor]="Twitter">Twitter</button>
+      <button mat-menu-item [matMenuTriggerFor]="YouTube">YouTube</button>
+      <button mat-menu-item [matMenuTriggerFor]="Pinterest">Pinterest</button>
+      <button mat-menu-item [matMenuTriggerFor]="LinkedIn">LinkedIn</button>
+      <button mat-menu-item [matMenuTriggerFor]="Email">Email</button>
+      <button mat-menu-item [matMenuTriggerFor]="Blog">Blog</button>
+    </mat-menu>
+
+    <mat-menu #whatsapp="matMenu">
+      <button mat-menu-item (click)="Getsize(500,500)">Whatsapp Profile – 500 x 500</button>
+      <button mat-menu-item (click)="Getsize(800,800)">Whatsapp Square – 800 x 800</button>
+      <button mat-menu-item (click)="Getsize(750,1334)">Whatsapp Story – 750 x 1334</button>
+    </mat-menu>
+
+
+    <mat-menu #Facebook="matMenu">
+      <button mat-menu-item (click)="Getsize(1080,1920)">Facebook Story – 1080 x 1920</button>
+      <button mat-menu-item (click)="Getsize(1080,1920)">Facebook Event cover – 1920 x 1080 px</button>
+      <button mat-menu-item (click)="Getsize(1640 , 859)">Facebook Group cover – 1640 x 859 px</button>
+      <button mat-menu-item (click)="Getsize(1080 , 1350)">Facebook Vertical post – 1080 x 1350 px</button>
+      <button mat-menu-item (click)="Getsize(180 , 180)">Facebook Profile – 180 x 180 px</button>
+      <button mat-menu-item (click)="Getsize(1200 , 630)">Facebook Shared – 1200 x 630 px</button>
+      <button mat-menu-item (click)="Getsize(1200 , 628)">Facebook NewsFeed – 1200 x 628 px</button>
+      <button mat-menu-item (click)="Getsize(1200 , 628)">Facebook Ad (Link) – 1200 x 628 px</button>
+      <button mat-menu-item (click)="Getsize(600 , 600)">Facebook Ad (Carousel) – 600 x 600 px</button>
+      <button mat-menu-item (click)="Getsize(1200 , 717)">Facebook Highlighted – 1200 x 717 px</button>
+      <button mat-menu-item (click)="Getsize(1024 , 1024)">Facebook Marketplace – 1024 x 1024 px</button>
+      <button mat-menu-item (click)="Getsize(470 , 174)">Facebook Event – 470 x 174 px</button>
+      <button mat-menu-item (click)="Getsize(820 , 312)">Facebook Page Cover – 820 x 312 px.</button>
+    </mat-menu>
+
+    <mat-menu #Instagram="matMenu">
+      <button mat-menu-item (click)="Getsize(1080 , 1080)">Instagram Square – 1080 x 1080 px</button>
+      <button mat-menu-item (click)="Getsize(1080 , 566)">Instagram Horizontal – 1080 x 566px</button>
+      <button mat-menu-item (click)="Getsize(1080 , 566)"> Instagram Ad Horizontal – 1080 x 566px</button>
+      <button mat-menu-item (click)="Getsize(1080 , 566)">Instagram Landscape – 1080 x 566px</button>
+      <button mat-menu-item (click)="Getsize(1080 , 1920)">Instagram Reel – 1080 x 1920 px</button>
+      <button mat-menu-item (click)="Getsize(1080 , 1350)">Instagram Feed – 1080 x 1350 px</button>
+      <button mat-menu-item (click)="Getsize(1080 , 1350)">Instagram Feed – 1080 x 1350 px</button>
+      <button mat-menu-item (click)="Getsize(420 , 654)">Instagram IGTV Cover – 420 x 654 </button>
+      <button mat-menu-item (click)="Getsize(1080 , 1080)">Instagram Ad Square – 1080 x 1080 px</button>
+      <button mat-menu-item (click)="Getsize(1080 , 1350)">Instagram Portrait – 1080 x 1350 px</button>
+      <button mat-menu-item (click)="Getsize(1080 , 1350)">Instagram Ad Portrait – 1080 x 1350 px</button>
+      <button mat-menu-item (click)="Getsize(1080 , 1920)">Instagram Story – 1080 x 1920 px.</button>
+      <button mat-menu-item (click)="Getsize(161 , 161)">Instagram Photo Thumbnail – 161 x 161 px.</button>
+      <button mat-menu-item (click)="Getsize(110 , 110)">Instagram Profile – 110 x 110 px.</button>
+
+    </mat-menu>
+
+    <mat-menu #Twitter="matMenu">
+      <button mat-menu-item (click)="Getsize(400 , 400)">X (Twitter) Profile – 400 x 400 px </button>
+      <button mat-menu-item (click)="Getsize(1500 , 500)">X (Twitter) Banner (Header) – 1500 x 500 px</button>
+      <button mat-menu-item (click)="Getsize(1200 , 675)">X (Twitter) Share – 1200 x 675 px</button>
+      <button mat-menu-item (click)="Getsize(1024 , 512)">X (Twitter) Website card – 1024 x 512 px</button>
+      <button mat-menu-item (click)="Getsize(440 , 220)">X (Twitter) In-stream photo – 440 x 220px </button>
+      <button mat-menu-item (click)="Getsize(800 , 418)">X (Twitter) Share-link - 800 x 418 px</button>
+    </mat-menu>
+
+    <mat-menu #YouTube="matMenu">
+      <button mat-menu-item (click)="Getsize(1280 , 720)">YouTube Thumbnail Image Size – 1280 x 720 px</button>
+      <button mat-menu-item (click)="Getsize(2560 , 1140 )">YouTube Banner – 2560 x 1140 px</button>
+      <button mat-menu-item (click)="Getsize(800 , 800)">YouTube Channel Icon – 800 x 800 px</button>
+      <button mat-menu-item (click)="Getsize(728 , 90 )">YouTube Leaderboard – 728 x 90 px</button>
+      <button mat-menu-item (click)="Getsize(180 , 150)">YouTube Rectangle – 180x 150 px</button>
+      <button mat-menu-item (click)="Getsize(300 , 60 )">YouTube Display Ad 1 – 300 x 60 px</button>
+      <button mat-menu-item (click)="Getsize(300 , 250)">YouTube Display Ad 2 – 300 x 250 px</button>
+      <button mat-menu-item (click)="Getsize(468 , 60)">YouTube Overlay Ad 3 – 468 x 60 px</button>
+      <button mat-menu-item (click)="Getsize(2560 , 1440)">YouTube Channel Art (header) – 2560 x 1440 px.</button>
+    </mat-menu>
+
+    <mat-menu #Pinterest="matMenu">
+      <button mat-menu-item (click)="Getsize(222 , 150)">Pinterest Board Cover – 222 x 150 px</button>
+      <button mat-menu-item (click)="Getsize(220 , 150)">Pinterest Large Thumbnail – 220 x 150 px</button>
+      <button mat-menu-item (click)="Getsize(55 , 55)">Pinterest Small Thumbnail – 55 x 55 px</button>
+      <button mat-menu-item (click)="Getsize(165 , 165 )">Pinterest Profile – 165 x 165 px</button>
+      <button mat-menu-item (click)="Getsize(800 , 1200)">Pinterest Pin Image – 800 x 1200 px</button>
+    </mat-menu>
+
+    <mat-menu #LinkedIn="matMenu">
+      <button mat-menu-item (click)="Getsize(1104 , 736)">LinkedIn Share – 1104 x 736 px</button>
+      <button mat-menu-item (click)="Getsize(1200 , 628)">LinkedIn Posts– 1200 x 628 px</button>
+      <button mat-menu-item (click)="Getsize(1584 , 396)">LinkedIn Personal Cover – 1584 x 396 px</button>
+      <button mat-menu-item (click)="Getsize(646 ,220)">LinkedIn Company Banner – 646 x 220 px</button>
+      <button mat-menu-item (click)="Getsize(1536 , 768)">LinkedIn Company Cover – 1536 x 768 px</button>
+      <button mat-menu-item (click)="Getsize(400 , 400)">LinkedIn Profile – 400 x 400 px</button>
+      <button mat-menu-item (click)="Getsize(1128 , 376)">LinkedIn Company Hero – 1128 x 376 px</button>
+      <button mat-menu-item (click)="Getsize(300 , 300)">LinkedIn Company Logo – 300 x 300 px</button>
+      <button mat-menu-item (click)="Getsize(60 , 60)">LinkedIn Square Logo – 60 x 60 px</button>
+    </mat-menu>
+
+    <mat-menu #Email="matMenu">
+      <button mat-menu-item (click)="Getsize(600 , 200 )">Email Header Size – 600 x 200 px</button>
+      <button mat-menu-item (click)="Getsize(600 , 200 )">Email Header – 600 x 200 px</button>
+    </mat-menu>
+
+    <mat-menu #Blog="matMenu">
+      <button mat-menu-item (click)="Getsize(1200 , 600)">Blog Featured Image Size – 1200 x 600 px</button>
+      <button mat-menu-item (click)="Getsize(750 , 750)">Blog Image Size – 750 x 750 px</button>
+      <button mat-menu-item (click)="Getsize(750 , 750)">Blog – 750 x 750 px</button>
+    </mat-menu>
+
+  </div>
+
+  <div class="canva">
+    <mat-form-field>
+      <mat-label>Canvas Width (px)</mat-label>
+      <input matInput type="number" [value]="Canvawidth" (input)="responsive($event,'width')" [min]="40" [max]="8000">
+      <mat-icon matSuffix>aspect_ratio</mat-icon>
+      <button mat-button matSuffix mat-icon-button (click)="decrementCanvaswidth()">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button mat-button matSuffix mat-icon-button (click)="incrementCanvaswidth()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Canvas Height (px)</mat-label>
+      <input matInput type="number" [value]="Canvaheight" (input)="responsive($event,'height')" [min]="40" [max]="8000">
+      <mat-icon matSuffix>aspect_ratio</mat-icon>
+      <button mat-button matSuffix mat-icon-button (click)="decrementCanvasheight()">
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button mat-button matSuffix mat-icon-button (click)="incrementCanvasheight()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- <input type="number" [value]="Canvawidth" (input)="responsive($event,'width')" min="40" max="8000" style=" padding:5px">&nbsp;
+        <input type="number"[value]="Canvaheight" (input)="responsive($event,'height')"min="40" max="8000"  style="padding:5px"> -->
+    <input type="color" id="bColor" style="visibility:hidden;" (input)="changeBackgroundColor($event.target.value)" />
+    <span><label for="bColor" matTooltip="BackGroundColor"><img src="../../../assets/Canva icon/color-24.png"
+          alt=""></label></span>
+    <input type="file" id="file2" style="visibility:hidden;display: none; width: 0; height: 0;"(change)="backimage($event)"accept="image/*">
+
+    <span><label for="file2" matTooltip="BackGroundImage"><img src="../../../assets/Canva icon/wallpaper-24.png"
+          alt=""></label></span>
+    <span mat-button [matMenuTriggerFor]="menu3" matTooltip="Polygon"><img src="../../../assets/Canva icon/polygon-24.png"
+        alt=""></span>
+    <mat-menu #menu3="matMenu">
+      <div id="ss">
+        <span (click)="Star()" (click)="$event.stopPropagation()"><img src="../../../assets/Canva icon/rating-24.png"
+            alt="">&nbsp;&nbsp;Star</span><br><br>
+        <span (click)="Daimond()" (click)="$event.stopPropagation()"><img
+            src="../../../assets/Canva icon/polygon-24.png" alt="">&nbsp;&nbsp;Daimond</span><br><br>
+        <span (click)="Hexagon()" (click)="$event.stopPropagation()"><img
+            src="../../../assets/Canva icon/polygon-24.png" alt="">&nbsp;&nbsp;Hexagon</span><br><br>
+        <span (click)="Octagon()" (click)="$event.stopPropagation()"><svg version="1.1" id="Layer_1"
+            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+            height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+            <rect x="6.9" y="3" width="10.2" height="2" />
+            <rect x="6.1" y="18.9" width="11.9" height="2.2" />
+            <rect x="-1.5" y="11.4" transform="matrix(-1.836970e-16 1 -1 -1.836970e-16 16.404 8.404)" width="10.9"
+              height="2" />
+            <rect x="2.8" y="4.7" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 13.6171 5.6711)" width="5.6"
+              height="2" />
+            <rect x="15.6" y="4.7" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 27.3658 22.6468)" width="5.6"
+              height="2" />
+            <rect x="3" y="17.8" transform="matrix(0.7071 0.7071 -0.7071 0.7071 14.844 1.7722)" width="4.6"
+              height="2" />
+            <rect x="16.5" y="17.7" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 45.2796 18.7323)" width="4.5"
+              height="2" />
+            <rect x="14.6" y="11.4" transform="matrix(-1.836970e-16 1 -1 -1.836970e-16 32.454 -7.646)" width="10.9"
+              height="2" />
+          </svg>&nbsp;&nbsp;Octagon</span>
+      </div>
+    </mat-menu>
+    <span mat-button [matMenuTriggerFor]="menu2" matTooltip="Grid" (click)="addGridLines(50)"
+      style="margin-left: -.5%;"><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24"
+        style="enable-background:new 0 0 24 24;" xml:space="preserve">
+        <style type="text/css">
+          .st0 {
+            fill: none;
+            stroke: #000000;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+          }
+        </style>
+        <rect x="5.08" y="2.86" class="st0" width="13.85" height="18" />
+        <line class="st0" x1="4.58" y1="8.79" x2="19.48" y2="8.79" />
+        <line class="st0" x1="4.58" y1="14.84" x2="19.48" y2="14.84" />
+        <line class="st0" x1="12" y1="3.5" x2="12.03" y2="20.86" />
+      </svg>
+    </span>
+    <mat-menu #menu2="matMenu">
+      <div id="ss">
+        <h4>Grid Spacing</h4>
+        <mat-slider class="vv" (click)="$event.stopPropagation()" [value]="globalgrid" (change)="addGridLines($event.value)" thumbLabel
+          tickInterval="1" step="10" min="1" max="100" aria-label="units" (change)="SpacingText($event)"></mat-slider>
+      </div>
+    </mat-menu>
+  </div>
+
+  
+</div>
+
+  <!-- <button (click)="groupSelectedObjects()">Group Selected Objects</button> -->
+
+<!--         Fbric js -->
+<div class="editor">
+  <div class="Toolbar" *ngIf="showToolbar">
+    <span (click)="undo()"  matTooltip="Undo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24; transform: scale(-1,1); " xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st2{stroke:#000000;stroke-miterlimit:10;}
+
+
+</style>
+<path class="st1" d="M2,13.64c0.79-4.45,4.84-8.02,9.2-8.11c4.35-0.09,8.54,3.31,9.5,7.72"/>
+<polygon class="st2" points="22.28,15.63 22.7,9.06 16.5,12.91 "/>
+</svg></span>
+    <span (click)="redo()"  matTooltip="Redo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st2{stroke:#000000;stroke-miterlimit:10;}
+</style>
+<path class="st1" d="M2,13.64c0.79-4.45,4.84-8.02,9.2-8.11c4.35-0.09,8.54,3.31,9.5,7.72"/>
+<polygon class="st2" points="22.28,15.63 22.7,9.06 16.5,12.91 "/>
+</svg></span>
+    <select [(ngModel)]="selectedFontFamily" (change)="changeFontFamily($event)" style="height: 30px; width: 120px;">
+      <option value="Roboto">Roboto</option>
+      <option value="Bungee Shade">Bungee</option>
+      <option value="Diplomata SC">Diplomata</option>
+      <option value="Monoton">Monoton</option>
+      <option value="Cookie">Cookie</option>
+      <option value="Pacifico">Pacifico</option>
+      <option value="Sedan">Sedan</option>
+      <option value="Dancing Script">Dancing</option>
+      <option value="Matemasie">Matemasie</option>
+      <option value="Silkscreen">Silkscreen</option>
+    </select>&nbsp;
+    <input style=" width:60px" type="number" [(ngModel)]="FontSize" (change)="updateFontSize()">
+    <input type="color" id="backcolor" style="visibility:hidden; width: 0; height: 0;" [(ngModel)]="selectedColor"
+    (input)="applyObjectbackgroundColor($event)" />
+    <span><label for="backcolor"  matTooltip="Background">
+      <div style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid black; margin-left: -1%;"
+      [ngStyle]="{'background-color': selectedColor}"></div>
+    </label></span>
+    <input type="color" id="color" style="visibility:hidden; height: 0; width:0;  " [(ngModel)]="selectedColor"
+      (input)="applyTextColor($event)" />
+    <span><label for="color" matTooltip="TextColor"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+   <path d="M3,21v-3.4h18V21H3z M6.2,15l4.7-12h2.2l4.7,12h-2.2l-1.1-3.1h-5L8.3,15H6.2z M10.1,10.2h3.8l-1.8-5H12L10.1,10.2z"/>
+   </svg></label></span>
+    <span (click)="applyBold()" matTooltip="Bold" ><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+</style>
+<g id="Layer_1">
+	<rect x="5.43" y="2.36" width="2" height="18.25"/>
+	<rect x="9.83" y="5.85" transform="matrix(6.123234e-17 -1 1 6.123234e-17 0.2271 21.4308)" width="2" height="9.5"/>
+	<rect x="11" y="14.86" transform="matrix(6.123234e-17 -1 1 6.123234e-17 -7.6064 31.6064)" width="2" height="9.5"/>
+	<rect x="9.18" y="-1.39" transform="matrix(6.123234e-17 -1 1 6.123234e-17 6.819 13.5317)" width="2" height="9.5"/>
+	<path class="st0" d="M14.29,3.36c1.96,0.29,3.47,2.31,3.14,4.21c-0.33,1.9-2.43,3.33-4.38,2.99"/>
+	<path class="st0" d="M14.26,10.49c2.89-0.03,5.77,2.25,5.69,4.7c-0.04,1.22-0.76,2.37-1.83,3.19c-1.07,0.82-2.48,1.31-3.92,1.22"/>
+</g>
+<g id="Layer_2">
+</g>
+</svg></span>
+    <span (click)="applyItalic()" matTooltip="Italic"><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+</style>
+<line class="st0" x1="9.22" y1="4.05" x2="16.93" y2="4.05"/>
+<line class="st0" x1="7.07" y1="20" x2="14.78" y2="20"/>
+<path class="st0" d="M13.57,4.75C12.69,9.83,11.81,14.91,10.93,20"/>
+</svg></span>
+    <span (click)="toggleUnderline()"   matTooltip="Underline"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px">
+      <defs>
+        <style>
+          .cls-1 {
+            fill: #fff;
+          }
+        </style>
+      </defs>
+      <path class="cls-1" d="m0,24C0,16,0,8,0,0c8,0,16,0,24,0,0,8,0,16,0,24-8,0-16,0-24,0ZM6.23,2.06c0,3.73-.19,7.39.06,11.01.2,2.79,2.82,4.83,5.61,4.92,2.59.08,5.57-2.06,5.78-4.74.29-3.7.07-7.44.07-11.16h-1.74c0,3.12,0,6.15,0,9.19,0,.54.03,1.09-.08,1.62-.4,2.02-2.26,3.29-4.47,3.1-1.89-.16-3.42-1.79-3.44-3.79-.04-3.36,0-6.72,0-10.14h-1.77Zm-.18,19.84h11.88v-1.83H6.05v1.83Z"/>
+      <path d="m6.23,2.06h1.77c0,3.42-.03,6.78,0,10.14.02,2,1.55,3.63,3.44,3.79,2.21.19,4.07-1.09,4.47-3.1.1-.52.08-1.08.08-1.62,0-3.03,0-6.07,0-9.19h1.74c0,3.72.22,7.46-.07,11.16-.21,2.68-3.19,4.83-5.78,4.74-2.78-.09-5.41-2.13-5.61-4.92-.26-3.63-.06-7.29-.06-11.01Z"/>
+      <path d="m6.05,21.9v-1.83h11.88v1.83H6.05Z"/>
+    </svg></span>
+    <span (click)="toggleTextTransform()"  matTooltip="Transform"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+      height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+   <style type="text/css">
+     .st0{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+   </style>
+   <g id="Layer_1">
+   </g>
+   <g id="Layer_2">
+     <line class="st0" x1="3.61" y1="19.28" x2="8.72" y2="6.03"/>
+     <line class="st0" x1="15.19" y1="19.28" x2="9.62" y2="6.06"/>
+     <line class="st0" x1="7.91" y1="6.54" x2="10.51" y2="6.54"/>
+     <line class="st0" x1="5.54" y1="13.89" x2="12.78" y2="13.99"/>
+   </g>
+   <g id="Layer_3">
+     <path class="st0" d="M19.68,15.08c-0.71-0.5-1.77-0.32-2.3,0.38c-0.52,0.7-0.43,1.82,0.2,2.41c0.63,0.59,1.71,0.58,2.32-0.04"/>
+     <path class="st0" d="M19.99,14.24c-0.21,1.47-0.12,2.98,0.27,4.4"/>
+     <path class="st0" d="M20.27,18.08c0.04,0.54,0.58,0.97,1.08,0.88"/>
+   </g>
+   </svg></span>
+    <span (click)="toggleListStyle()"  matTooltip="LineStyle"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st0{stroke:#000000;stroke-miterlimit:10;}
+</style>
+<rect x="7.13" y="5" class="st0" width="14.4" height="1.55"/>
+<rect x="7.13" y="11.02" class="st0" width="14.4" height="1.55"/>
+<rect x="7.33" y="17.05" class="st0" width="14.4" height="1.55"/>
+<circle class="st0" cx="3.04" cy="5.77" r="1.7"/>
+<circle class="st0" cx="3.04" cy="12" r="1.7"/>
+<circle class="st0" cx="3.04" cy="17.83" r="1.7"/>
+</svg></span>
+    <span (click)="toggleStrikeThrough()"  matTooltip="Strikethrough"><svg version="1.1" xmlns="http://www.w3.org/2000/svg"  x="0px" y="0px" width="24px"
+      height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+   <style type="text/css">
+     .st0{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+     .st3{stroke:#000000;stroke-miterlimit:10;}
+   </style>
+   <g id="Layer_1">
+     <g>
+       <g>
+         <g>
+           <line class="st0" x1="4.95" y1="3.68" x2="19.05" y2="3.58"/>
+           <line class="st0" x1="12" y1="4.32" x2="12" y2="20.42"/>
+         </g>
+       </g>
+     </g>
+     <rect x="7.45" y="11.3" class="st3" width="9.7" height="1.4"/>
+   </g>
+   <g id="Layer_2">
+   </g>
+   </svg></span>
+    <span mat-button [matMenuTriggerFor]="menu2"  matTooltip="Spacing"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px"
+      height="24px">
+      <defs>
+        <style>
+          .cls-1 {
+            fill: #fff;
+          }
+        </style>
+      </defs>
+      <path class="cls-1" d="m0,0C8,0,16,0,24,0c0,8,0,16,0,24-8,0-16,0-24,0C0,16,0,8,0,0Zm18.97,2.04H5.05v1.98h5.96v11.93h2.02V3.98h5.94v-1.94Zm-11.97,14.2c-.97.95-1.93,1.88-2.75,2.69.91.92,1.83,1.86,2.77,2.82v-1.72h10v1.7c.97-.95,1.91-1.88,2.82-2.77-.93-.9-1.87-1.82-2.84-2.76v1.76H7v-1.72Z"/>
+      <path d="m18.97,2.04v1.94h-5.94v11.97h-2.02V4.02h-5.96v-1.98h13.92Z"/>
+      <path d="m7,16.24v1.72h10.01v-1.76c.97.94,1.91,1.86,2.84,2.76-.91.89-1.85,1.82-2.82,2.77v-1.7H7.03v1.72c-.95-.96-1.87-1.9-2.77-2.82.82-.81,1.78-1.74,2.75-2.69Z"/>
+    </svg></span>
+    <mat-menu #menu2="matMenu">
+      <div id="ss">
+        <h3>Letter Spacing</h3>
+        <mat-slider class="vv" (click)="$event.stopPropagation()" thumbLabel tickInterval="1" step="1" min="1" max="800"
+          aria-label="units" (change)="SpacingText($event)"></mat-slider>
+        <h3>Line Spacing</h3>
+        <mat-slider class="vv" (click)="$event.stopPropagation()" thumbLabel tickInterval="1" step=".1" min="1" max="5"
+          aria-label="units" (change)="TextLineHight($event)" ([ngModel])="height"></mat-slider>
+      </div>
+    </mat-menu>
+    <!-- <span mat-button [matMenuTriggerFor]="menu"  matTooltip="Alignment"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<rect x="2.88" y="2.9" width="18.25" height="2"/>
+<rect x="2.88" y="11" width="18.25" height="2"/>
+<rect x="2.88" y="19.1" width="18.25" height="2"/>
+<rect x="7.88" y="6.9" width="13" height="2"/>
+<rect x="7.88" y="15.05" width="13" height="2"/>
+</svg></span>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="$event.stopPropagation()" (click)="updateTextAlign('left')">Left</button>
+      <button mat-menu-item (click)="$event.stopPropagation()" (click)="updateTextAlign('center')">Center </button>
+      <button mat-menu-item (click)="$event.stopPropagation()" (click)="updateTextAlign('right')"> Right </button>
+    </mat-menu> -->
+
+    <span mat-button [matMenuTriggerFor]="menu3"  matTooltip="Transparency"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+   <rect x="2.26" y="2.06" width="3.63" height="3.63"/>
+   <rect x="10.26" y="2.06" width="3.63" height="3.63"/>
+   <rect x="6.13" y="5.74" width="4.13" height="4.18"/>
+   <rect x="17.88" y="1.83" width="4.13" height="4.18"/>
+   <rect x="13.95" y="5.74" width="4.13" height="4.18"/>
+   <rect x="10.01" y="9.78" width="4.13" height="4.18"/>
+   <rect x="2.01" y="9.78" width="4.13" height="4.18"/>
+   <rect x="5.89" y="13.86" width="4.13" height="4.18"/>
+   <rect x="2.01" y="17.65" width="4.13" height="4.18"/>
+   <rect x="17.88" y="17.65" width="4.13" height="4.18"/>
+   <rect x="10.01" y="17.65" width="4.13" height="4.18"/>
+   <rect x="13.95" y="13.86" width="4.13" height="4.18"/>
+   <rect x="17.88" y="9.78" width="4.13" height="4.18"/>
+   <rect x="10.01" y="1.83" width="4.13" height="4.18"/>
+   <rect x="2.01" y="1.83" width="4.13" height="4.18"/>
+   </svg></span>
+    <mat-menu #menu3="matMenu">
+      <div id="ss">
+        <h3>Opacity</h3>
+        <mat-slider class="vv" (click)="$event.stopPropagation()" (change)="applyOpacity($event)" thumbLabel
+          tickInterval="1" step=".01" min="0" max="1" aria-label="units" [displayWith]="formatLabel"></mat-slider>
+      </div>
+    </mat-menu>
+    <span (click)="deleteSelectedObject()"  matTooltip="Delete"><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st7{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+</style>
+<g>
+	<g>
+		<g>
+			<rect x="4" y="4" width="16" height="1.78"/>
+			<rect x="9.29" y="7.56" width="1.8" height="9.58"/>
+			<rect x="12.9" y="7.56" width="1.8" height="9.58"/>
+			<path class="st7" d="M5.85,5.6l1.13,12.93c0,0,0.08,1.23,1.93,1.37c2.14,0.16,6.49,0.1,7.04,0.05"/>
+			<path class="st7" d="M18.23,5.65L17.3,18.53c0,0-0.06,1.23-1.59,1.36c-1.77,0.16-5.36,0.1-5.81,0.05"/>
+			<rect x="9.89" y="4" class="st7" width="4.17" height="0.38"/>
+		</g>
+	</g>
+</g>
+</svg></span>
+    <span (click)="clearCanvas()"  matTooltip="Clear"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+      height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+   <style type="text/css">
+     .st8{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+     .st6{stroke:#000000;stroke-miterlimit:10;}
+     .st9{stroke:#FFFFFF;stroke-miterlimit:10;}
+     .sto{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
+   </style>
+   <g id="Layer_1">
+     <path class="st8" d="M2.72,19.96V3.95c0-0.3,0.24-0.54,0.54-0.54h15.81c0.3,0,0.54,0.24,0.54,0.54v16.01c0,0.3-0.24,0.54-0.54,0.54
+       H3.26C2.96,20.51,2.72,20.26,2.72,19.96z"/>
+     <rect x="10.74" y="11.48" class="st1" width="0.85" height="0.95"/>
+     <ellipse class="st9" cx="17.27" cy="17.09" rx="7.28" ry="7.38"/>
+     <rect x="6.75" y="11.57" class="st6" width="0.85" height="0.95"/>
+     <rect x="6.75" y="15.58" class="st6" width="0.85" height="0.95"/>
+     <line class="sto" x1="14.29" y1="13.54" x2="20.83" y2="20.51"/>
+     <line class="sto" x1="20.83" y1="13.54" x2="14.29" y2="20.51"/>
+   </g>
+   <g id="Layer_2">
+     <rect x="2.72" y="7.49" class="st6" width="17.05" height="1.25"/>
+   </g>
+   </svg></span>
+    <span (click)="toggleObjectLock()"  matTooltip="Lock"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<path d="M6,22.2c-0.6,0-1-0.2-1.4-0.6C4.2,21.3,4,20.8,4,20.3v-9.8c0-0.5,0.2-1,0.6-1.4C5,8.8,5.4,8.6,6,8.6h1v-2
+	c0-1.4,0.5-2.5,1.5-3.5s2.2-1.4,3.5-1.4s2.6,0.5,3.5,1.4S17,5.3,17,6.6v2h1c0.5,0,1,0.2,1.4,0.6C19.8,9.5,20,10,20,10.5v9.8
+	c0,0.5-0.2,1-0.6,1.4c-0.4,0.4-0.9,0.6-1.4,0.6H6z M6,20.3h12v-9.8H6V20.3z M12,17.4c0.6,0,1-0.2,1.4-0.6c0.4-0.4,0.6-0.8,0.6-1.4
+	c0-0.5-0.2-1-0.6-1.4c-0.4-0.4-0.9-0.6-1.4-0.6s-1,0.2-1.4,0.6c-0.4,0.4-0.6,0.8-0.6,1.4c0,0.5,0.2,1,0.6,1.4S11.4,17.4,12,17.4z
+	 M9,8.6h6v-2c0-0.8-0.3-1.5-0.9-2.1S12.8,3.7,12,3.7c-0.8,0-1.5,0.3-2.1,0.9S9,5.8,9,6.6V8.6z M6,20.3v-9.8V20.3z"/>
+</svg></span>
+    <span (click)="Duplicate()"  matTooltip="Duplicate"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st2{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+	.st5{fill:none;stroke:#000000;stroke-miterlimit:10;}
+</style>
+<g id="Layer_1">
+</g>
+<g id="Layer_2">
+	<line class="st2" x1="3.64" y1="7.05" x2="17.56" y2="7.05"/>
+	<line class="st2" x1="3.64" y1="20.9" x2="17.56" y2="20.9"/>
+	<line class="st2" x1="3.64" y1="20.9" x2="17.56" y2="20.9"/>
+	<line class="st2" x1="6.76" y1="2.81" x2="21.56" y2="2.81"/>
+	<line class="st2" x1="3.64" y1="7.05" x2="3.64" y2="20.9"/>
+	<line class="st2" x1="17.56" y1="6.85" x2="17.56" y2="20.7"/>
+	<line class="st2" x1="21.56" y1="2.81" x2="21.56" y2="18.31"/>
+	<path class="st5" d="M20.64,2.36c0.46-0.16,1.1-0.02,1.36,0.31C22.4,3.2,22.1,4.41,21.7,4.61"/>
+	<path class="st5" d="M16.93,6.62c0.37-0.05,0.88-0.01,1.09,0.1c0.33,0.17,0.09,0.56-0.24,0.63"/>
+	<path class="st5" d="M16.93,21.49c0.37,0.09,0.88,0.01,1.09-0.17c0.33-0.29,0.09-0.94-0.24-1.05"/>
+	<path class="st5" d="M3.64,9.19c-0.28-0.77-0.52-1.88-0.5-2.35c0.03-0.77,0.67-0.38,0.94,0.28"/>
+	<path class="st5" d="M5.9,21.49c-0.81,0.08-1.95,0.01-2.4-0.15C2.76,21.08,3.3,20.5,4.01,20.4"/>
+	<path class="st5" d="M14.81,21.49c0.81,0.08,1.95,0.01,2.4-0.15c0.73-0.26,0.19-0.84-0.52-0.94"/>
+	<line class="st2" x1="10.6" y1="10.1" x2="10.6" y2="17.85"/>
+	<line class="st2" x1="6.76" y1="13.97" x2="14.81" y2="13.97"/>
+</g>
+</svg>
+    </span>
+  </div>
+
+
+  <!-- ------------------------Ractangle ------ -->
+
+  <div class="Toolbar" *ngIf="reat">
+      <span (click)="undo()"  matTooltip="Undo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24; transform: scale(-1,1); " xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st2{stroke:#000000;stroke-miterlimit:10;}
+
+
+</style>
+<path class="st1" d="M2,13.64c0.79-4.45,4.84-8.02,9.2-8.11c4.35-0.09,8.54,3.31,9.5,7.72"/>
+<polygon class="st2" points="22.28,15.63 22.7,9.06 16.5,12.91 "/>
+</svg></span>
+    <span (click)="redo()"  matTooltip="Redo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st2{stroke:#000000;stroke-miterlimit:10;}
+</style>
+<path class="st1" d="M2,13.64c0.79-4.45,4.84-8.02,9.2-8.11c4.35-0.09,8.54,3.31,9.5,7.72"/>
+<polygon class="st2" points="22.28,15.63 22.7,9.06 16.5,12.91 "/>
+</svg></span>
+  <input type="color" id="backcolor" style="visibility:hidden; width: 0; height: 0;" [(ngModel)]="selectedColor"(input)="applyTextColor($event)" />
+    <span matTooltip="Color"><label for="backcolor"  >
+        <div style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid black;"
+          [ngStyle]="{'background-color': selectedColor}"></div>
+      </label>
+    </span>
+    <input type="color" (click)="$event.stopPropagation()" style="visibility:hidden; width: 0; height: 0;"
+      id="borderColorInput" (input)="setBorderColor($event.target.value)" />
+    <span matTooltip="Border"><label for="borderColorInput" (click)="$event.stopPropagation()">
+        <div style="width: 24px; height: 24px; border-radius: 50%; border: 5px solid black;"
+          [ngStyle]="{'border-color': selectedColor3}"  ></div>
+      </label></span>
+    <span mat-button [matMenuTriggerFor]="menu"  matTooltip="BorderStyle"><svg version="1.1" id="Layer_3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      width="24px" height="24px" viewBox="0 0 6.55 6.55" style="enable-background:new 0 0 6.55 6.55;" xml:space="preserve">
+   <rect x="0.82" y="0.8" width="0.55" height="0.55"/>
+   <rect x="1.92" y="0.8" width="0.55" height="0.55"/>
+   <rect x="0.82" y="1.9" width="0.55" height="0.55"/>
+   <rect x="0.82" y="3" width="0.55" height="0.55"/>
+   <rect x="0.82" y="4.1" width="0.55" height="0.55"/>
+   <rect x="0.82" y="5.15" width="0.55" height="0.55"/>
+   <rect x="1.92" y="5.15" width="0.55" height="0.55"/>
+   <rect x="3.02" y="5.2" width="0.55" height="0.55"/>
+   <rect x="4.07" y="5.15" width="0.55" height="0.55"/>
+   <rect x="5.17" y="5.15" width="0.55" height="0.55"/>
+   <rect x="5.17" y="4.05" width="0.55" height="0.55"/>
+   <rect x="3.02" y="0.8" width="1.35" height="0.55"/>
+   <rect x="4.12" y="1.1" width="0.8" height="0.5"/>
+   <rect x="4.62" y="1.35" width="0.65" height="0.55"/>
+   <rect x="4.92" y="1.65" width="0.5" height="0.8"/>
+   <rect x="5.17" y="2.15" width="0.6" height="1.4"/>
+   </svg></span>
+    <mat-menu #menu="matMenu">
+      <div id="ss">
+        <h3>Border Width</h3>
+        <mat-slider class="vv" (click)="$event.stopPropagation()" thumbLabel tickInterval="1" step="1" min="1" max="100"
+          aria-label="units" (change)="setBorderWeight($event)"></mat-slider>
+        <h3>Border Corner</h3>
+        <mat-slider class="vv" (click)="$event.stopPropagation()" thumbLabel tickInterval="1" step="1" min="1" max="100"
+          aria-label="units" (change)="setCornerStyle($event)" ([ngModel])="height"></mat-slider><br>
+      </div>
+    </mat-menu>
+
+    <span mat-button [matMenuTriggerFor]="menu3"  matTooltip="Transparency"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+   <rect x="2.26" y="2.06" width="3.63" height="3.63"/>
+   <rect x="10.26" y="2.06" width="3.63" height="3.63"/>
+   <rect x="6.13" y="5.74" width="4.13" height="4.18"/>
+   <rect x="17.88" y="1.83" width="4.13" height="4.18"/>
+   <rect x="13.95" y="5.74" width="4.13" height="4.18"/>
+   <rect x="10.01" y="9.78" width="4.13" height="4.18"/>
+   <rect x="2.01" y="9.78" width="4.13" height="4.18"/>
+   <rect x="5.89" y="13.86" width="4.13" height="4.18"/>
+   <rect x="2.01" y="17.65" width="4.13" height="4.18"/>
+   <rect x="17.88" y="17.65" width="4.13" height="4.18"/>
+   <rect x="10.01" y="17.65" width="4.13" height="4.18"/>
+   <rect x="13.95" y="13.86" width="4.13" height="4.18"/>
+   <rect x="17.88" y="9.78" width="4.13" height="4.18"/>
+   <rect x="10.01" y="1.83" width="4.13" height="4.18"/>
+   <rect x="2.01" y="1.83" width="4.13" height="4.18"/>
+   </svg></span>
+    <mat-menu #menu3="matMenu">
+      <div id="ss">
+        <h3>Opacity</h3>
+        <mat-slider class="vv" (click)="$event.stopPropagation()" (change)="applyOpacity($event)" thumbLabel
+          tickInterval="1" step=".01" min="0" max="1" aria-label="units" [displayWith]="formatLabel"></mat-slider>
+      </div>
+    </mat-menu>
+    <span (click)="deleteSelectedObject()"  matTooltip="Delete"><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st7{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+</style>
+<g>
+	<g>
+		<g>
+			<rect x="4" y="4" width="16" height="1.78"/>
+			<rect x="9.29" y="7.56" width="1.8" height="9.58"/>
+			<rect x="12.9" y="7.56" width="1.8" height="9.58"/>
+			<path class="st7" d="M5.85,5.6l1.13,12.93c0,0,0.08,1.23,1.93,1.37c2.14,0.16,6.49,0.1,7.04,0.05"/>
+			<path class="st7" d="M18.23,5.65L17.3,18.53c0,0-0.06,1.23-1.59,1.36c-1.77,0.16-5.36,0.1-5.81,0.05"/>
+			<rect x="9.89" y="4" class="st7" width="4.17" height="0.38"/>
+		</g>
+	</g>
+</g>
+</svg></span>
+<span (click)="clearCanvas()"  matTooltip="Clear"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+  height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+ .st8{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+ .st6{stroke:#000000;stroke-miterlimit:10;}
+ .st9{stroke:#FFFFFF;stroke-miterlimit:10;}
+ .sto{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
+</style>
+<g id="Layer_1">
+ <path class="st8" d="M2.72,19.96V3.95c0-0.3,0.24-0.54,0.54-0.54h15.81c0.3,0,0.54,0.24,0.54,0.54v16.01c0,0.3-0.24,0.54-0.54,0.54
+   H3.26C2.96,20.51,2.72,20.26,2.72,19.96z"/>
+ <rect x="10.74" y="11.48" class="st1" width="0.85" height="0.95"/>
+ <ellipse class="st9" cx="17.27" cy="17.09" rx="7.28" ry="7.38"/>
+ <rect x="6.75" y="11.57" class="st6" width="0.85" height="0.95"/>
+ <rect x="6.75" y="15.58" class="st6" width="0.85" height="0.95"/>
+ <line class="sto" x1="14.29" y1="13.54" x2="20.83" y2="20.51"/>
+ <line class="sto" x1="20.83" y1="13.54" x2="14.29" y2="20.51"/>
+</g>
+<g id="Layer_2">
+ <rect x="2.72" y="7.49" class="st6" width="17.05" height="1.25"/>
+</g>
+</svg></span>
+    <span (click)="toggleObjectLock()"  matTooltip="Lock"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<path d="M6,22.2c-0.6,0-1-0.2-1.4-0.6C4.2,21.3,4,20.8,4,20.3v-9.8c0-0.5,0.2-1,0.6-1.4C5,8.8,5.4,8.6,6,8.6h1v-2
+	c0-1.4,0.5-2.5,1.5-3.5s2.2-1.4,3.5-1.4s2.6,0.5,3.5,1.4S17,5.3,17,6.6v2h1c0.5,0,1,0.2,1.4,0.6C19.8,9.5,20,10,20,10.5v9.8
+	c0,0.5-0.2,1-0.6,1.4c-0.4,0.4-0.9,0.6-1.4,0.6H6z M6,20.3h12v-9.8H6V20.3z M12,17.4c0.6,0,1-0.2,1.4-0.6c0.4-0.4,0.6-0.8,0.6-1.4
+	c0-0.5-0.2-1-0.6-1.4c-0.4-0.4-0.9-0.6-1.4-0.6s-1,0.2-1.4,0.6c-0.4,0.4-0.6,0.8-0.6,1.4c0,0.5,0.2,1,0.6,1.4S11.4,17.4,12,17.4z
+	 M9,8.6h6v-2c0-0.8-0.3-1.5-0.9-2.1S12.8,3.7,12,3.7c-0.8,0-1.5,0.3-2.1,0.9S9,5.8,9,6.6V8.6z M6,20.3v-9.8V20.3z"/>
+</svg></span>
+    <span (click)="Duplicate()"  matTooltip="Duplicate"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st2{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+	.st5{fill:none;stroke:#000000;stroke-miterlimit:10;}
+</style>
+<g id="Layer_1">
+</g>
+<g id="Layer_2">
+	<line class="st2" x1="3.64" y1="7.05" x2="17.56" y2="7.05"/>
+	<line class="st2" x1="3.64" y1="20.9" x2="17.56" y2="20.9"/>
+	<line class="st2" x1="3.64" y1="20.9" x2="17.56" y2="20.9"/>
+	<line class="st2" x1="6.76" y1="2.81" x2="21.56" y2="2.81"/>
+	<line class="st2" x1="3.64" y1="7.05" x2="3.64" y2="20.9"/>
+	<line class="st2" x1="17.56" y1="6.85" x2="17.56" y2="20.7"/>
+	<line class="st2" x1="21.56" y1="2.81" x2="21.56" y2="18.31"/>
+	<path class="st5" d="M20.64,2.36c0.46-0.16,1.1-0.02,1.36,0.31C22.4,3.2,22.1,4.41,21.7,4.61"/>
+	<path class="st5" d="M16.93,6.62c0.37-0.05,0.88-0.01,1.09,0.1c0.33,0.17,0.09,0.56-0.24,0.63"/>
+	<path class="st5" d="M16.93,21.49c0.37,0.09,0.88,0.01,1.09-0.17c0.33-0.29,0.09-0.94-0.24-1.05"/>
+	<path class="st5" d="M3.64,9.19c-0.28-0.77-0.52-1.88-0.5-2.35c0.03-0.77,0.67-0.38,0.94,0.28"/>
+	<path class="st5" d="M5.9,21.49c-0.81,0.08-1.95,0.01-2.4-0.15C2.76,21.08,3.3,20.5,4.01,20.4"/>
+	<path class="st5" d="M14.81,21.49c0.81,0.08,1.95,0.01,2.4-0.15c0.73-0.26,0.19-0.84-0.52-0.94"/>
+	<line class="st2" x1="10.6" y1="10.1" x2="10.6" y2="17.85"/>
+	<line class="st2" x1="6.76" y1="13.97" x2="14.81" y2="13.97"/>
+</g>
+</svg>
+    </span>
+  </div>
+
+  <!-- ------------------Image------- -->
+
+  <div class="Toolbar" *ngIf="img">
+     <span (click)="undo()"  matTooltip="Undo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24; transform: scale(-1,1); " xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st2{stroke:#000000;stroke-miterlimit:10;}
+
+
+</style>
+<path class="st1" d="M2,13.64c0.79-4.45,4.84-8.02,9.2-8.11c4.35-0.09,8.54,3.31,9.5,7.72"/>
+<polygon class="st2" points="22.28,15.63 22.7,9.06 16.5,12.91 "/>
+</svg></span>
+    <span (click)="redo()"  matTooltip="Redo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st2{stroke:#000000;stroke-miterlimit:10;}
+</style>
+<path class="st1" d="M2,13.64c0.79-4.45,4.84-8.02,9.2-8.11c4.35-0.09,8.54,3.31,9.5,7.72"/>
+<polygon class="st2" points="22.28,15.63 22.7,9.06 16.5,12.91 "/>
+</svg></span>
+    <span (click)="Brightness()"
+      style="display: inline-block; margin: 0.25em;  border-radius: 0.25em; padding: .15em 0.2em"
+       matTooltip="Brightness"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+        fill="#000000">
+        <path
+          d="M480-360q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm0 80q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Zm326-268Z" />
+      </svg></span>
+    <span (click)="Blur()" style="display: inline-block; margin: 0.25em;  border-radius: 0.25em; padding: .15em 0.2em"
+       matTooltip="Blur"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24"
+        style="enable-background:new 0 0 24 24;" xml:space="preserve">
+        <style type="text/css">
+          .st0 {
+            fill: none;
+            stroke: #000000;
+            stroke-miterlimit: 10;
+          }
+        </style>
+        <g>
+          <g>
+            <path class="st0" d="M18.18,13.11L18.18,13.11L12,1.75L5.81,13.11h0C5.3,13.98,5,14.97,5,16.03c0,3.44,3.13,6.22,7,6.22
+           s7-2.79,7-6.22C19,14.97,18.7,13.98,18.18,13.11z" />
+          </g>
+        </g>
+      </svg></span>
+    <span (click)="Saturation()"
+      style="display: inline-block; margin: 0.25em;  border-radius: 0.25em; padding: .15em 0.2em"
+       matTooltip="Saturation"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24.14">
+        <defs>
+          <style>
+            .cls-1 {
+              fill: #fff;
+            }
+          </style>
+        </defs>
+        <path class="cls-1" d="m0,24.14V0h24v24.14H0Zm16.01-7.86c0,1.61,1.34,2.95,2.96,2.96,1.66,0,3.03-1.33,3.04-2.96,0-1.59-1.36-2.95-2.97-2.96-1.66-.01-3.03,1.32-3.03,2.96Zm0-8.36c0,1.31,1.13,2.43,2.47,2.44,1.34,0,2.53-1.14,2.54-2.46,0-1.26-1.24-2.46-2.56-2.46-1.32,0-2.44,1.14-2.44,2.47Zm-6-3.51c-.02,1.08.87,1.99,1.95,2,1.03.01,2.04-.96,2.03-1.96,0-.98-.97-1.93-1.98-1.95-1.01-.02-1.98.91-2,1.91Zm-2.74,3.03c.02-.99-.74-1.78-1.73-1.79-1-.01-1.77.7-1.79,1.66-.02,1.01.71,1.79,1.7,1.82,1.02.02,1.8-.7,1.82-1.69Zm-5.26,5.41c0,.77.68,1.43,1.48,1.45.82.02,1.53-.67,1.51-1.47-.02-.75-.72-1.45-1.49-1.46-.81-.02-1.5.67-1.5,1.48Zm2.98,6.52c.65,0,1.16-.5,1.15-1.12-.01-.61-.56-1.13-1.17-1.12-.59,0-1.1.51-1.1,1.1,0,.63.49,1.14,1.13,1.14Zm4.97,2.78c.5.03.97-.4,1-.9.02-.46-.41-.94-.86-.97-.51-.03-.99.38-1.03.87-.04.48.4.97.9,1Z"/>
+        <path d="m16.01,16.28c0-1.64,1.37-2.97,3.03-2.96,1.61.01,2.98,1.37,2.97,2.96,0,1.63-1.38,2.97-3.04,2.96-1.62,0-2.97-1.35-2.96-2.96Z"/>
+        <path d="m16.01,7.92c0-1.34,1.12-2.47,2.44-2.47,1.32,0,2.57,1.2,2.56,2.46,0,1.32-1.19,2.47-2.54,2.46-1.33,0-2.46-1.13-2.47-2.44Z"/>
+        <path d="m10,4.41c.02-1,.99-1.92,2-1.91,1.01.02,1.98.96,1.98,1.95,0,1-1,1.97-2.03,1.96-1.08-.01-1.97-.92-1.95-2Z"/>
+        <path d="m7.27,7.44c-.02.99-.8,1.71-1.82,1.69-.99-.02-1.72-.8-1.7-1.82.02-.95.79-1.67,1.79-1.66.99.01,1.75.8,1.73,1.79Z"/>
+        <path d="m2,12.85c0-.81.69-1.5,1.5-1.48.77.02,1.47.71,1.49,1.46.02.8-.69,1.49-1.51,1.47-.8-.02-1.48-.68-1.48-1.45Z"/>
+        <path d="m4.99,19.37c-.63,0-1.14-.5-1.13-1.14,0-.6.51-1.1,1.1-1.1.61,0,1.16.51,1.17,1.12.01.62-.5,1.12-1.15,1.12Z"/>
+        <path d="m9.96,22.14c-.49-.03-.93-.52-.9-1,.04-.49.52-.9,1.03-.87.46.03.89.51.86.97-.02.5-.5.93-1,.9Z"/>
+      </svg></span>
+    <span (click)="Grayscale()"
+      style="display: inline-block; margin: 0.25em;  border-radius: 0.25em; padding: .15em 0.2em"  matTooltip="Grayscale"><svg
+        version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+        y="0px" width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;"
+        xml:space="preserve">
+        <style type="text/css">
+          .st0 {
+            fill: none;
+            stroke: #000000;
+            stroke-miterlimit: 10;
+          }
+
+          .sty {
+            fill: #0F0101;
+            stroke: #000000;
+            stroke-miterlimit: 10;
+          }
+        </style>
+        <path class="st0" d="M2.05,11.92c0-5.45,4.42-9.88,9.88-9.88c2.52,0,4.81,0.94,6.56,2.49c2.04,1.81,3.32,4.45,3.32,7.38
+       c0,5.45-4.42,9.88-9.87,9.88c-2.73,0-5.2-1.11-6.98-2.89S2.05,14.65,2.05,11.92z" />
+        <polyline class="st0" points="18.48,4.53 16.94,6.18 4.94,18.9 " />
+        <path class="st1"
+          d="M5.3,18.72c0,0-4.59-4.79-2.51-10.56c0,0,3.46-5.17,6.39-5.73c0,0,6.83,0.12,8.81,2.1L5.3,18.72z" />
+        <rect x="9.15" y="16.97" class="sty" width="1.75" height="1.75" />
+        <rect x="13.4" y="17.47" class="sty" width="1.25" height="1.25" />
+        <rect x="17.37" y="13.47" class="sty" width="1.25" height="1.25" />
+        <rect x="13.4" y="13.47" class="sty" width="1.25" height="1.25" />
+        <rect x="9.4" y="13.47" class="sty" width="1.25" height="1.25" />
+        <rect x="13.15" y="9.47" class="sty" width="1.25" height="1.25" />
+        <rect x="17.37" y="9.33" class="sty" width="1.25" height="1.25" />
+      </svg></span>
+      <span mat-button [matMenuTriggerFor]="menu3"  matTooltip="Transparency"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+     <rect x="2.26" y="2.06" width="3.63" height="3.63"/>
+     <rect x="10.26" y="2.06" width="3.63" height="3.63"/>
+     <rect x="6.13" y="5.74" width="4.13" height="4.18"/>
+     <rect x="17.88" y="1.83" width="4.13" height="4.18"/>
+     <rect x="13.95" y="5.74" width="4.13" height="4.18"/>
+     <rect x="10.01" y="9.78" width="4.13" height="4.18"/>
+     <rect x="2.01" y="9.78" width="4.13" height="4.18"/>
+     <rect x="5.89" y="13.86" width="4.13" height="4.18"/>
+     <rect x="2.01" y="17.65" width="4.13" height="4.18"/>
+     <rect x="17.88" y="17.65" width="4.13" height="4.18"/>
+     <rect x="10.01" y="17.65" width="4.13" height="4.18"/>
+     <rect x="13.95" y="13.86" width="4.13" height="4.18"/>
+     <rect x="17.88" y="9.78" width="4.13" height="4.18"/>
+     <rect x="10.01" y="1.83" width="4.13" height="4.18"/>
+     <rect x="2.01" y="1.83" width="4.13" height="4.18"/>
+     </svg></span>
+      <mat-menu #menu3="matMenu">
+        <div id="ss">
+          <h3>Opacity</h3>
+          <mat-slider class="vv" (click)="$event.stopPropagation()" (change)="applyOpacity($event)" thumbLabel
+            tickInterval="1"step=".01" min="0" max="1" aria-label="units" [displayWith]="formatLabel"></mat-slider>
+        </div>
+      </mat-menu>
+      <span (click)="deleteSelectedObject()"  matTooltip="Delete"><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+  <style type="text/css">
+    .st7{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+  </style>
+  <g>
+    <g>
+      <g>
+        <rect x="4" y="4" width="16" height="1.78"/>
+        <rect x="9.29" y="7.56" width="1.8" height="9.58"/>
+        <rect x="12.9" y="7.56" width="1.8" height="9.58"/>
+        <path class="st7" d="M5.85,5.6l1.13,12.93c0,0,0.08,1.23,1.93,1.37c2.14,0.16,6.49,0.1,7.04,0.05"/>
+        <path class="st7" d="M18.23,5.65L17.3,18.53c0,0-0.06,1.23-1.59,1.36c-1.77,0.16-5.36,0.1-5.81,0.05"/>
+        <rect x="9.89" y="4" class="st7" width="4.17" height="0.38"/>
+      </g>
+    </g>
+  </g>
+  </svg></span>
+  <span (click)="clearCanvas()"  matTooltip="Clear"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+    height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+ <style type="text/css">
+   .st8{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+   .st6{stroke:#000000;stroke-miterlimit:10;}
+   .st9{stroke:#FFFFFF;stroke-miterlimit:10;}
+   .sto{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
+ </style>
+ <g id="Layer_1">
+   <path class="st8" d="M2.72,19.96V3.95c0-0.3,0.24-0.54,0.54-0.54h15.81c0.3,0,0.54,0.24,0.54,0.54v16.01c0,0.3-0.24,0.54-0.54,0.54
+     H3.26C2.96,20.51,2.72,20.26,2.72,19.96z"/>
+   <rect x="10.74" y="11.48" class="st1" width="0.85" height="0.95"/>
+   <ellipse class="st9" cx="17.27" cy="17.09" rx="7.28" ry="7.38"/>
+   <rect x="6.75" y="11.57" class="st6" width="0.85" height="0.95"/>
+   <rect x="6.75" y="15.58" class="st6" width="0.85" height="0.95"/>
+   <line class="sto" x1="14.29" y1="13.54" x2="20.83" y2="20.51"/>
+   <line class="sto" x1="20.83" y1="13.54" x2="14.29" y2="20.51"/>
+ </g>
+ <g id="Layer_2">
+   <rect x="2.72" y="7.49" class="st6" width="17.05" height="1.25"/>
+ </g>
+ </svg></span>
+      <span (click)="toggleObjectLock()"  matTooltip="Lock"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+  <path d="M6,22.2c-0.6,0-1-0.2-1.4-0.6C4.2,21.3,4,20.8,4,20.3v-9.8c0-0.5,0.2-1,0.6-1.4C5,8.8,5.4,8.6,6,8.6h1v-2
+    c0-1.4,0.5-2.5,1.5-3.5s2.2-1.4,3.5-1.4s2.6,0.5,3.5,1.4S17,5.3,17,6.6v2h1c0.5,0,1,0.2,1.4,0.6C19.8,9.5,20,10,20,10.5v9.8
+    c0,0.5-0.2,1-0.6,1.4c-0.4,0.4-0.9,0.6-1.4,0.6H6z M6,20.3h12v-9.8H6V20.3z M12,17.4c0.6,0,1-0.2,1.4-0.6c0.4-0.4,0.6-0.8,0.6-1.4
+    c0-0.5-0.2-1-0.6-1.4c-0.4-0.4-0.9-0.6-1.4-0.6s-1,0.2-1.4,0.6c-0.4,0.4-0.6,0.8-0.6,1.4c0,0.5,0.2,1,0.6,1.4S11.4,17.4,12,17.4z
+     M9,8.6h6v-2c0-0.8-0.3-1.5-0.9-2.1S12.8,3.7,12,3.7c-0.8,0-1.5,0.3-2.1,0.9S9,5.8,9,6.6V8.6z M6,20.3v-9.8V20.3z"/>
+  </svg></span>
+      <span (click)="Duplicate()"  matTooltip="Duplicate"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+     height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+  <style type="text/css">
+    .st2{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+    .st5{fill:none;stroke:#000000;stroke-miterlimit:10;}
+  </style>
+  <g id="Layer_1">
+  </g>
+  <g id="Layer_2">
+    <line class="st2" x1="3.64" y1="7.05" x2="17.56" y2="7.05"/>
+    <line class="st2" x1="3.64" y1="20.9" x2="17.56" y2="20.9"/>
+    <line class="st2" x1="3.64" y1="20.9" x2="17.56" y2="20.9"/>
+    <line class="st2" x1="6.76" y1="2.81" x2="21.56" y2="2.81"/>
+    <line class="st2" x1="3.64" y1="7.05" x2="3.64" y2="20.9"/>
+    <line class="st2" x1="17.56" y1="6.85" x2="17.56" y2="20.7"/>
+    <line class="st2" x1="21.56" y1="2.81" x2="21.56" y2="18.31"/>
+    <path class="st5" d="M20.64,2.36c0.46-0.16,1.1-0.02,1.36,0.31C22.4,3.2,22.1,4.41,21.7,4.61"/>
+    <path class="st5" d="M16.93,6.62c0.37-0.05,0.88-0.01,1.09,0.1c0.33,0.17,0.09,0.56-0.24,0.63"/>
+    <path class="st5" d="M16.93,21.49c0.37,0.09,0.88,0.01,1.09-0.17c0.33-0.29,0.09-0.94-0.24-1.05"/>
+    <path class="st5" d="M3.64,9.19c-0.28-0.77-0.52-1.88-0.5-2.35c0.03-0.77,0.67-0.38,0.94,0.28"/>
+    <path class="st5" d="M5.9,21.49c-0.81,0.08-1.95,0.01-2.4-0.15C2.76,21.08,3.3,20.5,4.01,20.4"/>
+    <path class="st5" d="M14.81,21.49c0.81,0.08,1.95,0.01,2.4-0.15c0.73-0.26,0.19-0.84-0.52-0.94"/>
+    <line class="st2" x1="10.6" y1="10.1" x2="10.6" y2="17.85"/>
+    <line class="st2" x1="6.76" y1="13.97" x2="14.81" y2="13.97"/>
+  </g>
+  </svg>
+      </span>
+    <!-- <input type="file" id="image" style="visibility:hidden; width: 0; height: 0;" (change)="onFileSelected($event)" accept="image/*"> -->
+  <input type="file" id="image" style="visibility:hidden; width: 0; height: 0;" (change)="onFileSelected($event)" accept="image/*">
+
+  </div>
+
+
+  <!-- ---------------------------Line---------------- -->
+  <div class="Toolbar" *ngIf="Line">
+       <span (click)="undo()"  matTooltip="Undo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24; transform: scale(-1,1); " xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st2{stroke:#000000;stroke-miterlimit:10;}
+
+
+</style>
+<path class="st1" d="M2,13.64c0.79-4.45,4.84-8.02,9.2-8.11c4.35-0.09,8.54,3.31,9.5,7.72"/>
+<polygon class="st2" points="22.28,15.63 22.7,9.06 16.5,12.91 "/>
+</svg></span>
+    <span (click)="redo()"  matTooltip="Redo"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+	.st2{stroke:#000000;stroke-miterlimit:10;}
+</style>
+<path class="st1" d="M2,13.64c0.79-4.45,4.84-8.02,9.2-8.11c4.35-0.09,8.54,3.31,9.5,7.72"/>
+<polygon class="st2" points="22.28,15.63 22.7,9.06 16.5,12.91 "/>
+</svg></span>
+    <input type="color" id="backcolor" style="visibility:hidden; width: 0; height: 0;" [(ngModel)]="selectedColor"
+      (input)="applyTextColor($event)" />
+    <span><label for="backcolor"  matTooltip="Background">
+        <div style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid black;"
+          [ngStyle]="{'background-color': selectedColor}"></div>
+      </label></span>
+    <span (click)="toggleDotted()"
+      style="display: inline-block; margin: 0.25em;  border-radius: 0.25em; padding: .15em 0.2em"  matTooltip="Dotted"><svg
+        xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000">
+        <path
+          d="M120-160v-80h80v80h-80Zm0-160v-80h200v80H120Zm0-160v-80h320v80H120Zm0-160v-160h720v160H120Zm160 480v-80h80v80h-80Zm100-160v-80h200v80H380Zm60 160v-80h80v80h-80Zm80-320v-80h320v80H520Zm80 320v-80h80v80h-80Zm40-160v-80h200v80H640Zm120 160v-80h80v80h-80Z" />
+      </svg></span>
+    <span mat-button [matMenuTriggerFor]="menu2"  matTooltip="Start Line"><img src="../../../assets/Canva icon/left-24.png"
+        alt=""></span>
+    <mat-menu #menu2="matMenu">
+      <span mat-menu-item (click)="$event.stopPropagation()" (click)="StartArrow()"><svg version="1.1" id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px"
+          height="30px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+          <style type="text/css">
+            .st0 {
+              fill: #FFFFFF;
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+
+            .st1 {
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+          </style>
+          <line class="st0" x1="9.58" y1="12" x2="15.97" y2="12" />
+          <polygon class="st1" points="7.08,12.23 9.58,13.88 9.58,10.58 " />
+        </svg></span>
+      <span mat-menu-item (click)="$event.stopPropagation()" (click)="StartCircle()"><svg version="1.1" id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px"
+          height="30px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+          <style type="text/css">
+            .st0 {
+              fill: #FFFFFF;
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+
+            .st1 {
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+          </style>
+          <line class="st0" x1="9.58" y1="12" x2="15.97" y2="12" />
+          <path class="st1" d="M6.79,10.95L6.79,10.95c0.58-0.58,1.52-0.58,2.1,0l0,0c0.58,0.58,0.58,1.52,0,2.1l0,0
+         c-0.58,0.58-1.52,0.58-2.1,0l0,0C6.2,12.47,6.2,11.53,6.79,10.95z" />
+        </svg></span>
+      <span mat-menu-item (click)="$event.stopPropagation()" (click)="StartRect()"> <svg version="1.1" id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px"
+          height="30px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+          <style type="text/css">
+            .st0 {
+              fill: #FFFFFF;
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+
+            .st1 {
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+          </style>
+          <g>
+            <g>
+              <g>
+                <line class="st0" x1="10.98" y1="12" x2="17.37" y2="12" />
+
+                <rect x="7.25" y="10.51" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -5.9264 9.6923)" class="st1"
+                  width="2.97" height="2.97" />
+              </g>
+            </g>
+          </g>
+        </svg></span>
+      <span mat-menu-item (click)="$event.stopPropagation()" (click)="StartPoly()"><svg version="1.1" id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px"
+          height="30px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+          <style type="text/css">
+            .st0 {
+              fill: #FFFFFF;
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+
+            .st1 {
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+          </style>
+          <line class="st0" x1="9.58" y1="12" x2="15.97" y2="12" />
+          <rect x="6.35" y="10.51" transform="matrix(-1.633972e-07 1 -1 -1.633972e-07 19.837 4.163)" class="st1"
+            width="2.97" height="2.97" />
+        </svg></span>
+    </mat-menu>
+
+    <span mat-button [matMenuTriggerFor]="menu"  matTooltip="End Line"><img src="../../../assets/Canva icon/right-24.png"
+        alt=""></span>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="$event.stopPropagation()" (click)="EndArrow()"><svg version="1.1" id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px"
+          height="32px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+          <style type="text/css">
+            .st0 {
+              fill: #FFFFFF;
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+
+            .st1 {
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+          </style>
+          <line class="st0" x1="13.47" y1="12" x2="7.08" y2="12" />
+          <polygon class="st1" points="15.97,12.23 13.47,13.88 13.47,10.58 " />
+        </svg></button>
+      <button mat-menu-item (click)="$event.stopPropagation()" (click)="EndCircle()"><svg version="1.1" id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px"
+          height="32px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+          <style type="text/css">
+            .st0 {
+              fill: #FFFFFF;
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+
+            .st1 {
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+          </style>
+          <line class="st0" x1="12.74" y1="12" x2="6.35" y2="12" />
+          <path class="st1" d="M15.53,10.95L15.53,10.95c-0.58-0.58-1.52-0.58-2.1,0l0,0c-0.58,0.58-0.58,1.52,0,2.1l0,0
+        c0.58,0.58,1.52,0.58,2.1,0l0,0C16.11,12.47,16.11,11.53,15.53,10.95z" />
+        </svg></button>
+      <button mat-menu-item (click)="$event.stopPropagation()" (click)="EndRect()"> <svg version="1.1" id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px"
+          height="32px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+          <style type="text/css">
+            .st0 {
+              fill: #FFFFFF;
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+
+            .st1 {
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+          </style>
+          <line class="st0" x1="12.74" y1="12" x2="6.35" y2="12" />
+          <rect x="12.99" y="10.51" transform="matrix(-1.633972e-07 -1 1 -1.633972e-07 2.4803 26.4803)" class="st1"
+            width="2.97" height="2.97" />
+        </svg> </button>
+      <button mat-menu-item (click)="$event.stopPropagation()" (click)="EndPoly()"><svg version="1.1" id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="60px"
+          height="32px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+          <style type="text/css">
+            .st0 {
+              fill: #FFFFFF;
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+
+            .st1 {
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+          </style>
+          <line class="st0" x1="12.74" y1="12" x2="6.35" y2="12" />
+          <rect x="12.99" y="10.51" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -4.2441 13.7538)" class="st1"
+            width="2.97" height="2.97" />
+        </svg></button>
+    </mat-menu>
+
+
+   <span mat-button [matMenuTriggerFor]="menu3"  matTooltip="Transparency"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+   <rect x="2.26" y="2.06" width="3.63" height="3.63"/>
+   <rect x="10.26" y="2.06" width="3.63" height="3.63"/>
+   <rect x="6.13" y="5.74" width="4.13" height="4.18"/>
+   <rect x="17.88" y="1.83" width="4.13" height="4.18"/>
+   <rect x="13.95" y="5.74" width="4.13" height="4.18"/>
+   <rect x="10.01" y="9.78" width="4.13" height="4.18"/>
+   <rect x="2.01" y="9.78" width="4.13" height="4.18"/>
+   <rect x="5.89" y="13.86" width="4.13" height="4.18"/>
+   <rect x="2.01" y="17.65" width="4.13" height="4.18"/>
+   <rect x="17.88" y="17.65" width="4.13" height="4.18"/>
+   <rect x="10.01" y="17.65" width="4.13" height="4.18"/>
+   <rect x="13.95" y="13.86" width="4.13" height="4.18"/>
+   <rect x="17.88" y="9.78" width="4.13" height="4.18"/>
+   <rect x="10.01" y="1.83" width="4.13" height="4.18"/>
+   <rect x="2.01" y="1.83" width="4.13" height="4.18"/>
+   </svg></span>
+    <mat-menu #menu3="matMenu">
+      <div id="ss">
+        <h3>Opacity</h3>
+        <mat-slider class="vv" (click)="$event.stopPropagation()" (change)="applyOpacity($event)" thumbLabel
+          tickInterval="1" step=".01" min="0" max="1" aria-label="units" [displayWith]="formatLabel"></mat-slider>
+      </div>
+    </mat-menu>
+    <span (click)="deleteSelectedObject()"  matTooltip="Delete"><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st7{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+</style>
+<g>
+	<g>
+		<g>
+			<rect x="4" y="4" width="16" height="1.78"/>
+			<rect x="9.29" y="7.56" width="1.8" height="9.58"/>
+			<rect x="12.9" y="7.56" width="1.8" height="9.58"/>
+			<path class="st7" d="M5.85,5.6l1.13,12.93c0,0,0.08,1.23,1.93,1.37c2.14,0.16,6.49,0.1,7.04,0.05"/>
+			<path class="st7" d="M18.23,5.65L17.3,18.53c0,0-0.06,1.23-1.59,1.36c-1.77,0.16-5.36,0.1-5.81,0.05"/>
+			<rect x="9.89" y="4" class="st7" width="4.17" height="0.38"/>
+		</g>
+	</g>
+</g>
+</svg></span>
+<span (click)="clearCanvas()"  matTooltip="Clear"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+  height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+ .st8{fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:10;}
+ .st6{stroke:#000000;stroke-miterlimit:10;}
+ .st9{stroke:#FFFFFF;stroke-miterlimit:10;}
+ .sto{fill:none;stroke:#FFFFFF;stroke-width:2;stroke-miterlimit:10;}
+</style>
+<g id="Layer_1">
+ <path class="st8" d="M2.72,19.96V3.95c0-0.3,0.24-0.54,0.54-0.54h15.81c0.3,0,0.54,0.24,0.54,0.54v16.01c0,0.3-0.24,0.54-0.54,0.54
+   H3.26C2.96,20.51,2.72,20.26,2.72,19.96z"/>
+ <rect x="10.74" y="11.48" class="st1" width="0.85" height="0.95"/>
+ <ellipse class="st9" cx="17.27" cy="17.09" rx="7.28" ry="7.38"/>
+ <rect x="6.75" y="11.57" class="st6" width="0.85" height="0.95"/>
+ <rect x="6.75" y="15.58" class="st6" width="0.85" height="0.95"/>
+ <line class="sto" x1="14.29" y1="13.54" x2="20.83" y2="20.51"/>
+ <line class="sto" x1="20.83" y1="13.54" x2="14.29" y2="20.51"/>
+</g>
+<g id="Layer_2">
+ <rect x="2.72" y="7.49" class="st6" width="17.05" height="1.25"/>
+</g>
+</svg></span>
+    <span (click)="toggleObjectLock()"  matTooltip="Lock"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<path d="M6,22.2c-0.6,0-1-0.2-1.4-0.6C4.2,21.3,4,20.8,4,20.3v-9.8c0-0.5,0.2-1,0.6-1.4C5,8.8,5.4,8.6,6,8.6h1v-2
+	c0-1.4,0.5-2.5,1.5-3.5s2.2-1.4,3.5-1.4s2.6,0.5,3.5,1.4S17,5.3,17,6.6v2h1c0.5,0,1,0.2,1.4,0.6C19.8,9.5,20,10,20,10.5v9.8
+	c0,0.5-0.2,1-0.6,1.4c-0.4,0.4-0.9,0.6-1.4,0.6H6z M6,20.3h12v-9.8H6V20.3z M12,17.4c0.6,0,1-0.2,1.4-0.6c0.4-0.4,0.6-0.8,0.6-1.4
+	c0-0.5-0.2-1-0.6-1.4c-0.4-0.4-0.9-0.6-1.4-0.6s-1,0.2-1.4,0.6c-0.4,0.4-0.6,0.8-0.6,1.4c0,0.5,0.2,1,0.6,1.4S11.4,17.4,12,17.4z
+	 M9,8.6h6v-2c0-0.8-0.3-1.5-0.9-2.1S12.8,3.7,12,3.7c-0.8,0-1.5,0.3-2.1,0.9S9,5.8,9,6.6V8.6z M6,20.3v-9.8V20.3z"/>
+</svg></span>
+    <span (click)="Duplicate()"  matTooltip="Duplicate"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+<style type="text/css">
+	.st2{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+	.st5{fill:none;stroke:#000000;stroke-miterlimit:10;}
+</style>
+<g id="Layer_1">
+</g>
+<g id="Layer_2">
+	<line class="st2" x1="3.64" y1="7.05" x2="17.56" y2="7.05"/>
+	<line class="st2" x1="3.64" y1="20.9" x2="17.56" y2="20.9"/>
+	<line class="st2" x1="3.64" y1="20.9" x2="17.56" y2="20.9"/>
+	<line class="st2" x1="6.76" y1="2.81" x2="21.56" y2="2.81"/>
+	<line class="st2" x1="3.64" y1="7.05" x2="3.64" y2="20.9"/>
+	<line class="st2" x1="17.56" y1="6.85" x2="17.56" y2="20.7"/>
+	<line class="st2" x1="21.56" y1="2.81" x2="21.56" y2="18.31"/>
+	<path class="st5" d="M20.64,2.36c0.46-0.16,1.1-0.02,1.36,0.31C22.4,3.2,22.1,4.41,21.7,4.61"/>
+	<path class="st5" d="M16.93,6.62c0.37-0.05,0.88-0.01,1.09,0.1c0.33,0.17,0.09,0.56-0.24,0.63"/>
+	<path class="st5" d="M16.93,21.49c0.37,0.09,0.88,0.01,1.09-0.17c0.33-0.29,0.09-0.94-0.24-1.05"/>
+	<path class="st5" d="M3.64,9.19c-0.28-0.77-0.52-1.88-0.5-2.35c0.03-0.77,0.67-0.38,0.94,0.28"/>
+	<path class="st5" d="M5.9,21.49c-0.81,0.08-1.95,0.01-2.4-0.15C2.76,21.08,3.3,20.5,4.01,20.4"/>
+	<path class="st5" d="M14.81,21.49c0.81,0.08,1.95,0.01,2.4-0.15c0.73-0.26,0.19-0.84-0.52-0.94"/>
+	<line class="st2" x1="10.6" y1="10.1" x2="10.6" y2="17.85"/>
+	<line class="st2" x1="6.76" y1="13.97" x2="14.81" y2="13.97"/>
+</g>
+</svg>
+    </span>
+    <span matTooltip="LineWaight"><img src="../../../assets/Canva icon/width-24.png" alt=""></span>
+    <input type="number" placeholder="0" min="0" max="100" step="1" (click)="setLine($event)">
+  </div>
+
+</div>
+<!-- ----------------Canva -------------------- -->
+<div class="">
+<div class="row parent">
+  <div class="col-1  sideToolbar">
+    <div class="symbols">
+      <span (click)="addText() " ><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+          viewBox="0 -960 960 960" width="24px" fill="#000000">
+          <path d="M420-160v-520H200v-120h560v120H540v520H420Z" />
+        </svg>
+        <h4>Text</h4>
+      </span>
+      <span (click)="addRectangle()" ><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+          viewBox="0 -960 960 960" width="24px" fill="#000000">
+          <path d="M80-160v-640h800v640H80Zm80-80h640v-480H160v480Zm0 0v-480 480Z" />
+        </svg>
+        <h4>Rectangle</h4>
+      </span>
+      <span (click)="addCircle()"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+          viewBox="0 -960 960 960" width="24px" fill="#000000">
+          <path
+            d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+        </svg>
+        <h4>Circle</h4>
+      </span>
+      <span (click)="addTriangle()" ><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+          viewBox="0 -960 960 960" width="24px" fill="#000000">
+          <path d="m80-160 400-640 400 640H80Zm144-80h512L480-650 224-240Zm256-205Z" />
+        </svg>
+        <h4>Triangle</h4>
+      </span>
+      <span (click)="imagetool()" > <label for="image"><svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24"
+          style="enable-background:new 0 0 24 24;" xml:space="preserve">
+          <g id="Layer_1">
+            <rect x="3.03" y="3.96" width="18.05" height="2.2" />
+          </g>
+          <g id="Layer_3">
+            <rect x="1.95" y="5.06" width="2.15" height="13.85" />
+            <rect x="20" y="4.86" width="2.15" height="7.12" />
+            <rect x="20" y="4.86" width="2.15" height="7.12" />
+            <rect x="6.46" y="14.4" transform="matrix(-1.836970e-16 1 -1 -1.836970e-16 26.4497 11.3709)" width="2.15"
+              height="9.02" />
+            <rect x="17.91" y="14.05" transform="matrix(-1.836970e-16 1 -1 -1.836970e-16 38.0487 0.0718)" width="2.15"
+              height="10.02" />
+            <rect x="18.11" y="14.05" width="2.15" height="10.02" />
+            <polygon points="8.56,12.12 5.68,15.97 11.45,15.97 	" />
+            <g>
+              <g>
+                <polygon points="14.74,12.77 13.4,10.72 9.98,15.97 14.74,15.97 			" />
+              </g>
+            </g>
+          </g>
+          <g id="Layer_2">
+          </g>
+        </svg>
+        <h4>Image</h4>
+      </label></span>
+      <span (click)="addLine()" ><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24"
+          style="enable-background:new 0 0 24 24;" xml:space="preserve">
+          <style type="text/css">
+            .st0 {
+              stroke: #000000;
+              stroke-miterlimit: 10;
+            }
+          </style>
+          <rect x="11.01" y="-0.17" transform="matrix(0.7071 0.7071 -0.7071 0.7071 12.6395 -4.752)" class="st0"
+            width="2.1" height="26.1" />
+        </svg>
+        <h4>Line</h4>
+      </span>
+    </div>
+  </div>
+  <div class="col-11 can" >
+    <div class="parent_canvas"  [ngStyle]="Zoomstyle"> 
+      <div  class="child_canvas"
+       (contextmenu)="displayContextMenu($event); false"
+      (mousedown)="startLongPress($event)"
+      (mouseup)="endLongPress($event)"
+      (mouseleave)="endLongPress($event)"
+      class="long-press-container" (click)="closePopup()">
+      <canvas id="canvas" (click)="data($event)"   ></canvas>
+    </div>
+  </div>
+  </div>
+</div>
+
+
+<footer><b style="font-size: 15px;">Zoom:-</b>&nbsp;&nbsp;
+  <mat-slider (change)="zoom($event)" thumbLabel tickInterval="1" step="0.1" min="0.1" value="1" max="1"
+    aria-label="units"></mat-slider>
+</footer>
+
+<app-rightclcik style="border: 3px solid #F3F5F6; border-radius: 10px;"
+  *ngIf=" rightClickMenuItems.length > 0 && isDisplayContextMenu" [ngStyle]="getRightClickMenuStyle()"
+  [contextMenuItems]="rightClickMenuItems" [contextMenuItems2]="rightClickMenuItems2"
+  (onContextMenuItemClick)="handleMenuItemClick($event)"
+  (onContextMenuItemClick2)="handleMenuItemClick2($event)"
+  (onContextMenuItemClick3)="handleMenuItemClick3()"
+  (onContextMenuItemClick4)="handleMenuItemClick4()">
+</app-rightclcik>
+
+<div *ngIf="showPopup" class="popup2"  >
+  <app-rightclcik
+  [contextMenuItems]="rightClickMenuItems" [contextMenuItems2]="rightClickMenuItems2"
+  (onContextMenuItemClick)="handleMenuItemClick($event)"
+  (onContextMenuItemClick2)="handleMenuItemClick2($event)"
+  (onContextMenuItemClick3)="handleMenuItemClick3()"
+  (onContextMenuItemClick4)="handleMenuItemClick4()"></app-rightclcik>
+
+</div>
+
