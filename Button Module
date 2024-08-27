@@ -1,0 +1,50 @@
+//  button component html-----------------------------
+
+
+
+<button matRipple *ngIf="Type == 'success'" (click)="ClickAction()" class="edit_link_button p-2 publish_blog theme_bg theme_border" style="width: 100%;">
+    <span class="mx-2" style="color: white; font-weight: 500;">{{Name}}</span>
+    </button>
+    <button matRipple *ngIf="Type == 'other'" (click)="ClickAction()" class="edit_link_button p-2 theme_border" style="width: 100%;">
+        <span style="color: black; font-weight: 500;" class="mx-2">{{Name}}</span></button>
+
+
+//  button component css---------------------------
+
+.publish_blog{
+    
+    background-color: rgb(85, 164, 255);
+    border: unset;
+    outline: unset;
+    border-radius: 5px;
+    transition: 0.2s all ease-in-out;
+    
+}
+.edit_link_button{
+    outline: none;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #acacac;
+}
+.edit_link_button:active{
+    -webkit-box-shadow: 0px 0px 23px -10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 23px -10px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 23px -10px rgba(0,0,0,0.75);
+}
+
+// button component ts -----------------------------------
+
+
+  @Input() Value:any
+@Input() Type:any = "other"
+@Output() Click = new EventEmitter()
+@Input() Name:any = "Submit"
+ 
+
+  ngOnInit(): void {
+    console.log(this.Type)
+  }
+  ClickAction(){
+    this.Click.emit(this.Value)
+  }
+// use the button any component ---------------------
