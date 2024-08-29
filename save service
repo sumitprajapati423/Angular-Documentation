@@ -1,0 +1,57 @@
+// file
+
+Url:any =Constants.HOME_URL
+
+  loadThemesConfig(): Observable<any> {
+    return this.http.get(`../../assets/db.json`);
+  }
+
+  create_banner(bannerdata:any):Observable<any> {
+    return this.http.post<any>(this.Url+'/create_banner',bannerdata)
+  }
+
+  get_banner_list(data){
+    return this.http.get<any>(this.Url+'/get_banner_list', {
+      params: {
+        retailer_id: data.retailer_id,
+        token: data.token,
+        search: data.search,
+        from_date: data.from_date,
+        to_date: data.to_date
+      }
+    })
+  }
+
+  dowload_image(imageUrl) {
+    let requets = {
+      headers: new HttpHeaders({'Access-Control-Allow-Headers':'*'})
+    }
+    return this.http.get(imageUrl, requets)
+  }
+
+  Delete(data:any):Observable<any> {
+    return this.http.post<any>(this.Url+'/delete_banner', data)
+  }
+
+  get_by_id(data: any) {
+    return this.http.get(this.Url+'/get_banner_by_id', {
+      params: {
+        retailer_id: data.retailer_id,
+        token: data.token,
+        banner_id: data.banner_id
+      }
+    })
+  }
+
+  get_choose_banner(data:any){
+    return this. http.get(this.Url+'/get_template_banner',{
+      params: {
+        retailer_id: data.retailer_id,
+        token: data.token,
+      }
+    })
+  }
+
+  get_update_banner(data:any):Observable<any>{
+    return this.http.post<any>(this.Url+'/update_banner' , data)
+  }
