@@ -1,0 +1,11 @@
+// Angular Material Ui  -----This version is - angular 13
+
+ private snackBar: MatSnackBar,
+
+save(){
+    this.snackBar.open(" Save Successfull !",'close', {
+      duration:3000,
+      horizontalPosition:'center',
+      verticalPosition:'bottom'
+    })
+    
