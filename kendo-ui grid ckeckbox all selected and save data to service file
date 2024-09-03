@@ -1,0 +1,52 @@
+// app-component html --  kendo-grid in apply ----
+
+(selectionChange)="onSelectionChange($event)"
+    >
+    <kendo-grid-checkbox-column [showSelectAll]="true" [width]="30"   >
+    </kendo-grid-checkbox-column>
+
+
+// app-component ts ----
+
+ selectedProducts: any[] = [];
+
+ onSelectionChange(event: any) {
+    console.log(event)
+    if(event.selectedRows.length > 0){
+      var selected = event.selectedRows.map((row: any) => row.dataItem);
+      selected.forEach(ele =>{
+        this.selectedProducts.push(ele)
+      })
+
+    }
+    if(event.deselectedRows.length > 0){
+      var Deselected = event.deselectedRows.map((row: any) => row.dataItem);
+      Deselected.forEach(deselected =>{
+        const filteredArray = this.selectedProducts.filter(item => item.productid !== deselected.productid);
+        this.selectedProducts = filteredArray
+      }) 
+    }
+  }
+
+//  A button to clcik selected object save in service file---
+
+constructor(
+private store: servicefile name
+){}
+
+ savedata(data:any){
+    this.store.Product_data.next(this.selectedProducts)
+  }
+
+// create a storedata servicefile and add this code..----------
+    Product_data = new BehaviorSubject<any>([])
+
+// the data use any other component so that create a new component and his ts file add ngOninit in 
+coustructor(
+private store: servicefile name
+){}
+ngOninit(){
+ this.store.Product_data.subscribe(data =>{
+      console.log(data)
+    })
+}
