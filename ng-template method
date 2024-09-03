@@ -1,0 +1,13 @@
+//  ng-template method -------------------------
+<div *ngIf="products.length > 0; else noData">
+  <ul>
+    <li *ngFor="let product of products">
+     <p> {{ product.name }} </p>
+     <p> {{ product.price }}</p> 
+    <img [src]= "product.img" alt="" width="200px" height="200px">
+    </li>
+  </ul>
+</div>
+<ng-template #noData>
+  <p>No products available.</p>
+</ng-template>
