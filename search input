@@ -11,3 +11,41 @@
                 
                 </div> 
             </div>
+
+
+
+// filter search commoncomp module feature apply-------------------
+     import { Pipe, PipeTransform } from '@angular/core';
+     
+     @Pipe({
+       name: 'multifilter'
+     })
+     export class FilterPipe implements PipeTransform {
+     
+       transform(items: any[], searchText: string, properties: string[]): any[] {
+     
+         if (!items) return [];
+         if (!searchText) return items;
+         searchText = searchText.toLowerCase();
+         return items.filter(item => {
+           return properties.some(property => {
+             return item[property].toString().toLowerCase().includes(searchText);
+           });
+         });
+       }
+     }
+
+
+// use for any product search in  the input field-------------------------
+  // html page----
+        <input type="text" (keyup)="search($event.target.value)">
+       <ul>
+           <li *ngFor="let product of productdata|multifilter:Searchproducts:['title','date','opctional']">
+        </ul>
+
+// tf file use ----
+     Searchproducts:any
+
+     search(event:any){
+           this.Searchproducts = event
+         }
