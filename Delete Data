@@ -1,0 +1,15 @@
+// delete data one by one from any product service  simple way------------------------------
+
+<button> DeleteData </button>
+
+// ts file --
+
+  ngOnInit(){
+ this.store.Product_data.subscribe(data =>{
+      this.productdata = data
+});
+}
+
+DeleteData(){
+this.productdata.splice(index, 1);
+}
