@@ -1,0 +1,13 @@
+// create a download function and add this code----------------
+
+ downloadPdf(id) {
+      var obj = {
+        'token': this.login.token,
+        'collection_id':id ,
+      }
+      this.collection.Pdf(obj).subscribe(data =>{
+        var url = window.URL.createObjectURL(data)
+        saveAs(data,"sumit.pdf")
+        window.open(url,'_blank')
+      })
+    }
