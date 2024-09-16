@@ -1,0 +1,75 @@
+//   total ts file all fetch and clear ----------------------
+
+ ngOnInit(): void {
+    const today = new Date();
+    const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()-7);
+    const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    this.DateForm = this.fb.group({
+      start: [startDate],
+      end: [endDate]
+    });
+    this.login = JSON.parse(this.storage.getstorage('isLoggedin'))
+    this.collection.getallcollection({
+      retailerid: this.login.retailerid,
+      token: this.login.token,
+    }).subscribe(data => {
+      console.log(data)
+      this.Data = data.data
+      this.Filterdata= this.Data
+  })
+  
+  }
+
+  fetch(event){
+    console.log(event,'hhh');
+    console.log(this.login,'mer');
+    console.log(this.DateForm.value)
+    var obj = {
+      startdate:this.DateForm.controls['start'].value?this.formatDate(this.DateForm.controls['start'].value):null,
+      enddate:this.DateForm.controls['end'].value?this.formatDate(this.DateForm.controls['end'].value):null,
+      retailerid:this.login.retailerid,
+      token:this.login.token
+      
+    }
+    console.log(obj)
+    if(obj.startdate != null && obj.enddate != null){
+      this.collection.Fatchcollection(obj).subscribe({
+        next:(res) =>{
+          console.log(res,'res');
+          
+          if(res.code == 200){
+            console.log(this.Filterdata);
+            
+            this.Isfetched = true
+            this.FetchData = res.data
+            this.Filterdata = this.FetchData
+          }
+        },
+        error:(err) =>{
+          console.log(err)
+        }
+      })
+    }else{
+      this.snackBar.open('Start date and End date empty', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
+    }
+  
+  }
+  formatDate(date: Date): string {
+    const day = ('0' + date.getDate()).slice(-2);
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const year = date.getFullYear().toString();
+    return `${year}-${month}-${day}`;
+  }
+
+  Cleardate(event){
+    this.DateForm.reset()
+    this.FetchData = []
+    this.Filterdata = this.Data
+    this.Isfetched = false
+    this.Searchproducts = '';
+   }
+   
