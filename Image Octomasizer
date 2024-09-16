@@ -1,0 +1,288 @@
+//  html part----------------
+
+<div style="background-color: white; padding: 25px;">
+    <div class="blog_information_title">Collection Banner</div>
+                <div class="image_information_title text-muted mt-2">Featured Image</div>
+                <div *ngIf="IsImage == false" class="position-relative mt-4 d-flex justify-content-center align-items-center" style="width: 100%;">
+                    <input type="file"  (change)="ImageUpload($event)" #fileInput style="height: 180px; width: 100% ; opacity: 0; position: absolute; border: 1px solid black;">
+                    <img width="100%" src="../../../../assets/IMG_20240902_121138.png" alt="">
+                </div>
+                <div *ngIf="IsImage == true" class="image_overlay">
+                            <div class="position-absolute h-100 w-100 d-flex justify-content-center align-items-center child_overlay">
+                                <div style="height: 40px; width: 40px; background-color: white; border-radius: 20px; overflow: hidden; " class=" position-relative d-flex justify-content-center align-items-center">
+                                <input type="file" (change)="ImageUpload($event)" #fileInput name="imageUpload" accept="image/*" class="position-absolute" style="width: 40px; height: 40px; opacity: 0;">
+                                <img src="../../../../assets/Edit.svg" alt="">
+                                </div>
+                            </div>
+                            <img  width="100%" [src]="Image" [alt]="blogdata.Imagealttext(Image)">
+                </div>
+</div>
+
+//   ts file -------------------------------
+
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { secureStorage } from 'src/app/shared/securestorage';
+import { BlogService } from '../../blog.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { OptimizerService } from 'src/app/image-optimizer/optimizer.service';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { BlogDataService } from '../../blog-data.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { StoreService } from 'src/app/collection/store.service';
+
+@Component({
+  selector: 'app-blog-information',
+  templateUrl: './blog-information.component.html',
+  styleUrls: ['./blog-information.component.scss']
+})
+export class BlogInformationComponent implements OnInit,OnChanges {
+  @ViewChild('fileInput') fileInput: ElementRef;
+  @Output() Output = new EventEmitter<any>()
+  @Input() Blog_info:FormGroup
+  @Input() Editdata:any = {}
+  Image:SafeUrl;
+  IsImage:boolean = false
+  CheckBox_data:any[] = []
+  Category:any[]=[]
+  ExistCategory:any[]=[]
+  Tags_data:any[]=[]
+  Chipsdata:any[]=[]
+  Switch: boolean = false;
+  Imageevent:any
+  Tag_switch:boolean = false
+  private Destroyer$ = new Subject<any>()
+  Cat_switch: boolean = false;
+  maxSizeInMB: number = 2;
+  constructor(private BlogService:BlogService,
+    private Secure:secureStorage,
+    private sanitizer: DomSanitizer,
+    private imageoptimizer:OptimizerService,
+    private route:Router,
+    private blogdata:BlogDataService,
+    private store: StoreService,
+    private snackBar: MatSnackBar,
+    ) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['Editdata']){
+      if(changes['Editdata'].currentValue){
+        var obj = changes['Editdata'].currentValue
+    
+        this.IsImage = true
+        console.log(obj)
+        this.Image = obj
+   
+      }
+    }else{
+      this.IsImage = false
+    }
+  }
+
+  ngOnInit(): void {
+    this.imageoptimizer.OutputImageOptimizer.pipe(takeUntil(this.Destroyer$)).subscribe(res =>{
+      console.log(res)
+      if(res.Type == "featured_image"){
+        this.IsImage = true
+        this.Image = this.sanitizer.bypassSecurityTrustUrl(res.Images[0])
+        this.Output.emit(res.Images)
+      }
+    })
+
+  }
+  GetInputValue(event:any,type:any){
+    switch(type){
+        case 'Author':
+          this.Blog_info.controls['author_name'].setValue(event)
+          break;
+        default:break;
+        
+    }
+
+  }
+  get Tags(): FormArray {
+    return this.Blog_info.get('tags') as FormArray;
+  }
+  get Categories(): FormArray {
+    return this.Blog_info.get('categories') as FormArray;
+  }
+  GetChipsValue(event:any){
+    this.Tags.clear()
+    event.forEach(element => {
+      this.Tags.push(new FormControl(element))
+    });
+  }
+
+  ImageUpload(file:any){
+    const maxSizeInBytes = this.maxSizeInMB * 1024 * 1024;
+    const files = file.target.files[0];
+    if (files.size > maxSizeInBytes) {
+      this.fileInput.nativeElement.value = '';
+      this.snackBar.open(`Uploaded file size exceed 2MB. Please upload smaller file`, 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
+    }else{
+      var obj = {
+        Image:file,
+        Aspect:'3:1',
+        Size:['1500x500','180x60'],
+        Switch:true,
+        Type:'featured_image'
+      }
+      this.imageoptimizer.InputImageOptimizer.next(obj)
+      setTimeout(() => {
+        this.fileInput.nativeElement.value = '';
+      }, 2000);
+    }  
+  }
+  GetCategoriesValue(event:any){
+    console.log(event)
+    
+    this.Categories.clear()
+    if(event.switch){
+      this.Category.push(event)
+      console.log(this.Category)
+      this.Category = this.removeDuplicates(this.Category,'Lable')
+      this.PushData(this.Category)
+    }else{
+      var index = this.Category.findIndex(x => x.Lable === event.Lable)
+      this.Category.splice(index,1)
+      this.PushData(this.Category)
+    }
+    console.log(this.Categories.value)
+   
+  }
+  PushData(Cat:any){
+   
+      for(let i = 0; i < Cat.length; i++){
+        this.Categories.push(new FormControl(Cat[i].Lable))
+      }
+  }
+   removeDuplicates(array: any[], key: string): any[] {
+    const seen = new Set();
+    return array.filter(item => {
+      const keyValue = item[key];
+      return seen.has(keyValue) ? false : seen.add(keyValue);
+    });
+  }
+  // getAllCategory(){
+  //   var data = JSON.parse(this.Secure.getstorage('isLoggedin'))
+  //   var obj = {
+  //     token:data.token,
+  //     merchant:data.retailerid
+  //   }
+  //  this.BlogService.Category_getbymerchantid(obj).subscribe({
+  //   next:(res) =>{
+  //   this.CheckBox_data = res.Data
+  //   },
+  //   error:(err) =>{
+  //     console.log(err)
+  //   }
+  //  })
+  // }
+  // getAllTags(){
+  //   var data = JSON.parse(this.Secure.getstorage('isLoggedin'))
+  //   var obj = {
+  //     token:data.token,
+  //     merchant_id:Number(data.retailerid)
+  //   }
+  //   this.BlogService.Gettop10tags(obj).subscribe({
+  //     next:(res) =>{
+
+  //     this.Tags_data = res.data
+  //     },
+  //     error:(err) =>{
+  //       console.log(err)
+  //     }
+  //    })
+  // }
+  addtochips(event:any){
+    this.Chipsdata.push(event)
+    this.Tags.push(new FormControl(event))
+  }
+  Navigatetoothercomponents(event:any){
+    if(event == "tags"){
+      this.Tag_switch = true
+    }else{
+      this.Cat_switch = true
+    }
+   
+    // this.route.navigate([`blog/${event}`])
+  }
+  switchoff(event:any,type:any){
+  if(type == "tags"){
+    this.Tag_switch = false
+  }else{
+    this.Cat_switch = false
+  }
+    
+  }
+  getcheckboxvalue(event:any){
+    console.log(event)
+    var obj = {
+      cat_name:event
+    }
+    this.CheckBox_data.push(obj)
+  }
+    
+
+}
+
+
+//-------------------css part ---------------------------------
+
+.blog_information_title{
+    font-size: 25px;
+    font-weight: 600;
+}
+.image_information_title{
+    font-size: 18px;
+
+}
+.input{
+    height: 40px; border: 1px solid #b1b1b1; border-radius: 5px; outline: unset; font-size: 16px;
+    
+}
+.title_input:focus{
+    border: 2px solid rgba(58,168,242,1);
+    -webkit-box-shadow: 0px 0px 11px -1px rgba(58,168,242,1);
+-moz-box-shadow: 0px 0px 11px -1px rgba(58,168,242,1);
+box-shadow: 0px 0px 11px -3px rgba(58,168,242,1);
+}
+.tags_chips{
+    background:#f2f2f2;
+    padding:10px 20px 10px 20px;
+    display:flex;
+    border-radius:20px;
+    margin-left:5px;
+    width:unset;
+    cursor: pointer;
+    
+
+}
+.blog_info_featured_image_container{
+    height: 200px; width: 100%; position: relative;
+}
+.image_overlay{
+    height: 200px; width: 100%; position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // border: 1px solid black;
+}
+.child_overlay{
+    background-color: rgba(000, 000, 000, 0.5);
+    // transform: translateX(-100%);
+    transform: scale(0);
+    transition: 0.1s all ease-in-out;
+}
+.image_overlay:hover .child_overlay{
+    // transform: translateX(-0%);
+    transform: scale(1);
+    transition: 0.1s all ease-in-out;
+    
+}
