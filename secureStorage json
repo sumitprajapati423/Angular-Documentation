@@ -1,0 +1,15 @@
+// ts file 
+
+private storage: secureStorage,
+
+ngOninit(){
+this.login = JSON.parse(this.storage.getstorage('isLoggedin'))
+    this.collection.getallcollection({
+      retailerid: this.login.retailerid,
+      token: this.login.token,
+    }).subscribe(data => {
+      console.log(data)
+      this.Data = data.data
+      this.Filterdata= this.Data
+  })
+  }
