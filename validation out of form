@@ -1,0 +1,21 @@
+//  html where i show the error ----------------
+              
+<div class="mt-2" > <span *ngIf="Collection_Validator.product_list"  style="color: red; font-size: 12px;">Atleast One Product Is Required</span></div>
+
+// ts files -------------------
+ 
+Collection_Validator:any = {
+  product_list:false
+ }
+
+this.EditorFrom = this.fb.group({
+      name:['',Validators.required],
+      address:['',Validators.required],
+});
+
+save(){   
+    
+  this.EditorFrom.controls['name'].value.length > 0?false:this.EditorFrom.controls['name'].markAsTouched()
+  this.EditorFrom.controls['address'].value.length > 0?false:this.EditorFrom.controls['address'].markAsTouched()
+    this.Collection_Validator.product_list  = this.EditorFrom.controls['collection_product_list'].value.length > 0?false:true
+}
