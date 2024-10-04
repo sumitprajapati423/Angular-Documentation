@@ -1,0 +1,69 @@
+ // html edit product file
+*ngfor= "let dataitem of product"
+
+(click)="Edit(dataItem.collection_id)"
+
+//ts file --------------
+
+Edit(id:any){
+    var get = {
+      'token' : this.login.token,
+      'collection_id': id
+    }
+    
+    this.collection.GetCollectionbyid(get).subscribe(getdata=>{
+      
+      if(getdata.code == 200){
+        this.route.navigate(['collection/add'])
+        var obj = {
+          isEdit:true,
+          data:getdata.data
+        }
+        this.store.updateData(obj)
+      }
+      else{
+        this.snackBar.open('Please Check the form', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        });
+      }
+    })
+  }
+
+// create a store service file ----------
+ EditData = new BehaviorSubject<any>([]);
+  data$ = this.EditData.asObservable();
+
+ updateData(data: any) {
+    this.EditData.next(data);
+  }
+
+
+// get the edit data this file ----------------------
+ngOninit(){
+ this.store.data$.subscribe(editData=>{
+      if(editData.isEdit){        
+        this.IsEditCollection = true
+        this.CollectionEdit = editData.data[0],
+        this.productdata = this.CollectionEdit.product_details
+          this.EditorFrom.get('collection_name').setValue(this.CollectionEdit.collection_name)
+          this.EditorFrom.get('collection_short_name').setValue(this.CollectionEdit.collection_short_name)
+          this.EditorFrom.get('collection_description').setValue(this.CollectionEdit.collection_description)
+          this.EditorFrom.get('collection_image').setValue(this.CollectionEdit.collection_image)
+          this.EditorFrom.get('collection_thumbnail').setValue(this.CollectionEdit.collection_thumbnail)
+          this.EditorFrom.get('staff_id').setValue(this.CollectionEdit.staff_id)
+          this.EditorFrom.get('retailerid').setValue(this.CollectionEdit.retailerid)
+          this.EditorFrom.get('Seo_settings').get('title').setValue(this.CollectionEdit.collection_seo.title)
+          this.EditorFrom.get('Seo_settings').get('description').setValue(this.CollectionEdit.collection_seo.description)
+          this.EditorFrom.get('Social_settings').get('Facebook').get('title').setValue(this.CollectionEdit.collection_social.Facebook.title)
+          this.EditorFrom.get('Social_settings').get('Facebook').get('description').setValue(this.CollectionEdit.collection_social.Facebook.description)
+          this.EditorFrom.get('Social_settings').get('Facebook').get('image').setValue(this.CollectionEdit.collection_social.Facebook.image)
+          this.EditorFrom.get('Social_settings').get('Facebook').get('video').setValue(this.CollectionEdit.collection_social.Facebook.video)
+          this.EditorFrom.get('Social_settings').get('Twitter').get('title').setValue(this.CollectionEdit.collection_social.Twitter.title)
+          this.EditorFrom.get('Social_settings').get('Twitter').get('description').setValue(this.CollectionEdit.collection_social.Twitter.description)
+          this.EditorFrom.get('Social_settings').get('Twitter').get('image').setValue(this.CollectionEdit.collection_social.Twitter.image)
+          this.EditorFrom.get('Social_settings').get('Twitter').get('video').setValue(this.CollectionEdit.collection_social.Twitter.video)
+      }
+    })
+}
