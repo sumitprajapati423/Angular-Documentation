@@ -1,0 +1,38 @@
+// ts file -----------
+
+ screenWidth: number = window.innerWidth;
+  screenHeight: number = window.innerHeight;
+  private resizeObserver: ResizeObserver
+
+
+max_width = 20
+  image_width= 20
+  count_width = 15
+  date_width = 20
+  Active_width = 20
+
+
+ ngAfterViewInit() {
+    this.resizeObserver = new ResizeObserver(() => {
+      this.updateScreenSize();
+    });
+    this.resizeObserver.observe(document.body);
+  }
+  updateScreenSize() {
+    this.screenWidth = window.innerWidth;
+    this.screenHeight = window.innerHeight;
+    if(this.screenWidth > 1400){
+      this.max_width = 20
+      this.image_width= 20
+      this.count_width = 15
+      this.date_width = 20
+      this.Active_width = 20
+    }else{
+      this.max_width = 40
+      this.image_width = 60
+      this.count_width = 35
+      this.date_width = 35
+      this.Active_width = 35
+    } 
+    
+  }
