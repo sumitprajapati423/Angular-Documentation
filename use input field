@@ -1,0 +1,45 @@
+// html file----------------
+app-input use then elment this code------
+
+ <div class="w-100 mt-1">
+                <app-input [Required]="true" [Lable]="'Phone Number of the Staff'" [Minlength]="120" [Maxlength]="240" (OutputValue)="GetTitleinput($event)" [Placeholder]="'Number'"></app-input>
+                
+            </div>
+            <div class="w-100 mt-1">
+                <app-input [Required]="true" [Lable]="'Email'" [Minlength]="120" [Maxlength]="240"   [Placeholder]="'Email'"></app-input>
+                
+            </div>
+            <div class="w-100 mt-1">
+                <app-input [Required]="true" [Lable]="'Name of the Staff'" [Minlength]="120" [Maxlength]="240"   [Placeholder]="'Email'"></app-input>
+                
+            </div>
+            <div class="w-100 mt-1">
+                <app-input [Required]="true" [Lable]="'Permissions'" [Minlength]="120" [Maxlength]="240"   [Placeholder]="'Email'"></app-input>
+                
+            </div>
+//--ts file -----------------------------------------
+ GetTitleinput(event:any){
+    if(event.length > 0){
+      if(this.DisableLinkEditor != true){
+        this.Spinner = true
+        this.LinkValidation = false
+        this.Editlink = event.toLowerCase()
+        var obj = {
+          type:'title',
+          value:event
+        }
+        this.blogdata.Title.next(obj)
+      }
+    
+    }else{
+      var obj1 = {
+        type:'title',
+        value:""
+      }
+      this.LinkValidation = false
+      this.LinkAvailability = false
+      this.Spinner = false
+      this.blogdata.Title.next(obj1)
+      
+    }
+}
