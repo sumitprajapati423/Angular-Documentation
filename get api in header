@@ -1,0 +1,131 @@
+//   get api if header point token--------------
+//--------------apply the code in service -----------
+
+get_staff(data:any) {
+
+const headers = new HttpHeaders({
+  'X-Access-Token': this.info.token
+});
+  let body ={
+    retailerid:this.info.retailerid,
+    token:this.info.token
+  }
+return this.http.get(Constants.HOME_URL + `/v1.0.0/Retailer/getStaff/${this.info.retailerid}`,{headers:headers})
+
+}
+ 
+
+
+Delete_data(id:any) {
+
+    const headers = new HttpHeaders({
+      'X-Access-Token': this.info.token
+    });
+    console.log(id)
+
+    
+  return this.http.delete(Constants.HOME_URL + `/v1.0.0/Retailer/delStaff/${Number(id.retailer_id)}/${Number(id.employerid)}/${Number(id.mobileno)}`, {headers:headers});
+}
+
+// use the part of html in ---------------------
+  <span mat-menu-item (click)="openDialog(dataItem.staffregid,dataItem.mobileno)" mat-button  mat-stroked-button matTooltip="Delete">Delete</span>
+
+
+//-------------------------use the code in ts file----------------------------------
+
+ get_staff() {
+    var obj = {
+      retailerid:this.login.retailerid,
+      token:this.login.token
+    }
+    this.service.get_staff(obj).subscribe(
+      res => {
+        this.Data = res['data'] 
+        this.Filterdata = this.Data
+      },
+
+    
+    );
+  }
+
+//----------------------delete popup----
+
+private snackBar:MatSnackBar
+
+openDialog(id:any,mobileno:any) {
+    this.dialog.open(DeletePopup, {
+      data: {
+        id: id,
+        mobileno:mobileno
+      }
+    });
+  }
+
+last in one extra create component --
+
+@Component({
+  selector: 'deletePopup',
+  template: `
+
+  <h1 >Delete Staff Data</h1>
+<h3 >Are You Sure.</h3>
+<div class='mt-2'>
+  <button class='btn mr-2' (click)="close()">No</button>
+  <button class='btn mr-2 text-danger' (click)=" Delete()">Yes</button>
+</div>
+`,
+})
+export class DeletePopup {
+  login:any
+  constructor(
+    public dialogRef: MatDialogRef<DeletePopup>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private service:StaffService , 
+    private storage: secureStorage, 
+    private snackBar:MatSnackBar
+  ) {
+    this.login = JSON.parse(this.storage.getstorage('isLoggedin'))}
+    // DateForm = new FormGroup({
+    //   search: new FormControl(''),
+    //   start_date: new FormControl(new Date(new Date().getFullYear(), new Date().getMonth() - 3, 1)),
+    //   end_date: new FormControl(new Date())
+      
+    // });
+
+
+
+  close(){
+    this.dialogRef.close()
+  }
+
+  Delete(){
+    debugger
+    var obj = {
+      retailer_id: this.login.retailerid,
+      token: this.login.token,
+      employerid: this.data.id,
+      mobileno:this.data.mobileno
+    }
+    console.log(obj,'delete');
+    console.log(this.data)
+    this.service.Delete_data(obj).subscribe({
+      next: () => {
+        this.snackBar.open('Delete Successful!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })
+       setTimeout(() => {
+        window.location.reload()
+       },1000); 
+      },
+      
+      error: (err) => {
+        alert('Error occurred while deleting:');
+      }
+    })
+    
+  }
+  
+}
+
