@@ -1,0 +1,91 @@
+// use email input all validation ---------
+// ---------------------------html part -------
+<div class="mt-4">
+    <div style="font-size: 16px;">
+        {{Email_title}} <span *ngIf="Required" style="font-size: 18px; color: red;">*</span>
+    </div>
+    <div>
+    <div class="w-100 mt-1 position-relative d-flex align-items-center">
+        <input [ngClass]="Disable?'input_disable':'input'" class="w-100 input title_input theme_border" style="padding-right: 10px;" [formControl]="FormControl" [value]="FormControl.value" (keyup)="Returnvalue($event.target.value)" [disabled]="Disable"   type="email" [placeholder]="Placeholder"> 
+    </div>
+    <span *ngIf=" FormControl.invalid && FormControl.touched"  style="color: red; font-size: 12px;">
+        <small *ngIf="FormControl.errors.required" style="color: red; font-size: 12px;">Email is required.</small>
+    <small *ngIf="FormControl.errors.email" style="color: red; font-size: 12px;">Invalid email format.</small>
+    </span>
+    </div>
+</div>
+
+//-------------------------ts file-----------------------
+
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+
+
+@Component({
+  selector: 'app-email',
+  templateUrl: './email.component.html',
+  styleUrls: ['./email.component.scss']
+})
+export class EmailComponent implements OnInit {
+  @Input() FormControl = new FormControl('',Validators.required)
+  @Input() Required:boolean=true;
+  @Input() Email_title:any = 'title'
+  @Input() Placeholder:any = 'Text'
+  @Input() Disable:boolean = false
+  @Input() Value:any;
+  @Input() ErrMessage:any = "This field is required"
+  Touched:boolean = false
+  isEmailValid: boolean = true;
+
+  @Output() email_value= new EventEmitter<any>()
+  Length :number = 0;
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['Value']){
+        this.FormControl.setValue(this.Value)
+        this.Length = this.Value.length
+  
+    }
+  
+  }
+
+
+  Returnvalue(value: any) {
+    
+    this.Length = value.length
+    this.email_value.emit(value)
+    this.FormControl.setValue(value)
+    console.log(this.FormControl)
+
+      
+    this.validateEmail()?this.FormControl.markAsUntouched():this.FormControl.markAsTouched()
+  }
+
+  validateEmail() {
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailPattern.test(this.FormControl.value);
+    }
+
+}
+
+//---------------------------css part-----------------------
+
+.title_input:focus{
+    border: 2px solid rgba(58,168,242,1);
+    -webkit-box-shadow: 0px 0px 11px -1px rgba(58,168,242,1);
+-moz-box-shadow: 0px 0px 11px -1px rgba(58,168,242,1);
+box-shadow: 0px 0px 11px -3px rgba(58,168,242,1);
+}
+
+input{
+    height: 40px; border: 1px solid #b1b1b1; border-radius: 5px; outline: unset; font-size: 16px; padding-left: 10px;
+    
+}
+.input_disable{
+    height: 40px; border: 1px solid #b1b1b1; border-radius: 5px; outline: unset; font-size: 16px; padding-left: 10px; background-color: #f2f2f2;
+    
+}
