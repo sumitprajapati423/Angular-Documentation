@@ -1,0 +1,63 @@
+//  service part-----------
+
+  data = new EventEmitter<any>()
+
+   GetStaffList(Data:any){
+      this.StaffList = [...Data]
+      this.data.emit(this.StaffList)
+   }
+   DeleteStaff(id:any){
+    this.StaffList = this.StaffList.filter(item => item.staffregid != id)
+    this.data.emit(this.StaffList)
+   }
+
+// use the ts file----------------
+
+get_staff() {
+    var obj = {
+      retailerid:this.login.retailerid,
+      token:this.login.token
+    }
+    console.log(obj)
+    this.service.get_staff(obj).subscribe(
+      res => {
+          console.log(res)
+        this.Data = res['data'] 
+        this.service.GetStaffList(this.Data)------------only use main 
+      },
+    );
+  }
+
+//------button click working the code ------------
+ Delete(){
+    debugger
+    var obj = {
+      retailer_id: this.login.retailerid,
+      token: this.login.token,
+      employerid: this.data.id,
+      mobileno:this.data.mobileno
+    }
+    console.log(obj,'delete');
+    console.log(this.data)
+    this.service.Delete_data(obj).subscribe({
+      next: () => {
+        this.snackBar.open('Delete Successful!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })
+        
+       setTimeout(() => {
+        this.dialogRef.close()
+        this.service.DeleteStaff(obj.employerid) -----------------this is main part
+       },500); 
+      },
+      
+      
+      error: (err) => {
+        alert('Error occurred while deleting:');
+      }
+    })
+    
+  }
+  
