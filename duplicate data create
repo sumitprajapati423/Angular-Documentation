@@ -1,0 +1,18 @@
+//------------------A button click then other data is create duplicate....
+//----html part-------------
+<div class="col-md-12">
+  <div *ngFor="let data of extradata; let i = index" class=" d-flex justify-content-between text ">
+  <input type="text" placeholder="name" [(ngModel)]="data.name" >
+  <input type="number" placeholder="number" [(ngModel)]="data.number">
+  </div>
+  <br>
+  <button class="btn btn-success mx-5" (click)="duplicateData()">Add</button>
+</div>
+
+//--------------ts file---------------
+extradata:{name:string; number:string}[]= [{name:'',number:''}];
+
+  duplicateData(){
+    this.extradata.push({name:'', number:''})
+  }
+
