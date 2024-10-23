@@ -1,0 +1,20 @@
+// html part-----------------------
+
+<input type="text" style="width: 500px; height: 40px;" [(ngModel)]="copydata">
+    <span (click)="Copylink()" class="position-absolute theme_shadow" style="   right: 10px;padding: 5px 10px; background: lightslategrey; border-radius: 5px;bottom: 5px;cursor: pointer;">Copy</span>
+
+// ts part ---------------------------
+
+copydata:string = '';
+  constructor(
+    private clipboard: Clipboard, 
+  ) { }
+
+ Copylink(){
+    this.clipboard.copy(this.copydata)
+    this._snackBar.open(`Link Copied`, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    });
+  }
