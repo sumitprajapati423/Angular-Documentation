@@ -1,0 +1,31 @@
+// How to a list selected opation to unselect-------- angular material ui ckeckbox list---
+<form [formGroup]="languageForm">
+    <div class="language_data" >
+        <mat-selection-list #shoes formControlName="data" [(ngModel)]="selectedLanguages" >
+            <mat-list-option *ngFor="let shoe of Language;"[value]="shoe" >
+              {{shoe}}
+            </mat-list-option>
+          </mat-selection-list>
+          
+    </div>
+      <hr style="border: 1px solid #b6b6b6;">
+      <div class="d-flex justify-content-center">
+          <button class="btn" [disabled]="languageForm.invalid || !language.value.length" (click)="Add_language()">Add selected language</button>
+      </div>
+    </form>
+
+//ts file-----------------------------------------
+Add_Priview:boolean=false
+  languageForm:FormGroup
+  any_language:string='';
+
+ selectedLanguages: string[] = []; 
+  Language: string[] = ['Spanish', 'Bengali', 'Japanese', 'Turkish', 'Telugu','Tamil', 'French', 'Gujarati', 'Bhojpuri', 'Englisg','Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
+
+ Add_language(){
+    this.Add_Priview = true
+    const selectedLanguages = this.language.value;
+    this.any_language = selectedLanguages;
+    this.selectedLanguages = [];
+    
+  }
