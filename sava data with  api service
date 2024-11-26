@@ -1,0 +1,160 @@
+// ts file how to boolen type input data send to api service ------
+
+ Switch:boolean = false
+  Extra_charge:FormGroup
+  change_page:string='name';
+  flat:boolean=false
+  percent:boolean= true
+  chargeData: any;
+  showvalue:boolean= true
+  showvalue2:boolean= false
+  tokken;
+  retailer;
+  value: number = 0;
+  constructor(
+    private fb:FormBuilder,
+    private storage: secureStorage,
+    private snackBar: MatSnackBar,
+    private service:StaffService,
+
+  ) { 
+  }
+
+  ngOnInit(): void {
+    this.chargeData = JSON.parse(this.storage.getstorage('isLoggedin'))
+    this.Extra_charge=this.fb.group({
+     p_charge_name:['',Validators.required],
+     p_charge_type:['percentage',Validators.required],
+     p_charge_value: ['', [Validators.required, this.chargeValueValidator.bind(this)]],
+      authtoken:[''],
+      p_retailerid:[''],
+    })
+    console.log(this.chargeData);
+    
+   
+    this.Extra_charge.get('p_charge_type')?.valueChanges.subscribe(value => {
+      this.Extra_charge.get('p_charge_value')?.setValue(''); 
+    });
+
+  }
+
+  chargeValueValidator(control: any) {
+    const p_charge_type = this.Extra_charge?.get('p_charge_type')?.value; 
+    if (p_charge_type === 'percentage') {
+      return control.value <= 100 ? null : { max: true };
+    } else if (p_charge_type === 'amount') {
+      return control.value <= 999999999 ? null : { max: true };
+    }
+    return null;
+  }
+
+ percentData = {
+    name: '',
+    value: null
+  };
+
+  valueData = {
+    name: '',
+    value: null
+  };
+
+
+  
+  show2(){
+    this.showvalue = true
+    this.showvalue2 = false
+  }
+  show3(){
+    this.showvalue = false
+    this.showvalue2 = true
+    
+  }
+
+ save(){
+   if (this.Extra_charge.valid) {
+      const formData = {
+        p_retailerid: parseFloat(this.chargeData.retailerid), // conver string to numerice
+        p_charge_name: this.Extra_charge.value.p_charge_name,
+        p_charge_type: Boolean(this.Extra_charge.value.p_charge_type), 
+        p_charge_value: this.Extra_charge.value.p_charge_value,
+        p_isactive: true,
+        p_createdby: parseFloat(this.chargeData.staffid), // conver string to numerice
+        authtoken: this.chargeData.token 
+      };
+    
+   console.log(formData);
+   
+  
+    this.service.Add_charges(formData).subscribe(res =>{
+    console.log(res,'data');
+        this.snackBar.open('Save Successful!', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom'
+        })
+    }) 
+  }
+  else{
+    this.snackBar.open('Please Check the form', 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom'
+    });
+    
+  }
+    
+  }
+
+
+  show_percent(event:any){
+    this.change_page = event
+    this.percent = true
+    this.flat = false
+  }
+
+  show_flat(event:any){
+    this.change_page = event
+    this.flat = true
+    this.percent= false
+  }
+
+
+// html file ---------------------------------------------------
+ <form [formGroup]="Extra_charge" (ngSubmit)="save()" >
+            <div class="mx-2">
+                <label>
+                  <input type="radio"  (click)="show_percent('name')" formControlName="p_charge_type" value="percentage" />
+                  <span class="mx-2 fs-6" >Percent</span> &nbsp;
+                </label>
+                <label>
+                  <input type="radio"  (click)="show_flat('name')"  formControlName="p_charge_type" value="amount" />
+                  <span class="mx-2 fs-6" >Flat price</span>
+                </label>
+              </div>
+              
+            <div class="mx-2 my-4 col-md-12" *ngIf="change_page === 'name'" >
+               
+                    <div class="row d-flex justify-content-between ">
+                        <div class="col-md-7 change_name ">
+                            <label for="Extra_charge">Charge name</label><span style="font-size: 18px; color: red;">*</span><br>
+                            <input id="Extra_charge" formControlName="p_charge_name" required  [(ngModel)]="percentData.name"/>
+                            <div *ngIf="Extra_charge.get('p_charge_name').invalid && Extra_charge.get('p_charge_name').touched">
+                                <small class="error" style="color: red; font-size: 15px;">Change name is required.</small>
+                            </div>
+                        </div><br>
+                
+                        <div class="col-md-5 percent" >
+                            <span *ngIf="percent"><label for="Extra_charge">Charges in percent </label><span style="font-size: 18px; color: red;">*</span><br></span>
+                            <span *ngIf="flat"><label for="Extra_charge" >Charges amount </label><span style="font-size: 18px; color: red;">*</span> <br></span>
+                            <input type="number" id="Extra_charge" maxlength="100" formControlName="p_charge_value" required  [(ngModel)]="percentData.value"/>
+                            <div *ngIf="Extra_charge.get('p_charge_value').invalid && Extra_charge.get('p_charge_value').touched">
+                                <small style="color: red; font-size: 15px;" *ngIf="Extra_charge.get('p_charge_value')?.errors?.required">Charge Value is required.</small>
+                                <small style="color: red; font-size: 15px;" *ngIf="Extra_charge.get('p_charge_value')?.errors?.max">Charge Value exceeds limit.</small>
+                            </div>    
+                        </div><br>
+                    </div>
+                    <div class="col-md-12 my-4 d-flex justify-content-center">
+                        <button class="btn" type="submit" [disabled]="Extra_charge.invalid">Create</button>
+                    </div>
+                    </div>
+                </form>
