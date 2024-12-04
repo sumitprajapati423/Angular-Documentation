@@ -1,0 +1,631 @@
+// html file extra charges --------------------------
+
+        <div class="Extra_charge my-2" *ngIf="charge_Data.length == 0" >
+            <div class="text-center mx-4 d-flex flex-column justify-content-center align-items-center row-gap-1">
+                <div class="image">
+                    <img src="https://cdn.pixabay.com/photo/2024/04/08/11/42/doggy-8683291_1280.jpg" alt="" width="200px" height="200px">
+                </div>
+                <div class="mt-3" style="font-size: 24px;">
+                    <p>Create Extra Charge</p>
+                </div>
+                <div style="font-size: 16px;">
+                    <p>Set up either fixed or percentage-based additional fees on
+                        your orders.</p>
+                </div>
+                <div >
+                    <button class="btn" (click)="OpenPopup()">Create extra charge</button>
+                </div>
+                <div class="my-4 fs-6">
+                    <a href="#">Learn more about extra charges</a>
+                </div>
+            </div>
+        </div>
+
+        <app-popup [PopSwitch]="Switch" [Title]="'Create Extra Charge'" (Close)="Closepopup($event)">
+            <form [formGroup]="Extra_charge" (ngSubmit)="save()" >
+            <div class="mx-2">
+                <label>
+                  <input type="radio"  (click)="show_percent('name')" formControlName="p_charge_type" value="true" />
+                  <span class="mx-2 fs-6" >Percent</span> &nbsp;
+                </label>
+                <label>
+                  <input type="radio"  (click)="show_flat('name')"  formControlName="p_charge_type" value="false" />
+                  <span class="mx-2 fs-6" >Flat price</span>
+                </label>
+              </div>
+              
+            <div class="mx-2 my-4 col-md-12" *ngIf="change_page === 'name'" >
+               
+                    <div class="row d-flex justify-content-between ">
+                        <div class="col-md-7 change_name ">
+                            <label for="Extra_charge">Charge name</label><span style="font-size: 18px; color: red;">*</span><br>
+                            <input id="Extra_charge" formControlName="p_charge_name" required />
+                            <div *ngIf="Extra_charge.get('p_charge_name').invalid && Extra_charge.get('p_charge_name').touched">
+                                <small class="error" style="color: red; font-size: 15px;">Change name is required.</small>
+                            </div>
+                        </div><br>
+                
+                        <div class="col-md-5 percent" >
+                            <span *ngIf="percent"><label for="Extra_charge">Charges in percent </label><span style="font-size: 18px; color: red;">*</span><br></span>
+                            <span *ngIf="flat"><label for="Extra_charge" >Charges amount </label><span style="font-size: 18px; color: red;">*</span> <br></span>
+                            <span *ngIf="percent"><input type="number" id="Extra_charge" maxlength="100" formControlName="p_charge_value"  required placeholder="Charge" /></span> 
+                            <span  *ngIf="flat"><input type="number" id="Extra_charge"  formControlName="p_charge_value"  required placeholder="Amount" /></span>
+                            <div *ngIf="Extra_charge.get('p_charge_value').invalid && Extra_charge.get('p_charge_value').touched">
+                                <small style="color: red; font-size: 15px;" *ngIf="Extra_charge.get('p_charge_value')?.errors?.required">Charge Value is required.</small>
+                                <small style="color: red; font-size: 15px;" *ngIf="Extra_charge.get('p_charge_value')?.errors?.max">Charge Value exceeds limit.</small>
+                            </div>    
+                        </div><br>
+                    </div>
+                    <div class="col-md-12 my-4 d-flex justify-content-center">
+                        <button class="btn" type="submit" [disabled]="Extra_charge.invalid">Create</button>
+                    </div>
+                    </div>
+                </form>
+        </app-popup>
+
+    <!-- <div class="charge_list my-2" *ngFor="let item of charge_Data ; let i = index" >
+        <div class="col-md-12 d-flex justify-content-between my-2 p-2 ">
+            <div style="font-size: 18px; font-weight: 500;">
+                    {{item.charge_name}}
+            </div>
+            <div>
+                <span style="margin-top: -5px;"><button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" style="margin-top: -5px;">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item>
+                  <span mat-button  mat-stroked-button></span>
+                  <span (click)="Edit(item)">Edit Charge</span>
+                    </button>
+                    <button mat-menu-item >
+                  <span mat-button  mat-stroked-button></span>
+                  <span style="color: red;" (click)="Delete(item)">Delete Charge</span>
+                    </button>
+                  </mat-menu>
+                </span>
+            </div>
+        </div>
+        <div>
+            <div class="col-md-6 listinput" >
+                 <span>
+                    <label for="Extra_charge">Charges  
+                        <span *ngIf="item?.charge_type === true"> in percent</span>
+                        <span *ngIf="item?.charge_type === false">amount</span>
+                    </label>
+                    <span style="font-size: 18px; color: red;">*</span><br>
+                </span>
+                
+                <input *ngIf="item?.charge_type === true" type="text" [(ngModel)]="item.charge_value" placeholder="percent">
+                <input *ngIf="item?.charge_type === false" type="text" [(ngModel)]="item.charge_value" placeholder="amount" >  
+            </div>
+            <p class="mx-4 my-1 fs-6"><b>{{item.charge_value}}</b>   will be added as normal on the bill</p>
+        </div><br>
+        <hr style="border: 1px solid black;">
+    </div>
+    <div class="col-md-12 my-2 display-flex justify-content-center text-center ">
+        <div>
+            <button (click)="OpenPopup()">Create extra charge</button>
+        </div>
+    </div>
+    <div class="col-md-12 my-2 display-flex justify-content-center text-right ">
+        <div>
+            <button class="btn">Save change</button>
+        </div>
+    </div> -->
+
+
+<div class="my-2" *ngIf="charge_Data.length > 0">
+  <div class="col-md-12 my-2 display-flex justify-content-center text-right ">
+    <button class="btn" (click)="OpenPopup()">Create extra charge</button>
+</div>
+<kendo-grid [kendoGridBinding]="charge_Data"   
+[height]="535"
+[pageSize]="10"
+[pageable]="{
+  pageSizes:[5,10,20,40,80,160],
+  info:true,
+  type:'input',
+  previousNext:true,
+  position:'bottom'
+}"
+[sortable]="true"
+[groupable]="true"
+[reorderable]="true"
+[resizable]="true"
+[height]="535"
+[columnMenu]="{ filter: true }">
+<kendo-grid-column media="(max-width: 700px)" title="charge"  [class]="{'text-center': true}">
+<ng-template kendoGridCellTemplate let-dataItem>
+  <article class="item">
+    <p class="title">Name</p>
+    <p class="desc" [ngClass]="{'disabled-row': dataItem.disabled}">{{dataItem.charge_name}}</p>
+  </article>
+  <article class="item">
+    <p class="title"> charge Value</p>
+    <p class="desc" [ngClass]="{'disabled-row': dataItem.disabled}">{{dataItem.charge_value}}</p>
+  </article>
+    <article class="item">
+    <p class="title">Charge Type</p>
+    <p class="desc" [ngClass]="{'disabled-row': dataItem.disabled}">
+      <ng-container *ngIf="dataItem.charge_type === true">
+      <!-- {{ dataItem.charge_value }}% -->
+      Percent
+    </ng-container>
+    <ng-container *ngIf="dataItem.charge_type === false">
+      <!-- {{ dataItem.charge_value | currency:'USD' }} -->
+      Amount
+    </ng-container></p>
+    </article>
+
+    <article class="item">
+      <p class="title"> Date</p>
+      <p class="desc" [ngClass]="{'disabled-row': dataItem.disabled}">{{dataItem.createdon}}</p>
+    </article>
+    <article class="item">
+    <p class="title">Ative</p>
+    <p class="desc"> <mat-slide-toggle
+      [color]="'primary'"
+      [checked]="!dataItem.disabled" 
+      (change)="toggleDisable(dataItem)">
+    </mat-slide-toggle></p>
+    </article>
+    <article class="item">
+    <p class="title">Action</p>
+    <p class="desc"  [ngClass]="{'disabled-row': dataItem.disabled}">
+        
+        <span  (click)="Edit(dataItem.banner_id)" title="Edit" ><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+       <style type="text/css">
+         .st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+         .st1{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+       </style>
+       <g>
+         <g>
+           <g>
+             <line class="st0" x1="3.3" y1="17.77" x2="17.95" y2="3.02"/>
+             <line class="st0" x1="6.05" y1="20.77" x2="20.7" y2="6.02"/>
+             <polyline class="st0" points="3.4,17.48 3.3,20.98 6.55,20.54 			"/>
+             <line class="st0" x1="17.57" y1="3.41" x2="20.32" y2="6.41"/>
+             <line class="st1" x1="15.36" y1="5.59" x2="18.15" y2="8.59"/>
+           </g>
+         </g>
+       </g>
+       </svg></span>&nbsp;&nbsp;
+        
+    </p>
+    </article>
+</ng-template>
+</kendo-grid-column>
+
+<kendo-grid-column media="(min-width: 700px)" field="charge_name" filter="text" title="Name" [width]="80"   >
+  <ng-template kendoGridCellTemplate let-dataItem >
+      <div [ngClass]="{'disabled-row': dataItem.disabled}"> {{dataItem.charge_name}}</div>
+  </ng-template>
+</kendo-grid-column>
+
+
+<kendo-grid-column media="(min-width: 700px)" field="charge_value" filter="text" title="Charge value" [width]="40"   [class]="{'text-center': true}"  >
+  <ng-template kendoGridCellTemplate let-dataItem >
+      <div  [ngClass]="{'disabled-row': dataItem.disabled}">{{dataItem.charge_value}}</div>
+  </ng-template>
+</kendo-grid-column>
+
+<kendo-grid-column media="(min-width: 700px)" field="charge_type" filter="text" title="Charge type" [width]="40"   [class]="{'text-center': true}"  >
+  <ng-template kendoGridCellTemplate let-dataItem>
+    <div  [ngClass]="{'disabled-row': dataItem.disabled}">
+      <ng-container *ngIf="dataItem.charge_type === true">
+        <!-- {{ dataItem.charge_value }}% -->
+        Percent
+      </ng-container>
+      <ng-container *ngIf="dataItem.charge_type === false">
+        <!-- {{ dataItem.charge_value | currency:'USD' }} -->
+        Amount
+      </ng-container>
+    </div>
+  </ng-template>
+</kendo-grid-column>
+
+<kendo-grid-column
+  field="createdon"
+  filter="text"
+  title="Date"
+  [width]="50"
+  [class]="{'text-center': false}"
+  media="(min-width: 700px)"
+>
+  <ng-template kendoGridCellTemplate let-dataItem>
+      <div  [ngClass]="{'disabled-row': dataItem.disabled}">{{dataItem.createdon  }}</div> 
+  </ng-template>
+</kendo-grid-column>
+
+<kendo-grid-column
+  title="Action"
+  [width]="40"
+  [columnMenu]="false"
+  [class]="{'text-center': true}"
+  media="(min-width: 700px)"
+>
+  <ng-template kendoGridCellTemplate let-dataItem>
+    <mat-slide-toggle
+    [color]="'primary'"
+    [checked]="!dataItem.disabled" 
+    (change)="toggleDisable(dataItem)">
+  </mat-slide-toggle>
+  </ng-template>
+</kendo-grid-column>
+
+<kendo-grid-column
+  field="Action"
+  title="Action"
+  [width]="40"
+  [class]="{'text-center': true}"
+  media="(min-width: 700px)"
+  [columnMenu]="false"
+>
+  <ng-template kendoGridCellTemplate let-dataItem>
+  <div class="icon"  [ngClass]="{'disabled-row': dataItem.disabled}">
+         
+          <span  (click)="Edit(dataItem)" matTooltip="Edit" ><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+         <style type="text/css">
+           .st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+           .st1{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+         </style>
+         <g>
+           <g>
+             <g>
+               <line class="st0" x1="3.3" y1="17.77" x2="17.95" y2="3.02"/>
+               <line class="st0" x1="6.05" y1="20.77" x2="20.7" y2="6.02"/>
+               <polyline class="st0" points="3.4,17.48 3.3,20.98 6.55,20.54 			"/>
+               <line class="st0" x1="17.57" y1="3.41" x2="20.32" y2="6.41"/>
+               <line class="st1" x1="15.36" y1="5.59" x2="18.15" y2="8.59"/>
+             </g>
+           </g>
+         </g>
+         </svg></span>&nbsp;&nbsp;&nbsp;
+  </div>
+  </ng-template>
+</kendo-grid-column>
+</kendo-grid>
+</div>
+
+
+
+//-------------------ts file in this ---------------------------------------
+
+import { Component, OnInit } from '@angular/core';
+import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { secureStorage } from 'src/app/shared/securestorage';
+import { StaffService } from '../staff.service';
+import { duration } from 'moment';
+
+
+@Component({
+  selector: 'app-extra-charges',
+  templateUrl: './extra-charges.component.html',
+  styleUrls: ['./extra-charges.component.scss']
+})
+export class ExtraChargesComponent implements OnInit {
+  Switch:boolean = false
+  Extra_charge:FormGroup
+  change_page:string='name';
+  flat:boolean=false
+  percent:boolean= true
+  chargeData: any;
+  showvalue:boolean= true
+  showvalue2:boolean= false
+  tokken;
+  retailer;
+  value: number = 0;
+  charge_Data:any;
+  ischargeEdit:boolean=false
+  ChargeEdit:any={}
+  editData: any;
+  constructor(
+    private fb:FormBuilder,
+    private storage: secureStorage,
+    private snackBar: MatSnackBar,
+    private service:StaffService,
+
+  ) { 
+  }
+
+  ngOnInit(): void {
+    this.chargeData = JSON.parse(this.storage.getstorage('isLoggedin'))
+    this.Extra_charge=this.fb.group({
+     p_charge_name:['',Validators.required],
+     p_charge_type:['true',Validators.required],
+     p_charge_value: ['', [Validators.required, this.chargeValueValidator.bind(this)]],
+      authtoken:[''],
+      p_retailerid:[''],
+    })
+    
+   
+    this.Extra_charge.get('p_charge_type')?.valueChanges.subscribe(value => {
+      this.Extra_charge.get('p_charge_value')?.setValue(''); 
+    });
+    this.Getcharge()
+
+
+
+  }
+
+  
+  chargeValueValidator(control: any) {
+    const p_charge_type = this.Extra_charge?.get('p_charge_type')?.value; 
+    if (p_charge_type === 'true') {
+      return control.value <= 100 ? null : { max: true };
+    } else if (p_charge_type === 'false') {
+      return control.value <= 999999999 ? null : { max: true };
+    }
+    return null;
+  }
+
+Getcharge(){
+  var obj = {
+    authtoken:this.chargeData.token ,
+    p_retailerid: parseFloat(this.chargeData.retailerid), 
+  }
+
+  this.service.Get_charges(obj).subscribe(getdata=>{
+    this.charge_Data = getdata['data']
+    console.log(this.charge_Data,'getdata');   
+  })
+}
+  
+
+
+
+  
+  show2(){
+    this.showvalue = true
+    this.showvalue2 = false
+  }
+  show3(){
+    this.showvalue = false
+    this.showvalue2 = true
+    
+  }
+ 
+  save(){
+    if(this.ischargeEdit === false){
+      if (this.Extra_charge.valid) {
+        const formData = {
+          p_retailerid: parseFloat(this.chargeData.retailerid), 
+          p_charge_name: this.Extra_charge.value.p_charge_name,
+          p_charge_type: String(this.Extra_charge.value.p_charge_type), 
+          p_charge_value: this.Extra_charge.value.p_charge_value,
+          
+          p_isactive: true,
+          p_createdby: parseFloat(this.chargeData.staffid), 
+          authtoken: this.chargeData.token 
+        };
+   
+          console.log(formData);
+          
+        this.service.Add_charges(formData).subscribe(res =>{
+        console.log(res,'data');
+            this.snackBar.open('Save Successful!', 'Close', {
+              duration: 3000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom'
+            })
+        }) 
+    }
+    else{
+      this.snackBar.open('Please Check the form2', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
+      
+    }
+    setTimeout(() => {
+      this.Closepopup(true)
+    }, (2000));
+    }
+    else{
+      this.update()
+    }
+  }
+
+Edit(id:any){
+    this.Switch =true
+    var obj = {
+      'authtoken':this.chargeData.token,
+      'p_chargeid':parseInt(id.chargeid),
+      'p_charge_name': id.charge_name,
+      'p_charge_value': parseInt(id.charge_value),
+      'p_charge_type':String( id.charge_type),
+      'p_isactive': String(id.isactive)
+    }
+    this.editData = { ...obj }
+    this.setFormValues()
+ console.log(this.editData,'kkk');
+  }
+
+  setFormValues(): void {
+    if (this.editData) {
+      this.ischargeEdit = true;
+      const ChargeEdit = this.editData;
+      this.Extra_charge.get('p_charge_type').setValue(String( ChargeEdit.p_charge_type))
+      this.Extra_charge.get('p_charge_name').setValue(ChargeEdit.p_charge_name)
+      this.Extra_charge.get('p_charge_value').setValue(Number(ChargeEdit.p_charge_value))
+
+      console.log(ChargeEdit, 'dataaa');
+    } else {
+      console.log("No data available to set form values.");
+    }
+
+    if (this.ChargeEdit.p_charge_type === true) {
+      this.percent = true; 
+      this.flat = false 
+    } 
+    else {
+      this.percent= false; 
+      this.flat = true
+    }
+
+    if (this.ChargeEdit.p_charge_type === false) {
+      this.flat = true; 
+      this.percent = false
+    } 
+    else {
+      this.flat= false;
+      this.percent = true 
+    }
+
+  }
+
+  update(){
+    
+    if(this.Extra_charge.valid){
+      this.Extra_charge.controls['authtoken'].setValue(this.chargeData.token)
+      this.Extra_charge.controls['p_retailerid'].setValue(Number(this.chargeData.retailerid))
+     
+      var obj = this.Extra_charge.value
+      obj.p_chargeid = parseInt(this.editData.p_chargeid)
+      obj.p_isactive=String(this.editData.p_isactive)
+     this.service.update_Charge(obj).subscribe(update =>{
+      // console.log(update,'new');
+        this.snackBar.open('update successfully', 'close',{
+          duration:3000,
+          horizontalPosition:'center',
+          verticalPosition:'bottom'
+        })
+    })
+  }
+  setTimeout(() => {
+    this.Closepopup(true)
+  }, (2000));
+  
+
+
+    
+  }
+
+  toggleDisable(dataItem: any): void {
+    dataItem.disabled = !dataItem.disabled;
+  }
+
+   Delete(index: any) {
+    // this.charge_Data.splice(index, 1);
+       this.charge_Data = this.charge_Data.filter(element => element.chargeid !== index.chargeid);
+       this.snackBar.open('Delete your Product', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom'
+      });
+      }
+
+  OpenPopup(){
+  this.Switch =true
+  
+  }
+  Closepopup(event:any){
+    this.Switch = event
+    this.Extra_charge.reset()
+   
+  }
+
+  show_percent(event:any){
+    this.change_page = event
+    this.percent = true
+    this.flat = false
+  }
+
+  show_flat(event:any){
+    this.change_page = event
+    this.flat = true
+    this.percent= false
+  }
+
+
+
+}
+
+
+//--------------------------css file inn this -------------------------
+
+
+
+.Extra_charge{
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+}
+.Extra_charge img{
+    border-radius: 50%;
+}
+.btn{
+    background-color: #1E4558;
+    color: white;
+    // padding: 6px 22px 6px 22px;
+}
+
+input:focus{
+    border: 2px solid rgba(58,168,242,1);
+    -webkit-box-shadow: 0px 0px 11px -1px rgba(58,168,242,1);
+-moz-box-shadow: 0px 0px 11px -1px rgba(58,168,242,1);
+box-shadow: 0px 0px 11px -3px rgba(58,168,242,1);
+}
+
+.change_name input{
+    width: 230px;
+    height: 40px; border: 1px solid #b1b1b1; border-radius: 5px; outline: unset; font-size: 16px; padding-left: 10px; 
+}
+
+.percent input{
+    width: 130px;
+    height: 40px; border: 1px solid #b1b1b1; border-radius: 5px; outline: unset; font-size: 16px; padding-left: 10px; 
+
+}
+
+.charge_list{
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    padding: 10px;
+}
+
+.listinput input{
+    width: 100%;
+    height: 50px;
+}
+
+.disabled-row {
+    pointer-events: none;
+    opacity: 0.5;
+    // background-color: #f0f0f0;
+  }
+
+  @media (min-width:320px ) and (max-width:700px){
+    .item{
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .title {
+        text-align: left;
+        width: 50%;
+    }
+    
+    .desc {
+        text-align: right;
+        width: 50%; 
+       ;
+    }
+   
+}
+
+// kendo grid use import module -----in your module file in ------------------------
+
+1. GridModule,
+2.  DropDownsModule,
+3. SwitchModule,
+4. MatButtonModule, -- angular material ui 
+5. MatCardModule, --angular  material ui
