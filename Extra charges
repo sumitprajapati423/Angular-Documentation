@@ -6,7 +6,7 @@
                     <img src="https://cdn.pixabay.com/photo/2024/04/08/11/42/doggy-8683291_1280.jpg" alt="" width="200px" height="200px">
                 </div>
                 <div class="mt-3" style="font-size: 24px;">
-                    <p>Create Extra Charge</p>
+                    <p>Create Extra Charge </p>
                 </div>
                 <div style="font-size: 16px;">
                     <p>Set up either fixed or percentage-based additional fees on
@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <app-popup [PopSwitch]="Switch" [Title]="'Create Extra Charge'" (Close)="Closepopup($event)">
+        <app-popup [PopSwitch]="Switch"  [Title]="ischargeEdit ? 'Update Extra Charge' : 'Create Extra Charge'" (Close)="Closepopup($event)">
             <form [formGroup]="Extra_charge" (ngSubmit)="save()" >
             <div class="mx-2">
                 <label>
@@ -57,7 +57,7 @@
                         </div><br>
                     </div>
                     <div class="col-md-12 my-4 d-flex justify-content-center">
-                        <button class="btn" type="submit" [disabled]="Extra_charge.invalid">Create</button>
+                        <button class="btn" type="submit" [disabled]="Extra_charge.invalid">{{ischargeEdit?'Update':'Create'}}</button>
                     </div>
                     </div>
                 </form>
@@ -115,10 +115,19 @@
 
 
 <div class="my-2" *ngIf="charge_Data.length > 0">
-  <div class="col-md-12 my-2 display-flex justify-content-center text-right ">
+  <!-- <div class="col-md-12 my-2 display-flex justify-content-center text-right ">
     <button class="btn" (click)="OpenPopup()">Create extra charge</button>
+</div> -->
+
+<div class="col-md-12 d-flex justify-content-between align-center my-2 p-2 Guest_checkout ">
+    <div class="mx-2 my-2 align-content-center">
+        <span>Extra Charge</span>
+  </div>
+  <div class="align-content-center mr-2">
+    <button class="btn" (click)="OpenPopup()">Create extra charge</button>
+  </div>
 </div>
-<kendo-grid [kendoGridBinding]="charge_Data"   
+<kendo-grid  [kendoGridBinding]="charge_Data"   
 [height]="535"
 [pageSize]="10"
 [pageable]="{
@@ -138,15 +147,15 @@
 <ng-template kendoGridCellTemplate let-dataItem>
   <article class="item">
     <p class="title">Name</p>
-    <p class="desc" [ngClass]="{'disabled-row': dataItem.disabled}">{{dataItem.charge_name}}</p>
+    <p class="desc" >{{dataItem.charge_name}}</p>
   </article>
   <article class="item">
     <p class="title"> charge Value</p>
-    <p class="desc" [ngClass]="{'disabled-row': dataItem.disabled}">{{dataItem.charge_value}}</p>
+    <p class="desc" >{{dataItem.charge_value}}</p>
   </article>
     <article class="item">
     <p class="title">Charge Type</p>
-    <p class="desc" [ngClass]="{'disabled-row': dataItem.disabled}">
+    <p class="desc" >
       <ng-container *ngIf="dataItem.charge_type === true">
       <!-- {{ dataItem.charge_value }}% -->
       Percent
@@ -159,21 +168,21 @@
 
     <article class="item">
       <p class="title"> Date</p>
-      <p class="desc" [ngClass]="{'disabled-row': dataItem.disabled}">{{dataItem.createdon}}</p>
+      <p class="desc" >{{dataItem.createdon}}</p>
     </article>
     <article class="item">
-    <p class="title">Ative</p>
+    <p class="title">Status</p>
     <p class="desc"> <mat-slide-toggle
       [color]="'primary'"
       [checked]="!dataItem.disabled" 
-      (change)="toggleDisable(dataItem)">
+      (change)="toggleDisable(dataItem,dataItem.chargeid)">
     </mat-slide-toggle></p>
     </article>
     <article class="item">
     <p class="title">Action</p>
-    <p class="desc"  [ngClass]="{'disabled-row': dataItem.disabled}">
+    <p class="desc"  >
         
-        <span  (click)="Edit(dataItem.banner_id)" title="Edit" ><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+        <span  (click)="Edit(dataItem)" title="Edit" ><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
           width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
        <style type="text/css">
          .st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
@@ -199,20 +208,20 @@
 
 <kendo-grid-column media="(min-width: 700px)" field="charge_name" filter="text" title="Name" [width]="80"   >
   <ng-template kendoGridCellTemplate let-dataItem >
-      <div [ngClass]="{'disabled-row': dataItem.disabled}"> {{dataItem.charge_name}}</div>
+      <div> {{dataItem.charge_name}}</div>
   </ng-template>
 </kendo-grid-column>
 
 
-<kendo-grid-column media="(min-width: 700px)" field="charge_value" filter="text" title="Charge value" [width]="40"   [class]="{'text-center': true}"  >
+<kendo-grid-column media="(min-width: 700px)" field="charge_value" filter="numeric"  title="Charge value" [width]="40"   [class]="{'text-center': true}"  >
   <ng-template kendoGridCellTemplate let-dataItem >
-      <div  [ngClass]="{'disabled-row': dataItem.disabled}">{{dataItem.charge_value}}</div>
+      <div>{{dataItem.charge_value}}</div>
   </ng-template>
 </kendo-grid-column>
 
 <kendo-grid-column media="(min-width: 700px)" field="charge_type" filter="text" title="Charge type" [width]="40"   [class]="{'text-center': true}"  >
   <ng-template kendoGridCellTemplate let-dataItem>
-    <div  [ngClass]="{'disabled-row': dataItem.disabled}">
+    <div >
       <ng-container *ngIf="dataItem.charge_type === true">
         <!-- {{ dataItem.charge_value }}% -->
         Percent
@@ -227,19 +236,20 @@
 
 <kendo-grid-column
   field="createdon"
-  filter="text"
+  filter="date"
+  [format]="'yyyy/MM/dd'"
   title="Date"
   [width]="50"
   [class]="{'text-center': false}"
   media="(min-width: 700px)"
 >
   <ng-template kendoGridCellTemplate let-dataItem>
-      <div  [ngClass]="{'disabled-row': dataItem.disabled}">{{dataItem.createdon  }}</div> 
+      <div >{{dataItem.createdon}}</div> 
   </ng-template>
 </kendo-grid-column>
 
 <kendo-grid-column
-  title="Action"
+  title="Status"
   [width]="40"
   [columnMenu]="false"
   [class]="{'text-center': true}"
@@ -247,9 +257,10 @@
 >
   <ng-template kendoGridCellTemplate let-dataItem>
     <mat-slide-toggle
-    [color]="'primary'"
-    [checked]="!dataItem.disabled" 
-    (change)="toggleDisable(dataItem)">
+    [color]="'primary'" 
+    [disabled]="'false'"
+    [checked]="dataItem.isactive"
+    (change)="statuspopup(dataItem)">
   </mat-slide-toggle>
   </ng-template>
 </kendo-grid-column>
@@ -263,7 +274,7 @@
   [columnMenu]="false"
 >
   <ng-template kendoGridCellTemplate let-dataItem>
-  <div class="icon"  [ngClass]="{'disabled-row': dataItem.disabled}">
+  <div class="icon" >
          
           <span  (click)="Edit(dataItem)" matTooltip="Edit" ><svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
@@ -286,19 +297,30 @@
   </div>
   </ng-template>
 </kendo-grid-column>
+
 </kendo-grid>
+<app-popup [PopSwitch]="Switch2" [Title]="'Confirm Deactivation'" (Close)="Closepopup($event)">
+
+  <div class="mx-2 ">
+    <p class="fs-5 mx-2">Once Deactivated it will be removed</p>
+  </div>
+  <div class="my-4 col-md-12 display-flex justi-content-center text-right">
+    <button class="btn" style="background-color: #f6f6f6; color: red;" (click)="toggleDisable()">Yes Confirm</button> &nbsp;
+    <button class="btn" style="background-color: #f6f6f6; color: black" (click)="cancelToggleDisable()">Cancel</button>
+  </div>
+</app-popup>
+
 </div>
 
 
 
 //-------------------ts file in this ---------------------------------------
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {  FormBuilder,  FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { secureStorage } from 'src/app/shared/securestorage';
-import { StaffService } from '../staff.service';
-import { duration } from 'moment';
+import { StaffService } from '../Setting.service';
 
 
 @Component({
@@ -306,8 +328,10 @@ import { duration } from 'moment';
   templateUrl: './extra-charges.component.html',
   styleUrls: ['./extra-charges.component.scss']
 })
+
 export class ExtraChargesComponent implements OnInit {
   Switch:boolean = false
+  Switch2:boolean = false
   Extra_charge:FormGroup
   change_page:string='name';
   flat:boolean=false
@@ -315,43 +339,85 @@ export class ExtraChargesComponent implements OnInit {
   chargeData: any;
   showvalue:boolean= true
   showvalue2:boolean= false
-  tokken;
-  retailer;
+  info;
   value: number = 0;
-  charge_Data:any;
+  charge_Data:any[]=[];
   ischargeEdit:boolean=false
   ChargeEdit:any={}
   editData: any;
+  dataItem: { charge_name: string; charge_value: number; charge_type: string; chargeid: number; isactive: string; };
+
   constructor(
-    private fb:FormBuilder,
+    private formBuilder: FormBuilder,
     private storage: secureStorage,
     private snackBar: MatSnackBar,
-    private service:StaffService,
+    private service: StaffService,
 
   ) { 
-  }
-
-  ngOnInit(): void {
-    this.chargeData = JSON.parse(this.storage.getstorage('isLoggedin'))
-    this.Extra_charge=this.fb.group({
-     p_charge_name:['',Validators.required],
-     p_charge_type:['true',Validators.required],
-     p_charge_value: ['', [Validators.required, this.chargeValueValidator.bind(this)]],
-      authtoken:[''],
-      p_retailerid:[''],
-    })
-    
    
-    this.Extra_charge.get('p_charge_type')?.valueChanges.subscribe(value => {
-      this.Extra_charge.get('p_charge_value')?.setValue(''); 
-    });
-    this.Getcharge()
-
-
-
   }
 
   
+
+  ngOnInit(): void {
+    this.info = JSON.parse(this.storage.getstorage("isLoggedin"));
+    this.reactiveFormVallidation(); 
+       
+    this.Extra_charge.get('p_charge_type')?.valueChanges.subscribe(value => {
+      this.Extra_charge.get('p_charge_value')?.setValue(''); 
+    });
+   
+    this.Getcharge()
+   
+
+  }
+
+  OpenPopup(){
+    this.Switch =true
+    this.Switch2 = false
+    }
+    statuspopup(dataItem: { charge_name: string, charge_value: number, charge_type: string, chargeid: number, isactive: string } ){
+      this.Switch2 = true
+      this.Switch =false
+      this.dataItem = dataItem;  
+    }
+    Closepopup(event:any){
+      this.Switch = event
+      this.Switch2 = event
+      this.Extra_charge.reset()
+      this.ischargeEdit = false;
+      const currentIsActive = this.dataItem.isactive === 'false';
+      const newIsActive = currentIsActive;
+      this.dataItem.isactive = newIsActive ? 'true' : 'false';
+      this.Getcharge()
+    }
+  
+    show_percent(event:any){
+      this.change_page = event
+      this.percent = true
+      this.flat = false
+    }
+  
+    show_flat(event:any){
+      this.change_page = event
+      this.flat = true
+      this.percent= false
+    }
+  
+
+
+
+reactiveFormVallidation() {
+  this.Extra_charge=this.formBuilder.group({
+    p_charge_name:['',Validators.required],
+    p_charge_type:['true',Validators.required],
+    p_charge_value: ['', [Validators.required, this.chargeValueValidator.bind(this)]],
+     authtoken:[''],
+     p_retailerid:[''],
+   });
+}
+
+
   chargeValueValidator(control: any) {
     const p_charge_type = this.Extra_charge?.get('p_charge_type')?.value; 
     if (p_charge_type === 'true') {
@@ -364,20 +430,15 @@ export class ExtraChargesComponent implements OnInit {
 
 Getcharge(){
   var obj = {
-    authtoken:this.chargeData.token ,
-    p_retailerid: parseFloat(this.chargeData.retailerid), 
+    p_retailerid: parseInt(this.info.retailerid), 
+    authtoken:this.info.token ,
   }
-
   this.service.Get_charges(obj).subscribe(getdata=>{
     this.charge_Data = getdata['data']
-    console.log(this.charge_Data,'getdata');   
+
   })
 }
-  
 
-
-
-  
   show2(){
     this.showvalue = true
     this.showvalue2 = false
@@ -389,28 +450,33 @@ Getcharge(){
   }
  
   save(){
+ 
     if(this.ischargeEdit === false){
       if (this.Extra_charge.valid) {
         const formData = {
-          p_retailerid: parseFloat(this.chargeData.retailerid), 
+          p_retailerid: parseFloat(this.info.retailerid), 
           p_charge_name: this.Extra_charge.value.p_charge_name,
           p_charge_type: String(this.Extra_charge.value.p_charge_type), 
           p_charge_value: this.Extra_charge.value.p_charge_value,
           
           p_isactive: true,
-          p_createdby: parseFloat(this.chargeData.staffid), 
-          authtoken: this.chargeData.token 
+          p_createdby: parseFloat(this.info.staffid), 
+          authtoken: this.info.token 
         };
-   
-          console.log(formData);
           
         this.service.Add_charges(formData).subscribe(res =>{
-        console.log(res,'data');
             this.snackBar.open('Save Successful!', 'Close', {
               duration: 3000,
               horizontalPosition: 'center',
               verticalPosition: 'bottom'
             })
+        
+            this.Getcharge()
+          
+            setTimeout(() => {
+              this.Switch = false
+              this.Extra_charge.reset()
+            }, 500);
         }) 
     }
     else{
@@ -421,9 +487,6 @@ Getcharge(){
       });
       
     }
-    setTimeout(() => {
-      this.Closepopup(true)
-    }, (2000));
     }
     else{
       this.update()
@@ -432,8 +495,9 @@ Getcharge(){
 
 Edit(id:any){
     this.Switch =true
+    this.ischargeEdit = true;
     var obj = {
-      'authtoken':this.chargeData.token,
+      'authtoken':this.info.token,
       'p_chargeid':parseInt(id.chargeid),
       'p_charge_name': id.charge_name,
       'p_charge_value': parseInt(id.charge_value),
@@ -442,7 +506,6 @@ Edit(id:any){
     }
     this.editData = { ...obj }
     this.setFormValues()
- console.log(this.editData,'kkk');
   }
 
   setFormValues(): void {
@@ -453,7 +516,6 @@ Edit(id:any){
       this.Extra_charge.get('p_charge_name').setValue(ChargeEdit.p_charge_name)
       this.Extra_charge.get('p_charge_value').setValue(Number(ChargeEdit.p_charge_value))
 
-      console.log(ChargeEdit, 'dataaa');
     } else {
       console.log("No data available to set form values.");
     }
@@ -481,73 +543,81 @@ Edit(id:any){
   update(){
     
     if(this.Extra_charge.valid){
-      this.Extra_charge.controls['authtoken'].setValue(this.chargeData.token)
-      this.Extra_charge.controls['p_retailerid'].setValue(Number(this.chargeData.retailerid))
+      this.Extra_charge.controls['authtoken'].setValue(this.info.token)
+      this.Extra_charge.controls['p_retailerid'].setValue(Number(this.info.retailerid))
      
       var obj = this.Extra_charge.value
       obj.p_chargeid = parseInt(this.editData.p_chargeid)
       obj.p_isactive=String(this.editData.p_isactive)
+
      this.service.update_Charge(obj).subscribe(update =>{
-      // console.log(update,'new');
         this.snackBar.open('update successfully', 'close',{
           duration:3000,
           horizontalPosition:'center',
           verticalPosition:'bottom'
         })
+        this.Getcharge();
+        this.Extra_charge.reset()
+        setTimeout(() => {
+          this.Switch = false
+    
+        }, 500);
     })
   }
-  setTimeout(() => {
-    this.Closepopup(true)
-  }, (2000));
+  }
+
   
+ 
 
+  toggleDisable() {
+    const currentIsActive = this.dataItem.isactive === 'true';
+  const newIsActive = currentIsActive;
+  this.dataItem.isactive = newIsActive ? 'false' : 'true';
+  
+    const obj = {
+      authtoken: this.info.token,
+      p_charge_name: this.dataItem.charge_name,
+      p_charge_type: String(this.dataItem.charge_type),
+      p_charge_value: Number(this.dataItem.charge_value),
+      p_chargeid: this.dataItem.chargeid,
+      p_isactive: newIsActive, 
+      p_createdby: parseInt(this.info.staffid),
+      p_retailerid: Number(this.info.retailerid),
+    };
 
-    
-  }
-
-  toggleDisable(dataItem: any): void {
-    dataItem.disabled = !dataItem.disabled;
-  }
-
-   Delete(index: any) {
-    // this.charge_Data.splice(index, 1);
-       this.charge_Data = this.charge_Data.filter(element => element.chargeid !== index.chargeid);
-       this.snackBar.open('Delete your Product', 'Close', {
+    this.service.update_Charge(obj).subscribe(update => {
+      console.log(update, 'update');
+      this.snackBar.open('Deactivate successful', 'close', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'bottom'
       });
-      }
-
-  OpenPopup(){
-  this.Switch =true
-  
-  }
-  Closepopup(event:any){
-    this.Switch = event
-    this.Extra_charge.reset()
-   
-  }
-
-  show_percent(event:any){
-    this.change_page = event
-    this.percent = true
-    this.flat = false
-  }
-
-  show_flat(event:any){
-    this.change_page = event
-    this.flat = true
-    this.percent= false
+      this.Getcharge()
+      setTimeout(() => {
+        this.Switch2 = false
+      }, 1000);
+    });
   }
 
 
 
+  cancelToggleDisable(){
+  this.Switch2 = false
+
+  const currentIsActive = this.dataItem.isactive === 'false';
+  const newIsActive = currentIsActive;
+  this.dataItem.isactive = newIsActive ? 'true' : 'false';
+  this.Getcharge()
+  }
+    
 }
 
 
-//--------------------------css file inn this -------------------------
 
+
+
+
+//--------------------------css file inn this -------------------------
 
 
 .Extra_charge{
@@ -565,6 +635,9 @@ Edit(id:any){
     background-color: #1E4558;
     color: white;
     // padding: 6px 22px 6px 22px;
+}
+.btn:hover{
+    transform: scale(1.1);
 }
 
 input:focus{
@@ -603,6 +676,23 @@ box-shadow: 0px 0px 11px -3px rgba(58,168,242,1);
     // background-color: #f0f0f0;
   }
 
+
+  .Guest_checkout{
+    width: 100%;
+    height: 100%;
+    border: 1px solid #f6f6f6;
+    background: white;
+}
+
+.Guest_checkout span{
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.Guest_checkout p{
+    font-size: 15px;
+    color: #6c757d;
+}
   @media (min-width:320px ) and (max-width:700px){
     .item{
         display: flex;
@@ -621,6 +711,7 @@ box-shadow: 0px 0px 11px -3px rgba(58,168,242,1);
     }
    
 }
+
 
 // kendo grid use import module -----in your module file in ------------------------
 
