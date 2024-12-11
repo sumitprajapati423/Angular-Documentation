@@ -1,5 +1,6 @@
 // html file extra charges --------------------------
 
+
         <div class="Extra_charge my-2" *ngIf="charge_Data.length == 0" >
             <div class="text-center mx-4 d-flex flex-column justify-content-center align-items-center row-gap-1">
                 <div class="image">
