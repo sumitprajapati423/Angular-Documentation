@@ -1,0 +1,95 @@
+//----------------------html part--------------
+
+<div class='weightInput2'>
+    <input type="text">
+   <button (click)="toggleDropdown()" > {{ selectedUnit }}</button>
+   <div *ngIf="showDropdown" class="dropdown">
+     <ul class="mx-4">
+       <li *ngFor="let unit of units" (click)="selectUnit(unit)">
+         {{ unit }}
+       </li>
+     </ul>
+   </div>
+ </div>
+//-------------------------------------css part-----------------------
+.weightInput2{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .weightInput2 input {
+    width: 70%;
+    height: 40px;
+    outline: none; 
+    padding: 10px; 
+    flex: 1; 
+    font-size: 16px;
+  }
+  
+  .weightInput2 button {
+    border: 1px solid black; 
+    background-color: gray; 
+    color: white; 
+    padding: 10px 15px; 
+    cursor: pointer;
+    font-size: 16px;
+    height: 40px; 
+  }
+  .dropdown {
+    margin-top: 110px;
+    margin-left: 85px;
+    border: 1px solid #ccc; 
+
+    position: absolute; 
+    background-color: white; 
+    z-index: 1000;
+  }
+  
+  .dropdown ul {
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0;
+  }
+  
+  .dropdown li {
+    width: 100%;
+    padding: 8px;
+    cursor: pointer; 
+  }
+  
+  .dropdown li:hover {
+    background-color: #f0f0f0;
+  }
+
+//-----------------------------------------ts part -------------------------
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-selected-input',
+  templateUrl: './selected-input.component.html',
+  styleUrls: ['./selected-input.component.scss']
+})
+export class SelectedInputComponent implements OnInit {
+  units = ['kg', 'Gm'];
+  selectedUnit: string = 'kg';
+  showDropdown: boolean = false;
+
+  
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+  }
+
+  selectUnit(unit: string) {
+    this.selectedUnit = unit;
+    this.showDropdown = false; // Close dropdown after selection
+  }
+
+}
