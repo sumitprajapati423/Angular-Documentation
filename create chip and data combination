@@ -387,6 +387,9 @@ this.variant_value = this.fb.group({
 
 
 -----------------------------------------this comonent data send to other component and add other option ------------------------
+//---------------------html part -----------------------
+
+<app-variant  (senddata)="recivedatafn($event)" (ArrayData)="reciveArrayData($event)" (RemoveData)="removeDatafn($event)" [index]="i"></app-variant>
 
 //---------other component ---ts file-----------------------
  savedVariants: { name: string; values: {[x: string]: any; name: string, color?: string }[] }[] = [];  
