@@ -1,0 +1,474 @@
+
+//---create a input field create a chip---------
+//----------------html part --------------
+
+<div class="col-md-12 row d-flex justify-content-between " >
+  <div class="col-md-3">
+    <label for="">Attribute Name</label>
+    <input type="text" [(ngModel)]="inputValue" (click)="ShowDropdown()" (input)="onInputChange()" placeholder="Type to filter..." (focus)="onInputChange()" style="width: 100%; height: 40px;"/>
+    <button 
+    *ngIf="showAddButton" 
+    (click)="addItem()" 
+    (click)="openpopup()"
+    class="add-button" 
+    style="position: absolute; right: 20px; top: 70%; transform: translateY(-50%);"
+    data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
+    Add
+  </button>
+
+    <div *ngIf="isDropdownVisible" style="width: 100%;" class="ul">
+      <div *ngFor="let item of filteredData" (click)="selectItem(item)" style="width: 100%;" class="li">
+        {{ item }}
+      </div>
+    </div>
+  </div>
+    <div class="chips col-md-9 my-2 mx-3" *ngFor="let option of options; let i = index">
+    <label for="">Attribute Value</label><br>
+    <mat-form-field class="example-chip-list" appearance="fill">
+      <mat-chip-list #chipList aria-label="Option values">
+        <mat-chip
+          *ngFor="let value of option.values"
+          [selectable]="selectable"
+          [removable]="removable"
+          (removed)="remove(value, i)"
+          [style.backgroundColor]="value.color ? value.color : ''">
+          {{value.name}}
+          <button matChipRemove *ngIf="removable">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+
+        <label for="color">
+          <input class="selectedColor" *ngIf="inputValue === 'Color'"
+               type="color"
+               id="color"
+               (change)="onColorSelected($event)" /></label>
+
+        <input
+          *ngIf="inputValue !== 'Color'"
+          placeholder="New Value"
+          #fruitInput
+          [formControl]="option.fruitCtrl"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)">
+      </mat-chip-list>
+    </mat-form-field>
+    
+  </div>       
+</div> 
+
+//---------------------------css part-----
+.ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute; 
+    background: white; 
+    z-index: 1000; 
+  }
+  
+  .li {
+   padding: 8px;
+    cursor: pointer;
+  }
+  
+  .li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .add-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px 15px;
+    background-color: #f6f6f6;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .add-button:hover {
+    background-color: #f6f6f6;
+  }
+
+  .modal-body label{
+    font-size: 18px;
+  }
+
+
+ .chips{
+  width: 100%;
+  height: 100%;
+ }
+ .example-chip-list {
+  width: 100%;
+  height: 40px;
+}
+
+::ng-deep .mat-form-field-underline {
+  display: none;
+}
+
+ .selectedColor{
+    width: 100vh;
+    height: 50px;
+    margin-top: -50px;
+    visibility: hidden !important;
+    z-index: -2;
+    
+  }
+.col-md-12.d-flex {
+  display: flex;
+  justify-content: start; 
+  align-items: center;   
+  flex-wrap: nowrap;           
+
+}
+
+input[type="text"] {
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box; 
+}
+
+
+.add-button {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 35px; 
+  display: flex;
+  align-items: center;
+}
+
+
+.ul {
+  position: absolute;
+  top: 50px; 
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ccc;
+  z-index: 1000; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.li {
+  padding: 10px;
+  cursor: pointer;
+  background-color: white;
+  transition: background-color 0.2s ease;
+}
+
+
+.li:hover {
+  background-color: #f1f1f1;
+}
+
+.mat-chip {
+  background-color: #f1f1f1;
+  margin: 2px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.selectedColor {
+  width: 35px;
+  height: 35px;
+  margin-left: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+mat-form-field {
+  flex: 1;
+  min-width: 150px;
+}
+
+.mat-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.mat-chip-list {
+  z-index: 1;
+}
+
+//----------------ts part--------------------------------------
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import * as namer from 'color-namer';
+import {MatChipInputEvent} from '@angular/material/chips';
+import { ConnectableObservable } from 'rxjs';
+
+@Component({
+  selector: 'app-variant',
+  templateUrl: './variant.component.html',
+  styleUrls: ['./variant.component.scss']
+})
+export class VariantComponent implements OnInit {
+  @Input() index:number = 0
+  inputValue: string = '';
+  data: string[] = ['Size', 'Weight', 'Material', 'Color',];
+  filteredData: string[] = [];
+  isDropdownVisible: boolean = false;
+  showAddButton: boolean = true;
+  separatorKeysCodes: number[] = [13, 188];
+  removable = true;
+  Switch:boolean= false;
+  variant_value:FormGroup
+  value_name:string='';
+  @Output() senddata=new EventEmitter<any>() 
+  @Output() ArrayData=new EventEmitter<any>() 
+  @Output() RemoveData=new EventEmitter<any>() 
+
+
+  constructor(
+    private fb:FormBuilder
+  ) { }
+
+  ngOnInit(): void {
+this.variant_value = this.fb.group({
+  name:['',Validators.required],
+  discripation:['',Validators.required]
+})
+  }
+
+
+  onInputChange() {
+    if (this.inputValue) {
+      this.filteredData = this.data.filter(item =>
+        item.toLowerCase().includes(this.inputValue.toLowerCase())
+      );
+      this.isDropdownVisible = this.filteredData.length > 0;
+      this.showAddButton = this.filteredData.length === 0;
+    } else {
+      this.filteredData = [];
+      this.isDropdownVisible = false;
+      this.showAddButton = false;
+    }
+  }
+
+  selectItem(item: string) {
+    this.inputValue = item; 
+    this.options.forEach((value)=>{
+      if(value.name === item){
+
+      }else{
+        value.values=[]
+        value.fruitCtrl.setValue('')
+      }
+    })
+  
+    // this.options[0].values = []
+    this.filteredData = [];
+    this.isDropdownVisible = false;
+    this.showAddButton = false; 
+    var obj = {
+      index:this.index,
+      value:this.inputValue
+    }
+    this.senddata.emit(obj);
+    
+  }
+
+  ShowDropdown() {
+    this.isDropdownVisible = !this.isDropdownVisible;
+    this.filteredData = this.data;
+    this.showAddButton = true; 
+  }
+
+  addItem() {
+    if (this.inputValue && !this.data.includes(this.inputValue)) {
+      this.data.push(this.inputValue);
+      this.inputValue = ''; 
+      this.filteredData = [];
+      this.isDropdownVisible = false;
+      this.showAddButton = true; 
+    }
+  }
+
+  //-------------------------chip
+  options: { name: string; values: { name: string, color?: string }[]; fruitCtrl: FormControl }[] = [
+    { name: '', values: [], fruitCtrl: new FormControl() }
+  ];
+
+
+  add(event: MatChipInputEvent ): void {
+  
+    var obj = {
+      index:this.index,
+      value:event.value
+    }
+
+    const value = (event.value || '').trim();
+    if (value) {
+      this.options[0].values.push({name:value});
+      this.value_name = value
+    }
+ 
+
+     event.chipInput!.clear();
+    this.options[0].fruitCtrl.setValue(null);
+    this.ArrayData.emit(obj)
+  }
+
+  remove(value: { name: string, color?: string }, index: any): void {
+    const values = this.options[index].values;
+    const idx = values.indexOf(value);
+    if (idx >= 0) {
+      values.splice(idx, 1);
+    }
+    this.RemoveData.emit({index:this.index, value:values})
+  }
+
+  onColorSelected(event: any, ): void {
+    
+   
+    const selectedColorHex = event.target.value;
+    const colorName = namer(selectedColorHex).basic[0]?.name; 
+    console.log(colorName,'color');
+
+    if (colorName) {
+      this.options[0].values.push({ name: colorName, color: selectedColorHex });
+    }
+    var obj ={
+      index : this.index,
+      value:colorName
+     }
+    this.ArrayData.emit(obj)
+  }
+
+  Delete(index: number) {
+    this.options.splice(index, 1);
+  }
+
+  onOptionChange(option: any, index: number) {
+    if (option.name !== 'Color') {
+      // Reset values if the option is not "Color"
+      if (this.options[this.index].values) {
+        this.options[this.index].values = [];
+      }
+    }
+  }
+
+  addpopup(){
+    this.Switch = true
+  }
+
+  Closepopup(event:any){
+    this.Switch = false
+  }
+
+  valueSave(){
+    console.log(this.variant_value);
+    this.variant_value.reset()
+    
+  }
+  ValueCancel(){
+    this.Closepopup(true)
+    this.variant_value.reset()
+  } 
+
+}
+
+
+-----------------------------------------this comonent data send to other component and add other option ------------------------
+
+//---------other component ---ts file-----------------------
+ savedVariants: { name: string; values: {[x: string]: any; name: string, color?: string }[] }[] = [];  
+  savedVariants2: string[][]=[]
+
+ combinations: any[] = [];
+
+
+  convertSavedVariants(data:any){
+    let savedVariants2:string[][] = [];
+    data.forEach((variant:any) => {
+      savedVariants2.push(variant.values);
+    });
+    return savedVariants2;
+  }
+
+
+ recivedatafn(event: any) {
+   this.options[event.index].name = event.value   
+  }
+
+  reciveArrayData(event:any){
+    this.options[event.index].values = [...this.options[event.index].values,...[{name:event.value}]]
+    console.log(this.options);
+    
+  }
+
+  removeDatafn(event:any){
+    this.options[event.index].values = [...event.value]
+    
+  }
+
+  options: { name: string; values: { name: string, color?: string }[]; fruitCtrl: FormControl }[] = [
+    { name: '', values: [], fruitCtrl: new FormControl() }
+  ];
+  
+
+  AddOption() {
+    this.options.push({ name: '', values: [], fruitCtrl: new FormControl() });
+  }
+
+
+  Delete(index: number) {
+    this.options.splice(index, 1);
+  }
+
+SaveData() {
+
+    const formData = this.options.map(option => ({
+      name: option.name,
+      values:option.values
+    }));
+    
+    const filteredFormData = formData.filter(item => {
+      return item.name && item.values.length > 0;
+    });
+    
+    this.savedVariants = [];
+    this.savedVariants = [...filteredFormData];
+    var data = this.convertSavedVariants(this.savedVariants);
+     this.combinations = this.getCombinations([...data]);
+  
+    this.variant_page = 3;
+    window.scroll(0, 0);
+  }
+  
+-------------------------------------------------create one by one data combination mutiple data --------------------------------------
+
+  getCombinations(arrays: string[][], index: number = 0): string[][] {
+    if (index === arrays.length - 1) {
+      return arrays[index].map(item => [item]);
+    }
+
+    const nextCombinations = this.getCombinations(arrays, index + 1);
+    const currentArray = arrays[index];
+    const combinations: string[][] = [];
+
+    currentArray.forEach(item => {
+      nextCombinations.forEach(nextCombo => {
+        combinations.push([item, ...nextCombo]);
+      });
+    });
+
+    return combinations;
+  }
