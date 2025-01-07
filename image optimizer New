@@ -1,0 +1,1359 @@
+//--------------------------image optimizer module file--------------------------
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { ImageEditorComponent } from './image-editor/image-editor.component';
+import { MobileComponent } from './image-editor/mobile/mobile.component';
+import { WebComponent } from './image-editor/web/web.component';
+import { OptimizerService } from './optimizer.service';
+
+
+
+@NgModule({
+  declarations: [
+    ImageEditorComponent,
+    MobileComponent,
+    WebComponent,
+  ],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ImageCropperModule,
+    HttpClientModule
+  ],exports:[ImageEditorComponent],
+  providers:[OptimizerService]
+})
+export class ImageOptimizerModule { }
+
+//-----------------package.json in add..
+"ngx-image-cropper": "^6.0.2",
+
+//------------------------------------------optimizer service file----------------
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class OptimizerService {
+  InputImageOptimizer = new Subject<any>()
+  OutputImageOptimizer = new Subject<any>() 
+  constructor(private http: HttpClient) { }
+
+  uploadImage(formData: any): Observable<any> {
+    return this.http.post('http://192.168.0.7:4026/api/upload',formData);
+  }
+  getPager(totalItems: number, currentPage: number = 1, pageSize: number = 10) {
+    // calculate total pages
+    let totalPages = Math.ceil(totalItems / pageSize);
+
+    // ensure current page isn't out of range
+    if (currentPage < 1) {
+      currentPage = 1;
+    } else if (currentPage > totalPages) {
+      currentPage = totalPages;
+    }
+
+    let startPage: number, endPage: number;
+    if (totalPages <= 4) {
+      // less than 10 total pages so show all
+      startPage = 1;
+      endPage = totalPages;
+    } else {
+      // more than 10 total pages so calculate start and end pages
+      if (currentPage <= 3) {
+        startPage = 1;
+        endPage = 4;
+      } else if (currentPage + 2 >= totalPages) {
+        startPage = totalPages - 3;
+        endPage = totalPages;
+      } else {
+        startPage = currentPage - 2;
+        endPage = currentPage + 2;
+      }
+    }
+
+    // calculate start and end item indexes
+    let startIndex = (currentPage - 1) * pageSize;
+    let endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
+
+    // create an array of pages to ng-repeat in the pager control
+    let pages = Array.from(Array(endPage + 1 - startPage).keys()).map(
+      (i) => startPage + i
+    );
+
+    // return object with all pager properties required by the view
+    return {
+      totalItems: totalItems,
+      currentPage: currentPage,
+      pageSize: pageSize,
+      totalPages: totalPages,
+      startPage: startPage,
+      endPage: endPage,
+      startIndex: startIndex,
+      endIndex: endIndex,
+      pages: pages,
+    };
+  }
+}
+
+
+
+//-------------image editor file in create folder mobile component and web component ----------- 
+// ---------------mobile component--------------------
+html part --------------------------------
+
+<div *ngIf="Switch" class="image_editor_container">
+    <div #pop_cotainer class="popup_container">
+        <div class="optimizer_header ">
+            <span class="optimizer_header">
+                <span>Upload Image - Collection Featured Image</span>
+                <span  class="close_icon" (click)="closeImageOptimizer()"><img style="height: 25px;" width="25px" src="../../assets/Close.svg" alt=""></span>
+            </span>
+        </div>
+        <div class="tabs">
+            <div class="image_toolbaar">
+                <div class="margin_bottom" style="display: flex; align-items: end; width: 100%; justify-content: space-between;">
+                    <span *ngFor="let item of Tabs; index as i" class="items{{i}} tab_items" (click)="Click_to_slide(i,item)" [class.active]="activeTab === item" style="margin: 0px 15px; cursor: pointer;">
+                    <span>{{item}}</span>
+                    </span>
+                </div>
+              
+               
+            </div>
+        </div>
+        <div  class="content">
+            <div #content class="content_wrapper">
+                <div class="inner_content">
+                  
+                    <div class="image_container">
+                       
+                        <div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; position: relative;">
+                            <image-cropper *ngIf="ImageEvent"
+                            [imageChangedEvent]="ImageEvent"
+                            [maintainAspectRatio]="true"
+                            [aspectRatio]="getAspectRatio(Aspect)"
+                            [format]="'webp'"
+                            [(transform)]="transform"
+                            (imageCropped)="imageCropped($event)"
+                          >
+                          </image-cropper>
+                        </div>
+                    </div>
+                    <div class="image_preview">
+                        <div  [ngStyle]="{'background-image': 'url(' + croppedImage + ')','height':'100%',width:'100%','background-size':'contain','background-repeat':'no-repeat','background-position': 'center'}"></div>
+                        
+                    </div>
+                    <div class="tabs">
+                        <div class="image_toolbaar">
+                            <div style="display: flex; justify-content: space-around; width: 100%;">
+                                <div class="toolbar_wrapper">
+                                    <div style="margin: 0px 10px;">
+                                        <div style="font-size: 12px; text-align: center;">Scale</div>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <img (click)="Scaling(false)" class="mx-1" src="../../../../assets/Add.svg" alt="">
+                                            <input class="text_input" disabled   [formControl]="Scaleform" type="text"  style="width: 60px; text-align: center;">
+                                            <img (click)="Scaling(true)" class="mx-1" src="../../../../assets/Add.svg" alt="">
+            
+                                        </div>
+                                    </div>
+                                    <div style="margin: 0px 10px;">
+                                        <div style="font-size: 12px;">Rotate</div>
+                                        <input class="text_input" (input)="rotation($event)" (click)="rotation($event)" type="number" [formControl]="rotate" max="360" style="width: 70px;">deg
+                                    </div>
+                                    <div> 
+                                        <div style="font-size: 12px;">Flip</div>
+                                        <div>
+                                            <img (click)="flipHorizontal()" height="22px"  width="30px" src="../../assets/flip-horizontal.svg" alt="">
+                                            <img (click)="flipVertical()" height="22px" style="margin: 0px 10px;" width="30px" src="../../assets/flip-vertical.svg" alt="">
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                               
+                               
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div class="input_container">
+                        <form [formGroup]="ImageForm" style="padding: 10px;">
+                            <div class="form_control">
+                                <div class="input_title">Title</div>
+                                <input formControlName="fileName" class="text_input" type="text" placeholder="Title">
+                               </div>
+                               <div class="form_control">
+                                <div class="input_title">Alternate text</div>
+                                <input formControlName="alt_text" class="text_input" type="text" placeholder="Alternate text">
+                               </div>
+                            </form>
+                      
+                      
+                    
+                    </div>
+                    <div style="display: flex; justify-content: end; padding: 0px 10px; height: 50px;">
+                       
+                        <button (click)="closeImageOptimizer()" style=" margin: 0px 10px; padding: 0px 15px; background-color: white; height: 30px; border: 1px solid #1E4558; outline: unset; color: #1E4558; border-radius: 5px; font-weight: 600;">Cancel </button>
+                        <button style="background-color: #1E4558; padding: 0px 15px; height: 30px; border: unset; outline: unset; color: white; border-radius: 5px; font-weight: 600;" (click)="SaveImage()">+ Save Image</button>
+                     
+                    </div>
+                   
+                </div>
+                <div class="select_image_content">
+                    <div style="padding: 5px 10px;">
+                        <div  style=" padding: 0px 10px; border: 1px solid #b6b6b6; outline: unset; height: 30px; border-radius: 5px; display: flex; align-items: center;">
+                            <span class="d-flex">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" title="Search" width="16" height="16" class="sub-nav__NavbarSearchIcon-sc-1ovwz59-0 mqZEt"><path id="Path_1115" data-name="Path 1115" class="k3-search-cls-1" d="M24,21.887l-4.981-4.981a10.335,10.335,0,0,0,2.113-6.34A10.5,10.5,0,0,0,10.566,0,10.5,10.5,0,0,0,0,10.566,10.5,10.5,0,0,0,10.566,21.132a10.335,10.335,0,0,0,6.34-2.113L21.887,24ZM3.019,10.566a7.474,7.474,0,0,1,7.547-7.547,7.474,7.474,0,0,1,7.547,7.547,7.474,7.474,0,0,1-7.547,7.547A7.474,7.474,0,0,1,3.019,10.566Z"></path></svg>
+                            </span>
+                            <span  style="width: 100%; height: 100%;">
+                                <input type="text" placeholder="Search Banner ..." style=" padding: 0px 10px; outline: unset; border: unset; width: 100%; background-color: transparent; height: 100%; width: 100%;">
+                            </span>
+                       </div> 
+                    </div>
+                    <div class="select_image_container"></div>
+                    <div class="pager" style="display: flex;">
+                        <ul *ngIf="Pager.pages && Pager.pages.length" class="pagination">
+                            <li [ngClass]="{disabled:Pager.currentPage === 1}">
+                                <a (click)="setPage(1)"><img src="../../assets/Left_arrow.svg" alt=""></a>
+                            </li>
+                            <li [ngClass]="{disabled:Pager.currentPage === 1}">
+                                <a (click)="setPage(Pager.currentPage - 1)"><img src="../../assets/Vector.svg" alt=""></a>
+                            </li>
+                            <li *ngFor="let page of Pager.pages" [ngClass]="{active_page:Pager.currentPage === page}" class="pager_items" (click)="setPage(page)">
+                                <a >{{page}}</a>
+                            </li>
+                            <li [ngClass]="{disabled:Pager.currentPage === Pager.totalPages}">
+                                <a (click)="setPage(Pager.currentPage + 1)"><img src="../../assets/Right_arrow_2.svg" alt=""></a>
+                            </li>
+                            <li [ngClass]="{disabled:Pager.currentPage === Pager.totalPages}">
+                                <a (click)="setPage(Pager.totalPages)"><img src="../../assets/Right_arrow.svg" alt=""></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+    </div>
+</div>
+
+//----------------------------------------------ts file------------------------------
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
+import { OptimizerService } from '../../optimizer.service';
+
+
+@Component({
+  selector: 'app-mobile',
+  templateUrl: './mobile.component.html',
+  styleUrls: ['./mobile.component.css']
+})
+
+export class MobileComponent implements OnInit,AfterViewInit,OnChanges {
+  @ViewChild('pop_cotainer') PopupContainer!: ElementRef;
+  @ViewChild('content') Content!: ElementRef;
+  ImageForm!:FormGroup
+  fileName: any;
+  croppedImage: any;
+  transform: ImageTransform = {};
+  flipH:boolean = false;
+  flipV:boolean = false;
+  Mobile:boolean = false
+  Web:boolean = false
+  @Input() Switch:boolean = false
+  @Input() Aspect:any = '3:1'
+  @Input() ImageEvent: any;
+  @Input() Size:any[]=["300x100"]
+  @Output() Close = new EventEmitter<boolean>()
+  @Output() Output = new EventEmitter<any>()
+  EleContainer:any
+  
+  rotate = new FormControl(0);
+  Scaleform = new FormControl("100%")
+  Scale:number = 1
+  ScanleNum:number = 100
+  Tabs:any[] = ['Upload']
+  activeTab: string = 'Upload';
+  Translate:any = 0
+  Toolbar: boolean = true;
+  Searchbar:boolean = false
+  Pager: any = {};
+
+  constructor(private fb: FormBuilder,private api:OptimizerService,  private cd: ChangeDetectorRef,private el:ElementRef,private breakpointObserver: BreakpointObserver) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['Switch'].currentValue){
+     setTimeout(() => {
+      this.EleContainer = this.PopupContainer.nativeElement
+      this.EleContainer.style.setProperty("transform","translateY(-0%)")
+      this.EleContainer.style.setProperty("transition","0.2s all ease-in-out")
+     }, 200);
+    }
+  }
+  ngAfterViewInit(): void {
+    if(this.Switch){
+      this.Content.nativeElement.style.setProperty("transform",`translateX(-${100*this.Translate}%)`)
+    }
+
+   
+    this.cd.detectChanges()
+  }
+
+  ngOnInit(): void {
+   
+    this.ImageForm = this.fb.group({
+      base64Image: [''],
+      fileName: [''],
+      compression_value: ['50'],
+      aspect_ratio: ['3:1'],
+      image_sizes:this.fb.array([]),
+      alt_text: [''],
+      imageOutputTypes: ['webp'],
+    })
+    this.setPage(1);
+  }
+  get items(): FormArray {
+    return this.ImageForm.get('image_sizes') as FormArray;
+  }
+  SaveImage() {
+    this.ImageForm.controls['aspect_ratio'].setValue(this.Aspect)
+    this.Size.forEach(items =>{
+     const itemControl = this.fb.control(items); 
+     this.items.push(itemControl)
+    })
+    let formData = new FormData();
+
+    formData.append('base64Image', this.ImageForm.value.base64Image); // Directly append the base64 string
+    formData.append('fileName', this.ImageForm.value.fileName);
+    formData.append('alt_text', this.ImageForm.value.alt_text);
+    formData.append('image_output_type',this.ImageForm.value.imageOutputTypes);
+    formData.append('aspect_ratio', this.ImageForm.value.aspect_ratio);
+    formData.append('image_sizes', this.ImageForm.value.image_sizes);
+    formData.append('compression_value',this.ImageForm.value.compression_value.toString());
+    this.api.uploadImage(this.ImageForm.value).subscribe((response) => {
+        if(response.images){
+         
+          this.items.clear()
+         this.Output.emit(response.images)
+        }
+       
+      },
+      (error) => {
+        console.error('Upload error:', error);
+      }
+    );
+ }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    this.ImageEvent = event;
+    if (file) {
+      this.fileName = file.name; // Set the file name
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.croppedImage = e.target.result;
+        const base64String = this.croppedImage.split(',')[1];
+        this.ImageForm.controls['base64Image'].setValue(base64String);
+        this.ImageForm.controls['fileName'].setValue(file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  getAspectRatio(ratio: string): number {
+    const [width, height] = ratio.split(':').map(Number);
+    return width / height;
+  }
+  imageCropped(event: ImageCroppedEvent) {
+    this.croppedImage = event.base64;
+    const base64String = this.croppedImage.split(',')[1];
+    this.ImageForm.controls['base64Image'].setValue(base64String)
+  }
+  flipHorizontal() {
+    this.flipH = !this.flipH;
+    this.updateTransform();
+  }
+
+  flipVertical() {
+    this.flipV = !this.flipV;
+    this.updateTransform();
+  }
+  rotation(event:any) {
+  var value = Number(event.target.value)
+  if(value > 360){
+    this.rotate.setValue(360)
+  }else{
+    this.rotate.setValue(value)
+  }
+  this.updateTransform()
+  }
+  Scaling(event:any) {
+    if(event){
+      if(this.ScanleNum < 200){
+        this.ScanleNum = this.ScanleNum+10
+        this.Scaleform.setValue(this.ScanleNum+"%")
+        this.Scale = this.ScanleNum/100
+        console.log(this.Scale)
+      }
+     
+    }else{
+      if(this.ScanleNum > 0){
+       
+        if(this.ScanleNum/100 > 0.1){
+          this.ScanleNum = this.ScanleNum-10
+          this.Scaleform.setValue(this.ScanleNum+"%")
+          this.Scale = this.ScanleNum/100
+        }
+      }
+    
+    }
+    this.updateTransform()
+    }
+  
+
+ 
+  updateTransform() {
+    this.transform = {
+      flipH: this.flipH,
+      flipV: this.flipV,
+      rotate:this.rotate.value,
+      scale:this.Scale
+    };
+    this.cd.detectChanges()
+  }
+  closeImageOptimizer(){
+    this.EleContainer.style.setProperty("transform","translateY(-200%)")
+    this.EleContainer.style.setProperty("transition","0.2s all ease-in-out")
+      setTimeout(() => {
+        this.Close.emit(false)
+      }, 200);
+      this.Switch = false
+      this.ImageEvent = null
+      this.croppedImage = null
+ 
+  }
+ 
+ 
+ Click_to_slide(items:any,tab:any){
+ var cont =  this.Content.nativeElement 
+ this.Translate = items
+ this.activeTab = tab;   
+  if(items > 0){
+    this.Toolbar = false
+    this.Searchbar = true
+
+  }else{
+    this.Toolbar = true
+    this.Searchbar = false
+  }
+ cont.style.setProperty("transform",`translateX(-${100*this.Translate}%)`)
+ cont.style.setProperty("transition",`0.3s all ease-in-out`)
+
+ }
+ setPage(page: number) {
+  this.Pager = this.api.getPager(30,page)
+ }
+
+}
+
+//-----------------------------------------css file----------------------
+
+.image_editor_container{
+    height: 100%;
+    width: 100%;
+    background-color: rgba(000,000,000, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    
+
+
+}
+
+.popup_container{
+    height: 70%;
+    min-height: 500px;
+    border-radius: 10px;
+    width: 60%;
+    padding: 10px;
+    transform: translateY(-200%);
+    background-color: white;
+    max-height: 700px;
+    position: relative;
+   
+}
+
+.optimizer_header{
+    width: 100%;
+    font-size:22px;
+    font-weight: 500;
+    /* border-bottom: 1px solid black ; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    padding:3px 5px;
+    position: sticky;
+    background-color: white;
+    top: 0px;
+    margin-bottom: 10px;
+    /* padding: 0px 20px 0px 20px; */
+}
+.content{
+     height: calc(100% - 120px); width: 100%;
+    overflow: auto;
+    
+}
+.content_wrapper{
+    display: -webkit-box;
+    height: 100%;
+    width: 100%;
+}
+.content{
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none; 
+}
+
+.content::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+.inner_content{
+    height:100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    
+}
+.select_image_content{
+    height:100%;
+    width: 100%;
+ 
+    
+}
+.input_container{
+    background-color: white;
+    width: 30%;
+    height: calc(100% - 20px);
+    padding: 10px;
+    position: relative;
+
+}
+.form_control{
+    width: 100%;
+    margin: 15px 0px;
+   
+}
+.text_input{
+    width: 95%;
+    border: 1px solid #d4d4d4;
+    height: 30px;
+    border-radius: 5px;
+    padding: 0px 10px;
+    outline: unset;
+}
+.input_title{
+    margin: 5px 0px;
+    font-size: 15px;
+}
+.image_preview{
+    
+    height: calc(70% - 80px );
+    width: 100%;
+
+}
+.image_container{
+    width: 70%;
+
+    height: 100%;
+}
+.image_toolbaar{
+    width: 100%; background-color: white; height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+image-cropper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    justify-content: center;
+    object-fit: contain;
+  }
+  .close_icon{
+    position: absolute; right: 0px; top: -5px; padding: 5px; background-color: #f2f2f2; border-radius: 20px; height: 25px; width: 25px;
+    transition: 0.2s all ease-in-out;
+  }
+  .close_icon:active{
+     background-color:white;
+     transition: 0.2s all ease-in-out;
+  }
+  .margin_bottom{
+    margin-bottom: 10px;
+
+  }
+  .toolbar_wrapper{
+    display: flex;
+    justify-content: end;
+  }
+  .active{
+    margin: 0px 10px; padding: 0px 15px; background-color: white; height: 20px; border: 0.5px solid #1E4558; outline: unset; color: #1E4558; border-radius: 5px; font-weight: 600;
+  }
+  .tab_items{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 15px;
+    font-size: 13px;
+    font-weight: 600;
+    border-bottom: 2px solid #1E4558;
+  }
+  .select_image_container{
+        height: calc(100% - 50px);
+        width: 100%;
+        background-color: #f2f2f2;
+  }
+  .pagination{
+    display: flex;
+    list-style: none;
+    align-items: center;
+  }
+  .pagination li a{
+    display: flex;
+    align-items: center;
+  }
+  .active_page{
+    background-color: #1E4558; padding: 0px 15px !important; height: 20px; border: unset; outline: unset; color: white; border-radius: 5px; font-weight: 600;
+    display: flex;
+    align-items: center;
+    margin: 0px 10px;
+  }
+  .pager_items{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    
+    border-radius: 5px;
+    margin: 0px 5px;
+    cursor: pointer;
+  }
+
+
+  @media only screen and (max-width: 1024px) {
+  .popup_container{
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+    max-width: 100%;
+
+  }
+  .optimizer_header{
+    font-size: 18px;
+    padding: 5px 5px;
+  }
+  .close_icon{
+    right: 10px;
+    top: 0px;
+  }
+  .active{
+    margin: 0px 10px; padding: 0px 15px; background-color: white;  outline: unset; color: #1E4558; font-weight: 600;
+    border-bottom: 2px solid #1E4558 !important;
+    border-radius: 0px;
+    border: unset;
+  }
+  .tab_items{
+    width: 100%;
+    border: unset;
+  }
+  .image_container{
+    width: 100%;
+    height: 40%;
+}
+.input_container{
+  width: 100%;
+  padding: unset;
+  height: unset;
+}
+  .inner_content{
+    display: block;
+  }
+  .form_control{
+    width: 100%;
+  }
+  .toolbar_wrapper{
+    justify-content: space-around;
+    width: 100%;
+  }
+  .image_preview{
+    height: 100px;
+    width: 100%;
+  }
+  .select_image_content{
+    height: calc(100% - 0px);
+  }
+  .select_image_container{
+    height: calc(100% - 90px);
+  }
+
+  }
+
+//--------------------------------------web component-----------------------------
+//---------------html file------------------
+<div *ngIf="Switch" class="image_editor_container">
+    <div #pop_cotainer class="popup_container">
+        <div class="optimizer_header ">
+            <span class="optimizer_header">
+                <span>Upload Image - Collection Featured Image</span>
+                <span  class="close_icon" (click)="closeImageOptimizer()"><img style="height: 20px;" width="20px" src="../../assets/Close.svg" alt=""></span>
+            </span>
+        </div>
+        <div class="tabs">
+            <div class="image_toolbaar">
+                <div class="margin_bottom" style="display: flex; align-items: end; width: 35%;">
+                    <span *ngFor="let item of Tabs; index as i" class="items{{i}} tab_items" (click)="Click_to_slide(i,item)" [class.active]="activeTab === item" style="margin: 0px 15px; cursor: pointer;">
+                    <span>{{item}}</span>
+                    </span>
+                </div>
+                <div style="display: flex; justify-content: end;">
+                    <div *ngIf="Toolbar" class="toolbar_wrapper">
+                        <div style="margin: 0px 10px;">
+                            <div style="font-size: 12px; text-align: center;">Scale</div>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <img (click)="Scaling(false)" class="mx-1" src="../../../../assets/Add.svg" alt="">
+                                <input class="text_input" disabled   [formControl]="Scaleform" type="text"  style="width: 60px; text-align: center;">
+                                <img (click)="Scaling(true)" class="mx-1" src="../../../../assets/Add.svg" alt="">
+
+                            </div>
+                            
+                        </div>
+                        <div style="margin: 0px 10px;">
+                            <div style="font-size: 12px;">Rotate</div>
+                            <input class="text_input" (input)="rotation($event)" [formControl]="rotate" (click)="rotation($event)" type="number" min="0" max="360" style="width: 70px;">deg
+                        </div>
+                        <div> 
+                            <div style="font-size: 12px;">Flip</div>
+                            <div>
+                                <img (click)="flipHorizontal()" height="22px"  width="30px" src="../../assets/flip-horizontal.svg" alt="">
+                                <img (click)="flipVertical()" height="22px" style="margin: 0px 10px;" width="30px" src="../../assets/flip-vertical.svg" alt="">
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div *ngIf="Searchbar">
+                        <div  style=" padding: 0px 10px; border: 1px solid #b6b6b6; outline: unset; height: 30px; border-radius: 5px; width: 300px; display: flex; align-items: center;">
+                            <span class="d-flex">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" title="Search" width="16" height="16" class="sub-nav__NavbarSearchIcon-sc-1ovwz59-0 mqZEt"><path id="Path_1115" data-name="Path 1115" class="k3-search-cls-1" d="M24,21.887l-4.981-4.981a10.335,10.335,0,0,0,2.113-6.34A10.5,10.5,0,0,0,10.566,0,10.5,10.5,0,0,0,0,10.566,10.5,10.5,0,0,0,10.566,21.132a10.335,10.335,0,0,0,6.34-2.113L21.887,24ZM3.019,10.566a7.474,7.474,0,0,1,7.547-7.547,7.474,7.474,0,0,1,7.547,7.547,7.474,7.474,0,0,1-7.547,7.547A7.474,7.474,0,0,1,3.019,10.566Z"></path></svg>
+                            </span>
+                            <span  style="width: 100%; height: 100%;">
+                                <input type="text" placeholder="Search Banner ..." style=" padding: 0px 10px; outline: unset; border: unset; width: 100%; background-color: transparent; height: 100%; width: 100%;">
+                            </span>
+                       </div> 
+                    </div>
+                   
+                </div>
+               
+            </div>
+        </div>
+        <div  class="content">
+            <div #content class="content_wrapper">
+                <div class="inner_content">
+                    <div class="input_container">
+                        <form [formGroup]="ImageForm">
+                            <div class="form_control">
+                                <div class="input_title">Title</div>
+                                <input formControlName="fileName" class="text_input" type="text" placeholder="Title">
+                               </div>
+                               <div class="form_control">
+                                <div class="input_title">Alternate text</div>
+                                <input formControlName="alt_text" class="text_input"  type="text" placeholder="Alternate text">
+                               </div>
+                            </form>
+                      
+                       <div class="image_preview">
+                        <div  [ngStyle]="{'background-image': 'url(' + croppedImage + ')','height':'100%',width:'100%','background-size':'contain','background-repeat':'no-repeat'}"></div>
+                        
+                    </div>
+                    <div style="position: absolute; bottom: 0px; right: 10px;">
+                       
+                        <button (click)="closeImageOptimizer()" style=" margin: 0px 10px; padding: 0px 15px; background-color: white; height: 30px; border: 1px solid #1E4558; outline: unset; color: #1E4558; border-radius: 5px; font-weight: 600;">Cancel </button>
+                        <button style="background-color: #1E4558; padding: 0px 15px; height: 30px; border: unset; outline: unset; color: white; border-radius: 5px; font-weight: 600;" (click)="SaveImage()">+ Save Image</button>
+                     
+                    </div>
+                    </div>
+                    <div class="image_container">
+                       
+                        <div style="height: 100%; width: 100%; display: flex; justify-content: center; align-items: center; position: relative;">
+                            <image-cropper *ngIf="ImageEvent != null"
+                            [imageChangedEvent]="ImageEvent"
+                            [maintainAspectRatio]="true"
+                            [aspectRatio]="getAspectRatio(Aspect)"
+                            [format]="'webp'"
+                            [(transform)]="transform"
+                            (imageCropped)="imageCropped($event)"
+                          >
+                          </image-cropper>
+                        </div>
+                    </div>
+                   
+                </div>
+                <div class="select_image_content">
+                    <div class="select_image_container"></div>
+                    <div class="pager mt-4" style="display: flex;">
+                        <ul *ngIf="Pager.pages && Pager.pages.length" class="pagination">
+                            <li [ngClass]="{disabled:Pager.currentPage === 1}">
+                                <a (click)="setPage(1)"><img src="../../assets/Left_arrow.svg" alt=""></a>
+                            </li>
+                            <li [ngClass]="{disabled:Pager.currentPage === 1}">
+                                <a (click)="setPage(Pager.currentPage - 1)"><img src="../../assets/Vector.svg" alt=""></a>
+                            </li>
+                            <li *ngFor="let page of Pager.pages" [ngClass]="{active_page:Pager.currentPage === page}" class="pager_items" (click)="setPage(page)">
+                                <a >{{page}}</a>
+                            </li>
+                            <li [ngClass]="{disabled:Pager.currentPage === Pager.totalPages}">
+                                <a (click)="setPage(Pager.currentPage + 1)"><img src="../../assets/Right_arrow_2.svg" alt=""></a>
+                            </li>
+                            <li [ngClass]="{disabled:Pager.currentPage === Pager.totalPages}">
+                                <a (click)="setPage(Pager.totalPages)"><img src="../../assets/Right_arrow.svg" alt=""></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+    </div>
+</div>
+
+//--------------------------------------ts file-----------------------------
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
+import { OptimizerService } from '../../optimizer.service';
+
+
+@Component({
+  selector: 'app-web',
+  templateUrl: './web.component.html',
+  styleUrls: ['./web.component.css']
+})
+
+export class WebComponent implements OnInit,AfterViewInit,OnChanges {
+
+  @ViewChild('pop_cotainer') PopupContainer!: ElementRef;
+  @ViewChild('content') Content!: ElementRef;
+  ImageForm!:FormGroup
+  fileName: any;
+  croppedImage: any;
+  transform: ImageTransform = {};
+  flipH:boolean = false;
+  flipV:boolean = false;
+  Mobile:boolean = false
+  Web:boolean = false
+  @Input() Switch:boolean = false
+  @Input() Aspect:any = '3:1'
+  @Input() ImageEvent:any = null;
+  @Input() Size:any[]=[]
+  @Input() Content_image:boolean = false
+  @Output() Close = new EventEmitter<boolean>()
+  @Output() Output = new EventEmitter<any>()
+  EleContainer:any
+  rotate = new FormControl(0);
+  Scaleform = new FormControl("100%")
+  Scale:number = 1
+  ScanleNum:number = 100
+  Tabs:any[] = ['Upload']
+  activeTab: string = 'Upload';
+  Translate:any = 0
+  Toolbar: boolean = true;
+  Searchbar:boolean = false
+  Pager: any = {};
+
+  constructor(private fb: FormBuilder,  private cd: ChangeDetectorRef,private api:OptimizerService,private el:ElementRef,private breakpointObserver: BreakpointObserver) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes)
+    if(changes['Switch'].currentValue){
+     setTimeout(() => {
+      this.EleContainer = this.PopupContainer.nativeElement
+      this.EleContainer.style.setProperty("transform","translateY(-0%)")
+      this.EleContainer.style.setProperty("transition","0.2s all ease-in-out")
+     }, 200);
+    }
+  }
+  ngAfterViewInit(): void {
+ 
+    if(this.Switch){
+
+      this.Content.nativeElement.style.setProperty("transform",`translateX(-${100*this.Translate}%)`)
+    }
+  }
+
+  ngOnInit(): void {
+    // this.ImageEvent.target.files[0].name?this.ImageEvent.target.files[0].name:''
+    // this.Scaleform.disabled
+    this.ImageForm = this.fb.group({
+      base64Image: [''],
+      fileName: [''],
+      compression_value: ['50'],
+      aspect_ratio: ['3:1'],
+      image_sizes:this.fb.array([]),
+      alt_text: [''],
+      imageOutputTypes: ['webp'],
+    })
+    this.setPage(1);
+  }
+  get items(): FormArray {
+    return this.ImageForm.get('image_sizes') as FormArray;
+  }
+  SaveImage() {
+       this.ImageForm.controls['aspect_ratio'].setValue(this.Aspect)
+       this.Size.forEach(items =>{
+        const itemControl = this.fb.control(items); 
+        this.items.push(itemControl)
+       })
+       let formData = new FormData();
+
+       formData.append('base64Image', this.ImageForm.value.base64Image); // Directly append the base64 string
+       formData.append('fileName', this.ImageForm.value.fileName);
+       formData.append('alt_text', this.ImageForm.value.alt_text);
+       formData.append('image_output_type',this.ImageForm.value.imageOutputTypes);
+       formData.append('aspect_ratio', this.ImageForm.value.aspect_ratio);
+       formData.append('image_sizes', this.ImageForm.value.image_sizes);
+       formData.append('compression_value',this.ImageForm.value.compression_value.toString());
+       console.log(this.ImageForm.value)
+       this.api.uploadImage(this.ImageForm.value).subscribe(
+         (response) => {
+           if(response.images){
+            this.items.clear()
+            this.ImageEvent = null
+            this.Output.emit(response.images)
+           }
+          
+         },
+         (error) => {
+           console.error('Upload error:', error);
+         }
+       );
+    }
+
+  getAspectRatio(ratio: string): number {
+    const [width, height] = ratio.split(':').map(Number);
+    return width / height;
+  }
+  imageCropped(event: ImageCroppedEvent) {
+    this.croppedImage = event.base64;
+    const base64String = this.croppedImage.split(',')[1];
+    this.ImageForm.controls['base64Image'].setValue(base64String)
+  }
+  flipHorizontal() {
+    this.flipH = !this.flipH;
+    this.updateTransform();
+  }
+
+  flipVertical() {
+    this.flipV = !this.flipV;
+    this.updateTransform();
+  }
+  rotation(event:any) {
+  var value = Number(event.target.value)
+  
+    if(value > 360){
+      this.rotate.setValue(360)
+    }else{
+      this.rotate.setValue(value)
+    }
+  this.updateTransform()
+  }
+  Scaling(event:any) {
+    if(event){
+      if(this.ScanleNum < 200){
+        this.ScanleNum = this.ScanleNum+10
+        this.Scaleform.setValue(this.ScanleNum+"%")
+        this.Scale = this.ScanleNum/100
+        console.log(this.Scale)
+      }
+     
+    }else{
+      if(this.ScanleNum > 0){
+       
+        if(this.ScanleNum/100 > 0.1){
+          this.ScanleNum = this.ScanleNum-10
+          this.Scaleform.setValue(this.ScanleNum+"%")
+          this.Scale = this.ScanleNum/100
+        }
+      }
+    
+    }
+    this.updateTransform()
+    }
+  updateTransform() {
+    this.transform = {
+      flipH: this.flipH,
+      flipV: this.flipV,
+      rotate:this.rotate.value,
+      scale:this.Scale
+    };
+    this.cd.detectChanges()
+  }
+  closeImageOptimizer(){
+    this.EleContainer.style.setProperty("transform","translateY(-200%)")
+    this.EleContainer.style.setProperty("transition","0.2s all ease-in-out")
+      setTimeout(() => {
+        this.ImageEvent = null
+        this.Close.emit(false)
+      }, 200);
+      this.Switch = false
+      this.ImageEvent = null
+      this.croppedImage = null
+  }
+ 
+ Click_to_slide(items:any,tab:any){
+ var cont =  this.Content.nativeElement 
+ this.Translate = items
+ this.activeTab = tab;   
+  if(items > 0){
+    this.Toolbar = false
+    this.Searchbar = true
+
+  }else{
+    this.Toolbar = true
+    this.Searchbar = false
+  }
+ cont.style.setProperty("transform",`translateX(-${100*this.Translate}%)`)
+ cont.style.setProperty("transition",`0.3s all ease-in-out`)
+
+ }
+ setPage(page: number) {
+  this.Pager = this.api.getPager(30,page)
+ }
+
+}
+//------------------------------------------------css file-------------------------
+.image_editor_container{
+    height: 100%;
+    width: 100%;
+    background-color: rgba(000,000,000, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    
+
+
+}
+
+.popup_container{
+    height: 70%;
+    min-height: 500px;
+    border-radius: 10px;
+    width: 60%;
+    padding: 10px;
+    transform: translateY(-200%);
+    background-color: white;
+    max-height: 700px;
+    position: relative;
+   
+}
+
+.optimizer_header{
+    width: 100%;
+    font-size:22px;
+    font-weight: 500;
+    /* border-bottom: 1px solid black ; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+    padding:3px 5px;
+    position: sticky;
+    background-color: white;
+    top: 0px;
+    margin-bottom: 10px;
+    /* padding: 0px 20px 0px 20px; */
+}
+.content{
+     height: calc(100% - 120px); width: 100%;
+    overflow: auto;
+    
+}
+.content_wrapper{
+    display: -webkit-box;
+    height: 100%;
+    width: 100%;
+}
+.content{
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none; 
+}
+
+.content::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+.inner_content{
+    height:100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    
+}
+.select_image_content{
+    height:100%;
+    width: 100%;
+ 
+    
+}
+.input_container{
+    background-color: white;
+    width: 30%;
+    
+    padding: 10px;
+    position: relative;
+
+}
+.form_control{
+    width: 100%;
+    margin: 15px 0px;
+   
+}
+.text_input{
+    width: 95%;
+    border: 1px solid #d4d4d4;
+    height: 30px;
+    border-radius: 5px;
+    padding: 0px 10px;
+    outline: unset;
+}
+.input_title{
+    margin: 5px 0px;
+    font-size: 15px;
+}
+.image_preview{
+    
+    height: calc(70% - 80px );
+    width: 100%;
+
+}
+.image_container{
+    width: 70%;
+
+    height: 100%;
+}
+.image_toolbaar{
+    width: 100%; background-color: white; height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+image-cropper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    justify-content: center;
+    object-fit: contain;
+  }
+  .close_icon{
+    position: absolute;
+    right: 0px;
+    top: -5px;
+    padding: 5px;
+    background-color: #f2f2f2;
+    border-radius: 20px;
+    height: 25px;
+    width: 25px;
+    transition: 0.2s all ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .close_icon:active{
+     background-color:white;
+     transition: 0.2s all ease-in-out;
+  }
+  .margin_bottom{
+    margin-bottom: 10px;
+
+  }
+  .toolbar_wrapper{
+    display: flex;
+    justify-content: end;
+  }
+  .active{
+    margin: 0px 10px; padding: 0px 15px; background-color: white; height: 20px; outline: unset; color: #1E4558; font-weight: 600; border-bottom: 2px solid #1E4558;
+  }
+  .tab_items{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 15px;
+    font-size: 13px;
+    width: 100%;
+    font-weight: 600;
+    
+  }
+  .select_image_container{
+        height: calc(100% - 50px);
+        width: 100%;
+        background-color: #f2f2f2;
+  }
+  .pagination{
+    display: flex;
+    list-style: none;
+    align-items: center;
+  }
+  .pagination li a{
+    display: flex;
+    align-items: center;
+  }
+  .active_page{
+    background-color: #1E4558; padding: 0px 15px !important; height: 20px; border: unset; outline: unset; color: white; border-radius: 5px; font-weight: 600;
+    display: flex;
+    align-items: center;
+    margin: 0px 10px;
+  }
+  .pager_items{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    
+    border-radius: 5px;
+    margin: 0px 5px;
+    cursor: pointer;
+  }
+  .ngx-image-cropper .aspect-ratio-controls {
+    display: none !important;
+  }
+
+ --------------------------------------------------------emaig editor component-------------------------------------------
+//--------------------------html file--------------------
+<app-mobile *ngIf="Mobile" [Switch]="Switch" (Close)="close($event)" [Aspect]="Aspect"  (Output)="GetImagedata($event)" [Size]="Size" [ImageEvent]="ImageEvent"></app-mobile>
+<app-web *ngIf="Web" [Switch]="Switch" (Close)="close($event)" [Aspect]="Aspect"    [ImageEvent]="ImageEvent" [Size]="Size" (Output)="GetImagedata($event)"></app-web>
+
+//---------------------------------------------ts file-----------------------------------
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
+
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
+import { OptimizerService } from '../optimizer.service';
+import { Subscription } from 'rxjs';
+
+
+@Component({
+  selector: 'app-image-editor',
+  templateUrl: './image-editor.component.html',
+  styleUrls: ['./image-editor.component.css']
+})
+export class ImageEditorComponent implements OnInit,AfterViewInit,OnChanges {
+  Mobile:boolean = false
+  Web:boolean = false
+  Switch:boolean = false
+  Subscription: Subscription;
+  Aspect:any = '3:1'
+  ImageEvent: any;
+  Size:any[]=["300x100"]
+  Type:any = "bloginfo"
+  @Output() Close = new EventEmitter<boolean>()
+  @Output() Output = new EventEmitter<any>()
+  constructor(private fb: FormBuilder,  private cd: ChangeDetectorRef,private el:ElementRef,private PagerService:OptimizerService,private breakpointObserver: BreakpointObserver) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    
+  }
+  ngAfterViewInit(): void {
+ 
+   
+  }
+
+  ngOnInit(): void {
+  this.PagerService.InputImageOptimizer.subscribe(res =>{
+    console.log(res)
+    if(res){
+     
+      this.breakpointObserver.observe([
+        '(max-width: 768px)',
+        '(min-width: 769px) and (max-width: 1024px)',
+        '(min-width: 1025px)'
+      ]).subscribe((result: BreakpointState) => {
+        console.log(result)
+        if (result.matches) {
+          if (result.breakpoints['(max-width: 768px)']) {
+            console.log('Handset view');
+            this.Mobile = true
+            this.Web = false
+          } else if (result.breakpoints['(min-width: 769px) and (max-width: 1024px)']) {
+            this.Mobile = true
+            this.Web = false
+           
+            console.log('Tablet view');
+            // Perform actions for tablet view
+          } else if (result.breakpoints['(min-width: 1025px)']) {
+            console.log('Web view');
+            this.Web = true
+            this.Mobile = false
+          }
+        }
+      });
+      this.Switch = res.Switch
+      this.Aspect = res.Aspect
+      this.ImageEvent = res.Image
+      this.Size = res.Size
+      this.Type = res.Type
+    }
+      
+   })
+ 
+  }
+
+  close(event:boolean){
+    this.Mobile = event
+    this.Web = event
+    this.Switch = event
+    this.Close.emit(event)
+    
+  }
+  GetImagedata(Images: any) {
+    var obj = {
+      Type:this.Type,
+      Images:Images
+    }
+    this.Mobile = false
+    this.Web = false
+    this.Switch = false
+    this.Close.emit(false)
+    this.PagerService.OutputImageOptimizer.next(obj)
+  }
+}
+
+//-----------------------------------------------------css file------------------------------------
+nothing...
+
+
+
+// -----------------------use the other component add the ImageOptimizerModule ---------------
+//------------------html file--------------------
+<div  style="width: 100%;">
+  <app-blog-information  [Blog_info]="EditorFrom.get('Blog_info')" (Output)="GetUploadedImage($event) "></app-blog-information>
+</div>
+<app-image-editor></app-image-editor>
+
+
+//--------------------------------ts file -------not any important-----------
+  public EditorFrom!:FormGroup;
+
+
+    GetUploadedImage(images: any) {
+      this.EditorFrom.controls['collection_image'].setValue(images[0])
+      this.EditorFrom.controls['collection_thumbnail'].setValue(images[1])
+    }
