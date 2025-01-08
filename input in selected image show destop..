@@ -1,0 +1,298 @@
+//------------------A button click open gallery and choose the any image and show to image in desktop-----------------
+//--------Angular Material module add property------
+    MatTableModule,
+    MatCardModule,
+    MatDatepickerModule,
+    MatCheckboxModule,
+    MatTabsModule,
+    MatTreeModule,
+    MatAutocompleteModule,
+    DropDownsModule,
+    SwitchModule,
+    TreeModule,
+
+//----------------------------html part -------------------------
+  <mat-tab>
+              <ng-template mat-tab-label> Image Upload </ng-template>
+              <div class="row" style="margin: 20px">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-md-2" style="margin: 0 auto">
+                      <span class="text">Upload From URL</span>
+                    </div>
+                    <div class="col-md-4">
+                      <div>
+                        <input id="str" [(ngModel)]="str" style="padding: 5px" />
+                        <button
+                          class="action-btn1"
+                          mat-raised-button
+                          color="primary"
+                          (click)="fileChangeListener1(str)"
+                        >
+                          Send
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-md-2" style="margin: 0 auto">
+                      <span class="text">Upload From Files</span>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="file-upload">
+                        <span class="text">UPLOAD</span>
+                        <input
+                          id="custom-input"
+                          type="file"
+                          (change)="fileChangeListener($event)"
+                          multiple
+                        />
+                      </div>
+                    </div>
+                  </div>
+      
+      
+                  <br />
+      
+                  <div
+                    *ngFor="let image of images; let index = index"
+                    style="display: flex; width: 75%"
+                  >
+                    <div class="grid-item-img">
+                      <img
+                        [src]="imageview(image)"
+                        onerror="this.src = 'assets/images/default.png'"
+                        width="200px"
+                        height="100%"
+                      />
+                    </div>
+                    <div class="grid-item-upload">
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        class="action-btn"
+                        (click)="removeSelectedFile(image)"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                  <br />
+                  <div class="isa_error" *ngIf="isImageUploaded">
+                    Product Image is
+                    <strong>required</strong>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+//------------------------------------------ts part-----------------------------------
+str: string;
+imageuri1 = [];
+ 
+   images = [];
+   fileChangeListener($event) {
+     var image: any = new Image();
+ 
+     if ($event.target.files && $event.target.files[0]) {
+       // var file: File = $event.target.files[0];
+ 
+       var filesAmount = $event.target.files.length;
+       for (let i = 0; i < filesAmount; i++) {
+         var myReader: FileReader = new FileReader();
+         var that = this;
+ 
+         myReader.onloadend = (event: any) => {
+           // this.imageuri1.push(loadEvent.target.result);
+           this.imageuri1.push(
+             event.target.result.substring(
+               event.target.result.indexOf(",") + 1,
+               event.target.result.length
+             )
+           );
+ 
+           this.images.push(event.target.result);
+ 
+           // that.data2.image = this.imageuri;
+           if (this.imageuri1) {
+             that.isImageUploaded = false;
+           } else {
+             that.isImageUploaded = true;
+           }
+         };
+ 
+         myReader.readAsDataURL($event.target.files[i]);
+       }
+     }
+   }
+ 
+   fileChangeListener1(url) {
+     let resjson: JSON;
+     if (url) {
+       var image: any = new Image();
+       var that = this;
+       //this.service.uploadfromurl(url, token)
+       this.uploadurl(url);
+     }
+   }
+   uploadurl(url) {
+     if (url) {
+       this.spinner.show();
+       this.productService.getBase64String(url).subscribe(
+         (imageuri) => {
+           this.spinner.hide();
+           this.imageuri1.push(
+             imageuri["base64"].substring(
+               imageuri["base64"].indexOf(",") + 1,
+               imageuri["base64"].length
+             )
+           );
+ 
+           this.images.push(imageuri["base64"]);
+           // that.cropper.setImage(image);
+           if (imageuri["base64"]) {
+             this.isImageUploaded = false;
+           } else {
+             this.isImageUploaded = true;
+           }
+         },
+         (error) => {
+           this.spinner.hide();
+           this.openDialog(error.status, error.message);
+         }
+       );
+     } else {
+     }
+   }
+
+
+   removeSelectedFile(delimage) {
+     this.images = this.images.filter((images) => delimage !== images);
+     this.imageuri1 = this.imageuri1.filter(
+       (images) =>
+         delimage.substring(delimage.indexOf(",") + 1, delimage.length) !==
+         images
+     );
+   }
+ 
+   uploadProductImage(imageuri1, productid, title) {
+     this.productService
+       .uploadProductImage(productid, title, imageuri1)
+       .subscribe(
+         (response) => {},
+         (err) => {}
+       );
+   }
+
+//----------------------------------------Css part-------------------------------
+.file-upload {
+  height: 40px;
+  width: 150px;
+  position: relative;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // float: right;
+
+  border: 1px solid #fff;
+  overflow: hidden;
+  // #2590eb
+  // background-image: linear-gradient(to bottom, #1e4558 50%, #ffffff 50%);
+  background-size: 100% 200%;
+  transition: all 1s;
+  color: #fff;
+  font-size: 10px;
+}
+.file-upload span:hover {
+  cursor: pointer;
+}
+// .file-upload:hover {
+//   background-position: 0 -100%;
+//   color: #2590eb;
+//   cursor: pointer;
+// }
+
+.text {
+  font-size: 14px;
+}
+
+input[type="file"] {
+  height: 25px;
+  width: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-columns: 20% 60% 15%;
+  padding: 10px;
+  grid-gap: 15px 15px;
+}
+.grid-item-img,
+.grid-item-head,
+.grid-item-upload {
+  // background-color: rgba(255, 255, 255, 0.8);
+  // border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
+}
+.grid-item-img {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  width: 60%;
+}
+
+.grid-item-upload {
+  width: 40%;
+}
+.grid-item-upload button{
+  border: none;
+  background: none;
+}
+// .btn:hover {
+//   background-image: none !important;
+//   /* // background-color: #666; */
+//   background-color: #1E4558 !important;
+//   font: 13px sans-serif !important;
+//   text-decoration: none !important;
+//   border: 1px solid #000 !important;
+//   border-color: #aaa #444 #444 #aaa !important;
+//   color: #fff !important;
+// }
+
+// .btn {
+//   background-image: none !important;
+//   /* // background-color: #01b3e3; */
+//   background-color: #1E4558 !important;
+//   font: 13px sans-serif !important;
+//   text-decoration: none !important;
+//   border: 1px solid #000 !important;
+//   border-color: #aaa #444 #444 #aaa !important;
+//   color: #fff !important;
+// }
+
+.btn1 {
+  // background-color: #01b3e3;
+  // background-color: #01b3e3 !important;
+}
+.btn1:hover {
+  // background-color: #01b3e3;
+  // background-color: #4c5055 !important;
+}
+// ::ng-deep tree-viewport {
+//   height: auto;
+//   max-height: 230px;
+// }
+// .selectedcat {
+//   text-decoration: underline;
+// }
+// ::ng-deep .node-content-wrapper-focused {
+//   background: #fff;
+// }
+// ::ng-deep .node-content-wrapper:hover {
+//   background: #fff;
+//   text-decoration: underline;
+// }
