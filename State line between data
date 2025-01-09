@@ -1,0 +1,5 @@
+//---------create a state line with multiple data------------
+<div *ngFor="let innerItem of dataItem; index as i">  
+            <p class="item_line">{{ innerItem.name }} <span *ngIf="i < dataItem.length-1;other"  style="color: black; font-size: large; font-weight: 500; ">|</span> 
+              &nbsp;&nbsp;</p>
+  </div>
